@@ -39,7 +39,7 @@ public class GroupAppointment {
 	//TODO mínimo dos
 	//@NotEmpty(message="Introduce al menos dos usuarios")
 	@ManyToMany
-	//private Collection<User> patient;
+	private Collection<User> patient;
 	
 	//@NotEmpty(message="Tienes que estar registrado")
 	@ManyToOne

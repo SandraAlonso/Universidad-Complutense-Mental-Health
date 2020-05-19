@@ -74,10 +74,16 @@ public class User {
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "recipient_id")	
 	@JsonIgnore
-	private List<Message> received = new ArrayList<>();	
+	private List<Message> received = new ArrayList<>();
+	@OneToMany(targetEntity = GroupAppointment.class)
+	@JoinColumn(name = "group_appointment_id")
+	@JsonIgnore
+	private List<GroupAppointment> group_appointments = new ArrayList<>();
 	
 	// utility methods
 	
+
+
 	/**
 	 * Checks whether this user has a given role.
 	 * @param role to check
@@ -190,5 +196,13 @@ public class User {
 
 	public void setReceived(List<Message> received) {
 		this.received = received;
+	}
+	
+	public List<GroupAppointment> getGroup_appointments() {
+		return group_appointments;
+	}
+
+	public void setGroup_appointments(List<GroupAppointment> group_appointments) {
+		this.group_appointments = group_appointments;
 	}
 }

@@ -33,7 +33,7 @@
 
 
 <script type="text/javascript">
-   $(function() {
+   /* $(function() {
      //TODO params function
       function insert(res) {
            $("#example").append('<li class="cd-schedule__event">
@@ -43,11 +43,10 @@
             </li>'
           );
       }
-  //********************************************
 
 
 
-      /*  Submit form using Ajax */
+      /*  Submit form using Ajax 
       $('button[type=submit]').click(function(e) {
 
          //Prevent default submission of form
@@ -79,7 +78,7 @@
             }
          })
       });
-   });
+   });*/
 </script>
 
   <meta name="theme-color" content="#fafafa">
@@ -149,14 +148,15 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
 
           <ul>
-            
+          <c:forEach items="${u.group_appointments}" var="l">
             <li class="cd-schedule__event">
-              <a data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+             <a th:data-start="${l.start_hour}" th:data-end="${l.finish_hour}" data-content="event-abs-circuit" data-event="event-1" href="#0"> -->
                 <em class="cd-schedule__name">Antonio</em>
-              </a>
+             </a>
             </li>
+           </c:forEach>
 
-            <li class="cd-schedule__event">
+          <!--  <li class="cd-schedule__event">
               <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
                 <em class="cd-schedule__name">Grupal</em>
               </a>
@@ -167,7 +167,7 @@
                 <em class="cd-schedule__name">Marcos</em>
               </a>
             </li>
-
+-->
           </ul>
         </li>
 
@@ -331,7 +331,7 @@
   </div>
 
   <div id="modal1" class="modal">
-    <form th:action="@{/psicologo/createGroupAppointment(id=${u.id})}" method="post" name="createGroupAppointmentForm">
+    <form th:action="@{/psicologo/saveGroupAppointment(id=${u.id})}" method="post" name="createGroupAppointmentForm">
     <div class="modal-content">
       <h4>Cita individual</h4>
 

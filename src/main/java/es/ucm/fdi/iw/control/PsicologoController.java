@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +46,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import es.fdi.ucm.ucmh.model.GroupAppointment;
+import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
@@ -82,10 +83,9 @@ public class PsicologoController {
 	}
 	
 	
-   @PostMapping(value = "/saveGroupAppointment", produces = { MediaType.APPLICATION_JSON_VALUE })
-   @ResponseBody
+   @PostMapping("/saveGroupAppointment")
    @Transactional
-	public GroupAppointment saveGroupAppointment(Model model,HttpServletResponse response, @RequestParam long id, @ModelAttribute @Valid GroupAppointment group_appointment,
+	public String saveGroupAppointment(Model model, HttpServletResponse response, @RequestParam long id, @ModelAttribute @Valid GroupAppointment group_appointment,
          BindingResult result, HttpSession session) throws IOException {
 	   User requester = (User)session.getAttribute("u");
 	   User stored = entityManager.find(User.class, id);
@@ -93,8 +93,9 @@ public class PsicologoController {
 		   response.sendError(HttpServletResponse.SC_FORBIDDEN, 
 					"Este no es tu perfil");
 	   }
+	   group_appointment.setPychologist(stored);
        entityManager.persist(group_appointment);
-       return group_appointment;
+       return horarioPsicologo(session, model);
    }
 	   
 	   

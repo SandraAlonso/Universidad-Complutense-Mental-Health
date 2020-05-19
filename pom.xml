@@ -69,6 +69,12 @@
 			<version>20180219.1</version>
 		</dependency>
 
+
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <scope>runtime</scope>
+   		</dependency>
 		<!-- 
 			principal librería de pruebas unitarias en entorno Java
 			https://mvnrepository.com/artifact/junit/junit 			
