@@ -15,7 +15,7 @@ INSERT INTO user(id,enabled,username,password,roles,first_name,last_name) VALUES
 INSERT INTO user(id,enabled,username,password,roles,first_name,last_name) VALUES (
 	2, 1, 'b', 
 	'{bcrypt}$2a$10$xLFtBIXGtYvAbRqM95JhcOaG23fHRpDoZIJrsF2cCff9xEHTTdK1u',
-	'USER,PSICOLOGO',
+	'USER',
 	'Berta', 'Muéstrez'
 );
 

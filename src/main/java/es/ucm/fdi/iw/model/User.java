@@ -46,7 +46,8 @@ public class User {
 	public enum Role {
 		USER,			// used for logged-in, non-priviledged users
 		ADMIN,			// used for maximum priviledged users
-		
+		PSICOLOGO,
+		PACIENTE,
 		MODERATOR,		// remove or add roles as needed
 	}
 	

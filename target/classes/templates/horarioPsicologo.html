@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!-- License: https://codyhouse.co/mit -->
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	class="no-js" lang="es">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.getElementsByTagName("html")[0].className += " js";</script>
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="/css/schedule-style.css">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/materialize.css">
+  <link rel="stylesheet" href="/css/my-theme.css">
+
+  <!-- LO VUESTRO-->
+  <link href="https://fonts.googleapis.com/css?family=Muli|Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <script src="/js/vendor/modernizr-3.8.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.4.1.min.js"><\/script>')</script>
+  <script src="/js/plugins.js"></script>
+  <script src="/js/vendor/materialize.min.js"></script>
+  <script src="/js/main.js"></script>
+
+
+<script type="text/javascript">
+   $(function() {
+     //TODO params function
+      function insert(res) {
+           $("#example").append('<li class="cd-schedule__event">
+              <a data-start="13:00" data-end="14:00" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>'
+          );
+      }
+  //********************************************
+
+
+
+      /*  Submit form using Ajax */
+      $('button[type=submit]').click(function(e) {
+
+         //Prevent default submission of form
+         e.preventDefault();
+		 console.log("Hola");
+         //Remove all errors
+         $('input').next().remove();
+
+         $.post({
+            url : 'saveGroupAppointment',
+            data : $('form[name=createGroupAppointmentForm]').serialize(),
+            success : function(res) {
+               if(res.validated){
+                  //Set response
+                  console.log("Hola")
+                  M.toast({html: 'Cita agregada'})
+                  $('#resultContainer pre code').text(JSON.stringify(res.groupAppointment));
+              	  $('#resultContainer').show();
+              	  console.log("Hola2");
+              	  $('<li class="cd-schedule__event"><a data-start="13:00" data-end="14:00" data-content="event-abs-circuit" data-event="event-1" href="#0"><em class="cd-schedule__name">Antonio</em></a></li>').insertAfter("#example");
+                 // insert(res);
+               }else{
+                // Set error messages
+                 M.toast({html: 'error'})
+                 $.each(res.errorMessages,function(key,value){
+                   $('input[name='+key+']').after('<span class="error">'+value+'</span>');
+                 });
+               }
+            }
+         })
+      });
+   });
+</script>
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+  <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+
+  <!-- Menú -->
+
+  <nav id="menu">
+    <div class="nav-wrapper">
+      <a href="#" id="logo" class="brand-logo">UCMH</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="active"><a>Mi horario</a></li>
+          <li><a href="misPacientes">Pacientes</a></li>
+          <a class="waves-effect waves-light btn">Cerrar sesión</a>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Menú desplegable mobile-->
+
+  <ul class="sidenav" id="mobile-demo">
+    <li class="active"><a>Mi horario</a></li>
+    <li><a href="misPacientes">Pacientes</a></li>
+    <li><a>Cerrar sesión</a></li>
+  </ul>
+
+  <header class="cd-main-header text-center flex flex-column flex-center">
+    <h4 class="center-align">Mi horario</h4>
+  </header>
+
+  <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
+    <div class="cd-schedule__timeline">
+      <ul>
+        <li><span>09:00</span></li>
+        <li><span>09:30</span></li>
+        <li><span>10:00</span></li>
+        <li><span>10:30</span></li>
+        <li><span>11:00</span></li>
+        <li><span>11:30</span></li>
+        <li><span>12:00</span></li>
+        <li><span>12:30</span></li>
+        <li><span>13:00</span></li>
+        <li><span>13:30</span></li>
+        <li><span>14:00</span></li>
+        <li><span>14:30</span></li>
+        <li><span>15:00</span></li>
+        <li><span>15:30</span></li>
+        <li><span>16:00</span></li>
+        <li><span>16:30</span></li>
+        <li><span>17:00</span></li>
+        <li><span>17:30</span></li>
+        <li><span>18:00</span></li>
+      </ul>
+    </div> <!-- .cd-schedule__timeline -->
+
+    <div class="cd-schedule__events">
+      <ul>
+        <li class="cd-schedule__group">
+          <div class="cd-schedule__top-info"><span>Lunes</span></div>
+
+          <ul>
+            
+            <li class="cd-schedule__event">
+              <a data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
+                <em class="cd-schedule__name">Grupal</em>
+              </a>
+            </li>
+
+            <li id="example" class="cd-schedule__event">
+              <a data-start="14:00" data-end="15:15"  data-content="event-yoga-1" data-event="event-3" href="#0">
+                <em class="cd-schedule__name">Marcos</em>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+
+        <li class="cd-schedule__group">
+          <div class="cd-schedule__top-info"><span>Martes</span></div>
+
+          <ul>
+            <li class="cd-schedule__event">
+              <a data-start="10:00" data-end="11:00"  data-content="event-rowing-workout" data-event="event-2" href="#0">
+                <em class="cd-schedule__name">Grupal</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="11:30" data-end="13:00"  data-content="event-restorative-yoga" data-event="event-4" href="#0">
+                <em class="cd-schedule__name">Quedada de psicólogos</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="13:30" data-end="15:00" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="15:45" data-end="16:45"  data-content="event-yoga-1" data-event="event-3" href="#0">
+                <em class="cd-schedule__name">Marcos</em>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="cd-schedule__group">
+          <div class="cd-schedule__top-info"><span>Miércoles</span></div>
+
+          <ul>
+            <li class="cd-schedule__event">
+              <a data-start="09:00" data-end="10:15" data-content="event-restorative-yoga" data-event="event-4" href="#0">
+                <em class="cd-schedule__name">Quedada de psicólogos</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="10:45" data-end="11:45" data-content="event-yoga-1" data-event="event-3" href="#0">
+                <em class="cd-schedule__name">Marcos</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="12:00" data-end="13:45"  data-content="event-rowing-workout" data-event="event-2" href="#0">
+                <em class="cd-schedule__name">Grupal</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="13:45" data-end="15:00" data-content="event-yoga-1" data-event="event-3" href="#0">
+                <em class="cd-schedule__name">Marcos</em>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="cd-schedule__group">
+          <div class="cd-schedule__top-info"><span>Jueves</span></div>
+
+          <ul>
+            <li class="cd-schedule__event">
+              <a data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="12:00" data-end="13:45" data-content="event-restorative-yoga" data-event="event-4" href="#0">
+                <em class="cd-schedule__name">Quedada de psicólogos</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="15:30" data-end="16:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="17:00" data-end="18:30"  data-content="event-rowing-workout" data-event="event-2" href="#0">
+                <em class="cd-schedule__name">Grupal</em>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="cd-schedule__group">
+          <div class="cd-schedule__top-info"><span>Viernes</span></div>
+
+          <ul>
+            <li class="cd-schedule__event">
+              <a data-start="10:00" data-end="11:00"  data-content="event-rowing-workout" data-event="event-2" href="#0">
+                <em class="cd-schedule__name">Grupal</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="12:30" data-end="14:00" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                <em class="cd-schedule__name">Antonio</em>
+              </a>
+            </li>
+
+            <li class="cd-schedule__event">
+              <a data-start="15:45" data-end="16:45"  data-content="event-yoga-1" data-event="event-3" href="#0">
+                <em class="cd-schedule__name">Marcos</em>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="cd-schedule-modal">
+      <header class="cd-schedule-modal__header">
+        <div class="cd-schedule-modal__content">
+          <span class="cd-schedule-modal__date"></span>
+          <h3 class="cd-schedule-modal__name"></h3>
+        </div>
+
+        <div class="cd-schedule-modal__header-bg"></div>
+      </header>
+
+      <div class="cd-schedule-modal__body">
+        <div class="cd-schedule-modal__event-info"></div>
+        <div class="cd-schedule-modal__body-bg"></div>
+      </div>
+
+      <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
+    </div>
+
+    <div class="cd-schedule__cover-layer"></div>
+  </div> <!-- .cd-schedule -->
+  
+  <div id="resultContainer" style="display: none;">
+ <hr/>
+ <h4 style="color: green;">JSON Response From Server</h4>
+  <pre style="color: green;">
+    <code></code>
+   </pre>
+</div>
+
+  <script src="/js/vendor/schedule-util.js"></script> <!-- util functions included in the CodyHouse framework -->
+  <script src="/js/vendor/schedule-main.js"></script>
+
+  <!-- Botón estático y modales -->
+
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large waves-effect waves-light red">
+      <i class="material-icons">add</i>
+    </a>
+    <ul>
+      <li><a class="btn-floating blue modal-trigger" href="#modal1"><i class="material-icons">group</i></a></li>
+    </ul>
+  </div>
+
+  <div id="modal1" class="modal">
+    <form th:action="@{/psicologo/createGroupAppointment(id=${u.id})}" method="post" name="createGroupAppointmentForm">
+    <div class="modal-content">
+      <h4>Cita individual</h4>
+
+      <!-- Selección del paciente -->
+      <!-- Recargar con usuarios -->
+      
+      <!--   <div class="input-field col s6">
+          <input name="example" placeholder="Placeholder" id="first_name"  type="text" class="validate">
+          <label for="first_name">First Name</label>
+      </div> -->
+      
+      <!--
+      
+      <p> Selecciona los paciente con los que vas a tener la cita </p>
+      <div class="input-field col s12 m6">
+        <select class="icons">
+          <option value="" disabled selected>Selecciona paciente</option>
+          <option value="" data-icon="img/ejemplo.jpg">Paco</option>
+          <option value="" data-icon="img/ejemplo.jpg">Antonio</option>
+          <option value="" data-icon="img/ejemplo.jpg">Marco</option>
+        </select>
+        <label>Pacientes disponibles</label>
+      </div>
+      
+		-->
+
+
+      <p> Selecciona día para la sesión </p>
+      <input name="date" type="date">
+
+
+
+      <p> Selecciona hora de la sesión </p>
+      <input name="start_hour" type="time">
+
+
+      <p> Selecciona hora de fin de la sesión </p>
+      <input name="finish_hour" type="time">
+      
+
+    </div>
+    <div class="modal-footer">
+      <a href="" class="modal-close waves-effect waves-red btn-flat red">Cancelar</a>
+      <button type="submit" class="modal-close waves-effect waves-green btn-flat green">Aceptar</button>
+    </div>
+  </form>
+  </div>
+  
+  <script>
+  $(document).ready(function(){
+      $('.sidenav').sidenav();
+      $('.fixed-action-btn').floatingActionButton();
+      $('.modal').modal();
+      $('.trigger-modal').modal();
+      $('select').formSelect();
+      $('.datepicker').datepicker();
+      $('.timepicker').timepicker();
+    });
+  </script>
+</body>
+
+</html>

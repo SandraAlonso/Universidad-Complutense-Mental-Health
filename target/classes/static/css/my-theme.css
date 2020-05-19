@@ -1,0 +1,28 @@
+@charset "UTF-8";
+body {
+  font-family: 'Muli', sans-serif;
+}
+
+#logo {
+  margin-left: 15px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 35px;
+}
+
+.nav-derecha {
+  float: right;
+}
+
+#horario-paciente {
+  margin: 50px auto;
+  width: 80%;
+}
+
+.cabecera-tabla {
+  background-color: rgba(238, 110, 115, 0.8);
+  color: white;
+}
+
+h4 {
+  font-weight: 600;
+}

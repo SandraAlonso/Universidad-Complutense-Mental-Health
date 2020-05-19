@@ -9,20 +9,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +45,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import es.fdi.ucm.ucmh.model.GroupAppointment;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
@@ -50,10 +57,10 @@ import es.ucm.fdi.iw.model.User.Role;
  * @author mfreire
  */
 @Controller()
-@RequestMapping("user")
-public class UserController {
+@RequestMapping("psicologo")
+public class PsicologoController {
 	
-	private static final Logger log = LogManager.getLogger(UserController.class);
+	private static final Logger log = LogManager.getLogger(PsicologoController.class);
 	
 	@Autowired 
 	private EntityManager entityManager;
@@ -66,6 +73,36 @@ public class UserController {
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+	
+	@GetMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model) {
+		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
+		model.addAttribute("u", requester);
+		return "horarioPsicologo";
+	}
+	
+	
+   @PostMapping(value = "/saveGroupAppointment", produces = { MediaType.APPLICATION_JSON_VALUE })
+   @ResponseBody
+   @Transactional
+	public GroupAppointment saveGroupAppointment(Model model,HttpServletResponse response, @RequestParam long id, @ModelAttribute @Valid GroupAppointment group_appointment,
+         BindingResult result, HttpSession session) throws IOException {
+	   User requester = (User)session.getAttribute("u");
+	   User stored = entityManager.find(User.class, id);
+	   if(requester.getId() != stored.getId()) {
+		   response.sendError(HttpServletResponse.SC_FORBIDDEN, 
+					"Este no es tu perfil");
+	   }
+       entityManager.persist(group_appointment);
+       return group_appointment;
+   }
+	   
+	   
+	@GetMapping("/citas")
+	public String citasPsicologo()
+	{
+		return "misPacientes";
+	}
 
 	@GetMapping("/{id}")
 	public String getUser(@PathVariable long id, Model model, HttpSession session) 			
@@ -107,7 +144,6 @@ public class UserController {
 			// save encoded version of password
 			target.setPassword(passwordEncoder.encode(edited.getPassword()));
 		}		
-		target.setRoles(edited.getRoles());
 		target.setUsername(edited.getUsername());
 		return "user";
 	}	
@@ -200,4 +236,6 @@ public class UserController {
 		}
 		return "user";
 	}
+	
+	
 }

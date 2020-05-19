@@ -16,9 +16,7 @@
 		
 	<h4>Información del usuario <span th:text="${user.username}">Pepe</span></h4>
 	
-	<!--  TODO está bien esto?? -->
-	
-	<div th:if="(${session.u.id} eq ${user.id}) or ${session.u.hasRole('ADMIN')}">
+	<div th:if="(${session.u.id} eq ${user.id}) or ${user.hasRole('ADMIN')}">
 		<!-- puedes cambiar todo -->
 		<form id="usermod" class="smallform" th:action="@{/user/{id}(id=${user.id})}" method="POST">
 			
