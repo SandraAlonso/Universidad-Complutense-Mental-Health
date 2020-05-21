@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
@@ -21,15 +20,14 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.MediaType;
+
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,19 +81,23 @@ public class PsicologoController {
 	}
 	
 	
+	//Requester es el usuario que solicita la accion.
+	//Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que queremos cambiar
+	//Target es el resultado final que obtenemos despues de completar la accion y lo que guardamos en la BBDD
+	
    @PostMapping("/saveGroupAppointment")
    @Transactional
 	public String saveGroupAppointment(Model model, HttpServletResponse response, @RequestParam long id, @ModelAttribute @Valid GroupAppointment group_appointment,
          BindingResult result, HttpSession session) throws IOException {
 	   User requester = (User)session.getAttribute("u");
 	   User stored = entityManager.find(User.class, id);
-	   if(requester.getId() != stored.getId()) {
+	   if(requester.getId() != stored.getId()) {                   //un usario no puede modificar un perfil que no sea el suyo
 		   response.sendError(HttpServletResponse.SC_FORBIDDEN, 
 					"Este no es tu perfil");
 	   }
 	   group_appointment.setPychologist(stored);
        entityManager.persist(group_appointment);
-       return horarioPsicologo(session, model);
+       return horarioPsicologo(session, model);                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
    }
 	   
 	   
@@ -135,8 +137,8 @@ public class PsicologoController {
 		model.addAttribute("user", target);
 		
 		User requester = (User)session.getAttribute("u");
-		if (requester.getId() != target.getId() &&
-				! requester.hasRole(Role.ADMIN)) {			
+		if (requester.getId() != target.getId() &&                    //un usuario no puede modificar un perfil que no sea el suyo
+				! requester.hasRole(Role.ADMIN)) {			          
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, 
 					"No eres administrador, y éste no es tu perfil");
 		}

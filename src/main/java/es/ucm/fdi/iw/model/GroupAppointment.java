@@ -1,8 +1,5 @@
 package es.ucm.fdi.iw.model;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Date;
@@ -13,8 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Version;
-import javax.validation.constraints.NotEmpty;
+
 
 import org.springframework.format.annotation.DateTimeFormat;
 

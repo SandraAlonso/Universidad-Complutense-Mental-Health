@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="/css/materialize.css">
   <link rel="stylesheet" href="/css/my-theme.css">
 
-  <!-- LO VUESTRO-->
   <link href="https://fonts.googleapis.com/css?family=Muli|Oswald&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -146,11 +145,12 @@
       <ul>
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
-
+          
+		<!-- Añadir cita grupal al horario -->
           <ul>
-          <c:forEach items="${u.group_appointments}" var="l">
+          <c:forEach items="${u.group_appointments}" var="l">             <!-- Recorremos todos los groupAppointments -->
             <li class="cd-schedule__event">
-             <a th:data-start="${l.start_hour}" th:data-end="${l.finish_hour}" data-content="event-abs-circuit" data-event="event-1" href="#0"> -->
+             <a th:data-start="${l.start_hour}" th:data-end="${l.finish_hour}" data-content="event-abs-circuit" data-event="event-1" href="#0">
                 <em class="cd-schedule__name">Antonio</em>
              </a>
             </li>
