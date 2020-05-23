@@ -27,6 +27,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author mfreire
  */
+
+/*
+ * EXPLICACION GENERAL:
+ * 	1. Introduciomos los datos en la vista (edited)
+ * 	2. Ejecutamos la acción (por ejemplo editar)
+ * 	3. El controlador comprueba el perfil de la sesion y si es correcto lo guarda (target). 
+ * 	4. El controlador devuelve el modelo (datos) y la plantilla (html)
+ * 	5. La vista es actualizada.
+ * 
+ * 	Vista ------>Controller-------->Modelo------->Vista.
+ */
+
+
 @Entity
 @NamedQueries({
 	@NamedQuery(name="User.byUsername",
@@ -43,9 +56,9 @@ public class User {
 	private static Logger log = LogManager.getLogger(User.class);	
 	private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-	public enum Role {
-		USER,			// used for logged-in, non-priviledged users
-		ADMIN,			// used for maximum priviledged users
+	public enum Role {//los usuarios pueden tener varios roles.
+		USER,			// usuario sin privilegios
+		ADMIN,			// usuario con privilegios
 		PSICOLOGO,
 		PACIENTE,
 		MODERATOR,		// remove or add roles as needed
