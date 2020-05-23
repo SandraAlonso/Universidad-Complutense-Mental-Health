@@ -34,14 +34,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 	    http
 	        .authorizeRequests()
-	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error").permitAll()
+	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/h2/**").permitAll()
 	            .antMatchers("/admin/**").hasRole("ADMIN")		 // <-- administration
 	            .antMatchers("/psicologo/**").hasRole("PSICOLOGO")
 	            .anyRequest().authenticated()
 	            .and()
-			.formLogin()
+	            .headers().frameOptions().disable()
+	            .and()
+	            .csrf().ignoringAntMatchers("/h2/**") //Evitar comprobacion csrf en h2
+	            .and()
+	            .formLogin()
 				.loginPage("/login")
-				.permitAll().successHandler(loginSuccessHandler); // <-- called when login Ok; can redirect
+				.permitAll().successHandler(loginSuccessHandler); // <-- called when login Ok; can redirect; 
 	}
 	
 	/**
