@@ -76,7 +76,8 @@ public class PsicologoController {
 	@GetMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model) {
 		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
-		model.addAttribute("u", requester);
+		User stored = entityManager.find(User.class, requester.getId());
+		model.addAttribute("group_appointments", stored.getGroup_appointments());
 		return "horarioPsicologo";
 	}
 	

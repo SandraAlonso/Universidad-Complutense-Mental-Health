@@ -26,3 +26,10 @@ body {
 h4 {
   font-weight: 600;
 }
+
+.profile-image {
+	margin-top:15px;
+	margin-bottom:-10px;
+	margin-right:5px;
+    width: 30px!important;
+}

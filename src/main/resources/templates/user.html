@@ -6,9 +6,9 @@
 	<title>Perfil</title>
 </head></head>
 <body>
-	<nav th:replace="fragments/nav.html :: nav">
+	<div th:replace="fragments/nav.html :: nav">
 		Nav goes here
-	</nav>
+	</div>
 	
 	<div class="container">
 	<div class="main">
@@ -53,6 +53,7 @@
 	<textarea id="message" placeholder="escribe a este usuario" rows="4" cols="20"></textarea>
 	<button id="sendmsg" type="submit">Enviar</button>
 	</form>
+	</div>
 	</div>
 	
 	<footer th:replace="fragments/footer.html :: footer">

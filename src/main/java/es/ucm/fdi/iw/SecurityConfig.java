@@ -34,12 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 	    http
 	        .authorizeRequests()
-	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/h2/**").permitAll()
+	            .antMatchers("/css/**", "/js/**", "/img/**", "/", "/error", "/h2/**").permitAll() //Añadido h2
 	            .antMatchers("/admin/**").hasRole("ADMIN")		 // <-- administration
 	            .antMatchers("/psicologo/**").hasRole("PSICOLOGO")
 	            .anyRequest().authenticated()
 	            .and()
-	            .headers().frameOptions().disable()
+	            .headers().frameOptions().disable() // Para h2
 	            .and()
 	            .csrf().ignoringAntMatchers("/h2/**") //Evitar comprobacion csrf en h2
 	            .and()

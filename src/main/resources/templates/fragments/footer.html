@@ -5,9 +5,20 @@
 	<title>Footer fragment - rest is empty</title>
 </head>
 <body>
-	<footer>
-		Aplicación de plantilla de IW 2019-20. 
-		Accede a la última versión (y propón mejoras, es <a href="https://www.apache.org/licenses/LICENSE-2.0"/>código abierto</a>) en el <a href="https://github.com/manuel-freire/iw1920">repositorio oficial</a>.  
+	<footer th:fragment="footer" class="page-footer">
+	 <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Aplicación de UCMH de IW 2019-20 basada en plantilla.</h5>
+                <p class="grey-text text-lighten-4">Accede a la última versión (y propón mejoras, es <a href="https://www.apache.org/licenses/LICENSE-2.0"/>código abierto</a>) en el <a href="https://github.com/manuel-freire/iw1920">repositorio oficial</a>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            2020 UCMH
+            </div>
+          </div>
 	</footer>
 </body>
 </html>

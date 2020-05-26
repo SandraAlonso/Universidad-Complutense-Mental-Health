@@ -5,31 +5,12 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	class="no-js" lang="es">
 <head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>document.getElementsByTagName("html")[0].className += " js";</script>
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
-
-  <link rel="stylesheet" href="/css/schedule-style.css">
-  <link rel="stylesheet" href="/css/normalize.css">
-  <link rel="stylesheet" href="/css/materialize.css">
-  <link rel="stylesheet" href="/css/my-theme.css">
-
-  <link href="https://fonts.googleapis.com/css?family=Muli|Oswald&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
-  <script src="/js/vendor/modernizr-3.8.0.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.4.1.min.js"><\/script>')</script>
-  <script src="/js/plugins.js"></script>
-  <script src="/js/vendor/materialize.min.js"></script>
-  <script src="/js/main.js"></script>
-
+	
+	<th:block th:replace="fragments/head :: header"/>
+  	<title>Horario</title>
+  	<link rel="stylesheet" th:href="@{/css/schedule-style.css}" href="../css/schedule-style.css">
+	<meta name="theme-color" content="#fafafa">
+	
 
 <script type="text/javascript">
    /* $(function() {
@@ -80,7 +61,6 @@
    });*/
 </script>
 
-  <meta name="theme-color" content="#fafafa">
 </head>
 
 <body>
@@ -90,27 +70,11 @@
 
   <!-- Add your site or application content here -->
 
-  <!-- Menú -->
+  	<div th:replace="fragments/nav.html :: nav">
+		Nav goes here
+	</div>
 
-  <nav id="menu">
-    <div class="nav-wrapper">
-      <a href="#" id="logo" class="brand-logo">UCMH</a>
-      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li class="active"><a>Mi horario</a></li>
-          <li><a href="misPacientes">Pacientes</a></li>
-          <a class="waves-effect waves-light btn">Cerrar sesión</a>
-      </ul>
-    </div>
-  </nav>
 
-  <!-- Menú desplegable mobile-->
-
-  <ul class="sidenav" id="mobile-demo">
-    <li class="active"><a>Mi horario</a></li>
-    <li><a href="misPacientes">Pacientes</a></li>
-    <li><a>Cerrar sesión</a></li>
-  </ul>
 
   <header class="cd-main-header text-center flex flex-column flex-center">
     <h4 class="center-align">Mi horario</h4>
@@ -147,14 +111,12 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
           
 		<!-- Añadir cita grupal al horario -->
-          <ul>
-          <c:forEach items="${u.group_appointments}" var="l">             <!-- Recorremos todos los groupAppointments -->
-            <li class="cd-schedule__event">
-             <a th:data-start="${l.start_hour}" th:data-end="${l.finish_hour}" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">Antonio</em>
-             </a>
+         <ul>
+            <li th:each="l: ${group_appointments}" class="cd-schedule__event">
+	             <a th:data-start="${{l.start_hour}}" th:data-end="${{l.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+	                <em class="cd-schedule__name">Antonio</em>
+	             </a>
             </li>
-           </c:forEach>
 
           <!--  <li class="cd-schedule__event">
               <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
@@ -380,7 +342,7 @@
   </form>
   </div>
   
-  <script>
+ <script>
   $(document).ready(function(){
       $('.sidenav').sidenav();
       $('.fixed-action-btn').floatingActionButton();
@@ -391,6 +353,8 @@
       $('.timepicker').timepicker();
     });
   </script>
+
+
 </body>
 
 </html>
