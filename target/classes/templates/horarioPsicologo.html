@@ -57,9 +57,9 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
           
           <ul>
-           <li class="cd-schedule__event">
+           <li class="cd-schedule__event" th:each="gp : ${group_appointments}">
 	             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
-	                <em class="cd-schedule__name">Antonio</em>
+	                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 	             </a>
             </li>
             
@@ -243,8 +243,8 @@
      <!-- Recargar con usuarios -->
      
       <div class="input-field col s6">
-         <input name="example" placeholder="Placeholder" id="first_name"  type="text" class="validate">
-         <label for="first_name">First Name</label>
+         <input name="name" placeholder="Placeholder" id="name"  type="text" class="validate">
+         <label for="first_name">Nombre de la terapia</label>
      </div>
      
      

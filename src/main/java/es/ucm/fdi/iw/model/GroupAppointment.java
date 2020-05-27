@@ -26,6 +26,8 @@ public class GroupAppointment {
 	@DateTimeFormat(pattern = "yyyy-mm-dd")
 	private Date date;
 	
+	private String name;
+
 	//@NotEmpty(message="Introduce hora de inicio")
 	private LocalTime start_hour;
 	
@@ -87,6 +89,14 @@ public class GroupAppointment {
 
 	public void setPychologist(User pychologist) {
 		this.pychologist = pychologist;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

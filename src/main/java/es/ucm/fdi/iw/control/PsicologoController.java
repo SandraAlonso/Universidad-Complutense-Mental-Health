@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
@@ -77,8 +79,11 @@ public class PsicologoController {
 	public String horarioPsicologo(HttpSession session, Model model) {
 		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
 		User stored = entityManager.find(User.class, requester.getId());
+		
+	
+		
 		model.addAttribute("u", stored);
-		model.addAttribute("group_appointments", requester.getGroup_appointments());
+		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(dia_hoy));
 		return "horarioPsicologo";
 	}
 	
@@ -97,12 +102,15 @@ public class PsicologoController {
 		   response.sendError(HttpServletResponse.SC_FORBIDDEN, 
 					"Este no es tu perfil");
 	   }
+	 
+	   
 	   group_appointment.setPychologist(stored);
-       entityManager.persist(group_appointment);
+	   stored.addGroupAppointment(group_appointment);
+      
+	   entityManager.persist(group_appointment);
        entityManager.flush();
        model.addAttribute("u", stored);
 	   model.addAttribute("group_appointments", stored.getGroup_appointments());
-	   model.addAttribute("gp", group_appointment);
        return "horarioPsicologo";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
    }
 	   

@@ -2,7 +2,11 @@ package es.ucm.fdi.iw.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -89,9 +93,8 @@ public class User {
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
 	@OneToMany(targetEntity = GroupAppointment.class)
-	@JoinColumn(name = "group_appointment_id")
 	@JsonIgnore
-	private List<GroupAppointment> group_appointments = new ArrayList<>();
+	private Map<Date, GroupAppointment> group_appointments = new HashMap<Date, GroupAppointment>();
 	
 	// utility methods
 	
@@ -214,8 +217,23 @@ public class User {
 	public List<GroupAppointment> getGroup_appointments() {
 		return group_appointments;
 	}
+	
+	public void addGroupAppointment(GroupAppointment ap) {
+		group_appointments.add(ap);
+	}
 
 	public void setGroup_appointments(List<GroupAppointment> group_appointments) {
 		this.group_appointments = group_appointments;
+	}
+	
+	public List<GroupAppointments> getAppointmentsOfTheWeek(Date date) {
+		//Cogemos el calendario
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+		cal.get
+		// El día de hoy
+		Date dia_hoy = new Date() + ;	
+		
 	}
 }
