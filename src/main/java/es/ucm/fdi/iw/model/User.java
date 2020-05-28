@@ -3,10 +3,17 @@ package es.ucm.fdi.iw.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +24,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortComparator;
+import org.hibernate.annotations.SortType;
+import org.hibernate.collection.internal.PersistentSet;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -74,7 +86,6 @@ public class User {
 	// application-specific fields
 	private String firstName;
 	private String lastName;
-	private List<GroupAppointment> group_appointments = new ArrayList<>();
 
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "sender_id")
@@ -84,11 +95,12 @@ public class User {
 	@JoinColumn(name = "recipient_id")
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
+	
 	@OneToMany(targetEntity = GroupAppointment.class)
 	@JsonIgnore
-	private Map<Date, GroupAppointment> All_group_appointments = new HashMap<Date, GroupAppointment>();
+	@OrderBy("date ASC, start_hour ASC")
+	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
 	// utility methods
-
 	/**
 	 * Checks whether this user has a given role.
 	 * 
@@ -206,39 +218,51 @@ public class User {
 		this.received = received;
 	}
 
-	public List<GroupAppointment> getGroup_appointments() {
-		return group_appointments;
-	}
 
 	public void addGroupAppointment(GroupAppointment ap) {
-		group_appointments.add(ap);
+		System.out.println(ap.getDate());
+		groupAppointments.add(ap);
+	}
+	
+
+	public List<GroupAppointment> getGroupAppointments() {
+		return groupAppointments;
 	}
 
-	public void setGroup_appointments(List<GroupAppointment> group_appointments) {
-		this.group_appointments = group_appointments;
+	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
+		this.groupAppointments = groupAppointments;
 	}
 
-	public List<GroupAppointment> getAppointmentsOfTheWeek(Date date) {
-		// Cogemos el calendario
-		/*
-		 * Calendar cal = Calendar.getInstance();
-		 * 
-		 * cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()); cal.get // El día de
-		 * hoy Date dia_hoy = new Date() + ;
-		 */
-		Calendar calendar = Calendar.getInstance();
-		while (calendar.get(Calendar.DAY_OF_WEEK) > calendar.getFirstDayOfWeek()) {
-			calendar.add(Calendar.DATE, -1);// quita un dia hasta que ambos coincidan
+
+	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
+		
+		List<GroupAppointment> ga = new ArrayList<>();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK) + 1);
+		cal.add(Calendar.WEEK_OF_YEAR, week);
+		Date firstDayOfTheWeek = cal.getTime();
+		
+		cal.add(Calendar.DATE, 7);
+		Date lastDayOfTheWeek = cal.getTime();
+		
+		for(GroupAppointment g : groupAppointments) {
+			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
+			if(g.getDate().after(firstDayOfTheWeek) && g.getDate().before(lastDayOfTheWeek)) ga.add(g);
+			if(g.getDate().equals(lastDayOfTheWeek) || g.getDate().after(lastDayOfTheWeek)) break;
 		}
+		
+		return ga;
+		
+
 		// ahora calendar tiene el dia del lunes.
-		group_appointments.clear();// borramos las ultima consultas si las hubiera.
+		/*group_appointments.clear();// borramos las ultima consultas si las hubiera.
 		int i = 0;
 		while (i < 7) {
 			addGroupAppointment(All_group_appointments.get(calendar));// buscamos por fecha y añadimos a la lista
 			i++;
 			calendar.add(Calendar.DATE, +1);// sumamos hasta llegar al domingo
 		}
-		return group_appointments;
-
+		return group_appointments;*/
 	}
 }

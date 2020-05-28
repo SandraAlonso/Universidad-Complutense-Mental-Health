@@ -79,11 +79,9 @@ public class PsicologoController {
 	public String horarioPsicologo(HttpSession session, Model model) {
 		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
 		User stored = entityManager.find(User.class, requester.getId());
-		
-	Date fecha = new Date();
-		
+				
 		model.addAttribute("u", stored);
-		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(fecha));
+		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(0));
 		return "horarioPsicologo";
 	}
 	
@@ -109,9 +107,7 @@ public class PsicologoController {
       
 	   entityManager.persist(group_appointment);
        entityManager.flush();
-       model.addAttribute("u", stored);
-	   model.addAttribute("group_appointments", stored.getGroup_appointments());
-       return "horarioPsicologo";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
+       return "redirect:/psicologo/horario";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
    }
 	   
 	   

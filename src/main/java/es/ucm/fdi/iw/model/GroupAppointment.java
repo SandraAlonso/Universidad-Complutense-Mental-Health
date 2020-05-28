@@ -23,7 +23,7 @@ public class GroupAppointment {
 	private Integer ID;
 	
 	//@NotEmpty(message="Introduce la fecha de la cita")
-	@DateTimeFormat(pattern = "yyyy-mm-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date date;
 	
 	private String name;
