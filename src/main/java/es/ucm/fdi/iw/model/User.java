@@ -33,41 +33,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 
 /*
- * EXPLICACION GENERAL:
- * 	1. Introduciomos los datos en la vista (edited)
- * 	2. Ejecutamos la acción (por ejemplo editar)
- * 	3. El controlador comprueba el perfil de la sesion y si es correcto lo guarda (target). 
- * 	4. El controlador devuelve el modelo (datos) y la plantilla (html)
- * 	5. La vista es actualizada.
+ * EXPLICACION GENERAL: 1. Introduciomos los datos en la vista (edited) 2.
+ * Ejecutamos la acción (por ejemplo editar) 3. El controlador comprueba el
+ * perfil de la sesion y si es correcto lo guarda (target). 4. El controlador
+ * devuelve el modelo (datos) y la plantilla (html) 5. La vista es actualizada.
  * 
- * 	Vista ------>Controller-------->Modelo------->Vista.
+ * Vista ------>Controller-------->Modelo------->Vista.
  */
-
 
 @Entity
 @NamedQueries({
-	@NamedQuery(name="User.byUsername",
-	query="SELECT u FROM User u "
-			+ "WHERE u.username = :username AND u.enabled = 1"),
-	@NamedQuery(name="User.hasUsername",
-	query="SELECT COUNT(u) "
-			+ "FROM User u "
-			+ "WHERE u.username = :username")
-})
+		@NamedQuery(name = "User.byUsername", query = "SELECT u FROM User u "
+				+ "WHERE u.username = :username AND u.enabled = 1"),
+		@NamedQuery(name = "User.hasUsername", query = "SELECT COUNT(u) " + "FROM User u "
+				+ "WHERE u.username = :username") })
 
 public class User {
 
-	private static Logger log = LogManager.getLogger(User.class);	
+	private static Logger log = LogManager.getLogger(User.class);
 	private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-	public enum Role {//los usuarios pueden tener varios roles.
-		USER,			// usuario sin privilegios
-		ADMIN,			// usuario con privilegios
-		PSICOLOGO,
-		PACIENTE,
-		MODERATOR,		// remove or add roles as needed
+	public enum Role {// los usuarios pueden tener varios roles.
+		USER, // usuario sin privilegios
+		ADMIN, // usuario con privilegios
+		PSICOLOGO, PACIENTE, MODERATOR, // remove or add roles as needed
 	}
-	
+
 	// do not change these fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,66 +74,66 @@ public class User {
 	// application-specific fields
 	private String firstName;
 	private String lastName;
+	private List<GroupAppointment> group_appointments = new ArrayList<>();
 
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "sender_id")
 	@JsonIgnore
 	private List<Message> sent = new ArrayList<>();
 	@OneToMany(targetEntity = Message.class)
-	@JoinColumn(name = "recipient_id")	
+	@JoinColumn(name = "recipient_id")
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
 	@OneToMany(targetEntity = GroupAppointment.class)
 	@JsonIgnore
-	private Map<Date, GroupAppointment> group_appointments = new HashMap<Date, GroupAppointment>();
-	
+	private Map<Date, GroupAppointment> All_group_appointments = new HashMap<Date, GroupAppointment>();
 	// utility methods
-	
-
 
 	/**
 	 * Checks whether this user has a given role.
+	 * 
 	 * @param role to check
 	 * @return true iff this user has that role.
 	 */
 	public boolean hasRole(Role role) {
 		String roleName = role.name();
-		return Arrays.stream(roles.split(","))
-				.anyMatch(r -> r.equals(roleName));
+		return Arrays.stream(roles.split(",")).anyMatch(r -> r.equals(roleName));
 	}
-	
+
 	/**
 	 * Tests a raw (non-encoded) password against the stored one.
+	 * 
 	 * @param rawPassword to test against
 	 * @return true if encoding rawPassword with correct salt (from old password)
-	 * matches old password. That is, true iff the password is correct  
+	 *         matches old password. That is, true iff the password is correct
 	 */
 	public boolean passwordMatches(String rawPassword) {
 		return encoder.matches(rawPassword, this.password);
 	}
 
 	/**
-	 * Encodes a password, so that it can be saved for future checking. Notice
-	 * that encoding the same password multiple times will yield different
-	 * encodings, since encodings contain a randomly-generated salt.
+	 * Encodes a password, so that it can be saved for future checking. Notice that
+	 * encoding the same password multiple times will yield different encodings,
+	 * since encodings contain a randomly-generated salt.
+	 * 
 	 * @param rawPassword to encode
-	 * @return the encoded password (typically a 60-character string)
-	 * for example, a possible encoding of "test" is 
-	 * $2y$12$XCKz0zjXAP6hsFyVc8MucOzx6ER6IsC1qo5zQbclxhddR1t6SfrHm
+	 * @return the encoded password (typically a 60-character string) for example, a
+	 *         possible encoding of "test" is
+	 *         $2y$12$XCKz0zjXAP6hsFyVc8MucOzx6ER6IsC1qo5zQbclxhddR1t6SfrHm
 	 */
 	public static String encodePassword(String rawPassword) {
 		return encoder.encode(rawPassword);
-	}	
-	
+	}
+
 	// auto-generated getters and setters (which could be avoided with Lombok)
-	
+
 	public long getId() {
 		return id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
-	}	
+	}
 
 	public String getPassword() {
 		return password;
@@ -157,9 +148,10 @@ public class User {
 	}
 
 	/**
-	 * Sets the password to an encoded value. 
-	 * You can generate encoded passwords using {@link #encodePassword}.
-	 * call only with encoded passwords - NEVER STORE PLAINTEXT PASSWORDS
+	 * Sets the password to an encoded value. You can generate encoded passwords
+	 * using {@link #encodePassword}. call only with encoded passwords - NEVER STORE
+	 * PLAINTEXT PASSWORDS
+	 * 
 	 * @param encodedPassword to set as user's password
 	 */
 	public void setPassword(String encodedPassword) {
@@ -213,11 +205,11 @@ public class User {
 	public void setReceived(List<Message> received) {
 		this.received = received;
 	}
-	
+
 	public List<GroupAppointment> getGroup_appointments() {
 		return group_appointments;
 	}
-	
+
 	public void addGroupAppointment(GroupAppointment ap) {
 		group_appointments.add(ap);
 	}
@@ -225,15 +217,28 @@ public class User {
 	public void setGroup_appointments(List<GroupAppointment> group_appointments) {
 		this.group_appointments = group_appointments;
 	}
-	
-	public List<GroupAppointments> getAppointmentsOfTheWeek(Date date) {
-		//Cogemos el calendario
-		Calendar cal = Calendar.getInstance();
 
-		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-		cal.get
-		// El día de hoy
-		Date dia_hoy = new Date() + ;	
-		
+	public List<GroupAppointment> getAppointmentsOfTheWeek(Date date) {
+		// Cogemos el calendario
+		/*
+		 * Calendar cal = Calendar.getInstance();
+		 * 
+		 * cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()); cal.get // El día de
+		 * hoy Date dia_hoy = new Date() + ;
+		 */
+		Calendar calendar = Calendar.getInstance();
+		while (calendar.get(Calendar.DAY_OF_WEEK) > calendar.getFirstDayOfWeek()) {
+			calendar.add(Calendar.DATE, -1);// quita un dia hasta que ambos coincidan
+		}
+		// ahora calendar tiene el dia del lunes.
+		group_appointments.clear();// borramos las ultima consultas si las hubiera.
+		int i = 0;
+		while (i < 7) {
+			addGroupAppointment(All_group_appointments.get(calendar));// buscamos por fecha y añadimos a la lista
+			i++;
+			calendar.add(Calendar.DATE, +1);// sumamos hasta llegar al domingo
+		}
+		return group_appointments;
+
 	}
 }

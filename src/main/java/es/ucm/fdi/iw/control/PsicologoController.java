@@ -80,10 +80,10 @@ public class PsicologoController {
 		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
 		User stored = entityManager.find(User.class, requester.getId());
 		
-	
+	Date fecha = new Date();
 		
 		model.addAttribute("u", stored);
-		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(dia_hoy));
+		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(fecha));
 		return "horarioPsicologo";
 	}
 	
