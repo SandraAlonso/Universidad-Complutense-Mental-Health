@@ -28,6 +28,8 @@ public class GroupAppointment {
 	
 	private String name;
 
+	private String description;
+
 	//@NotEmpty(message="Introduce hora de inicio")
 	private LocalTime start_hour;
 	
@@ -99,4 +101,11 @@ public class GroupAppointment {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }
