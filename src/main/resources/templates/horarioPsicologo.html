@@ -170,14 +170,14 @@
   <div id="modal1" class="modal">
    <form th:action="@{/psicologo/saveGroupAppointment(id=${u.id})}" method="post" name="createGroupAppointmentForm">
    <div class="modal-content">
-     <h4>Cita individual</h4>
+     <h4>Cita grupal</h4>
 
      <!-- Selección del paciente -->
      <!-- Recargar con usuarios -->
      
       <div class="input-field col s6">
-         <input name="name" placeholder="Placeholder" id="name"  type="text" class="validate">
-         <label for="first_name">Nombre de la terapia</label>
+         <input name="name" placeholder="Nombre de la terapia" id="name"  type="text" class="validate">
+         
      </div>
      
      
@@ -206,10 +206,10 @@
      <p> Selecciona hora de fin de la sesión </p>
      <input name="finish_hour" type="time">
      
-     <p> Descricpión de la cita>
+     <p> Descricpión de la cita </p>
      <div class="input-field col s12">
           <textarea id="textarea1" name="description" class="materialize-textarea"></textarea>
-          <label for="textarea1">Textarea</label>
+          
      </div>
      
 
