@@ -110,9 +110,14 @@
 		this.modalEventName.textContent = target.getElementsByTagName('em')[0].textContent;
 		this.modalDate.textContent = target.getAttribute('data-start')+' - '+target.getAttribute('data-end');
 		this.modal.setAttribute('data-event', target.getAttribute('data-event'));
+		//this.modal.setAttribute('data-content', target.getAttribute('data-content'));
+
+      	this.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = "<div>" + target.getAttribute('data-content') + "</div>"; 
+      	Util.addClass(self.modal, 'cd-schedule-modal--content-loaded');
+
 
 		//update event content
-		this.loadEventContent(target.getAttribute('data-content'));
+		//this.loadEventContent(target.getAttribute('data-content'));
 
 		Util.addClass(this.modal, 'cd-schedule-modal--open');
 		
