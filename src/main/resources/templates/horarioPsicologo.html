@@ -57,7 +57,7 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
           	<ul>
 	           <li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[0]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
 	            </li>
@@ -69,7 +69,7 @@
 
           <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[1]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
             </li>
@@ -80,7 +80,7 @@
           <div class="cd-schedule__top-info"><span>Miércoles</span></div>
           <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[2]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
             </li>
@@ -92,7 +92,7 @@
 
          <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[3]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
             </li>
