@@ -75,13 +75,14 @@ public class PsicologoController {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 	
-	@GetMapping("/horario")
-	public String horarioPsicologo(HttpSession session, Model model) {
+	@RequestMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required=false) Integer weeks) {
 		User requester = (User)session.getAttribute("u"); //TODO podría usar directamente el requester?
 		User stored = entityManager.find(User.class, requester.getId());
-				
+		if(weeks == null) weeks = 0;
 		model.addAttribute("u", stored);
-		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(0));
+		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
 		return "horarioPsicologo";
 	}
 	

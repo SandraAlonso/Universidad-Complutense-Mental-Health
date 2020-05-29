@@ -232,6 +232,21 @@ public class User {
 	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
 		this.groupAppointments = groupAppointments;
 	}
+	
+	public List<Date> getDaysOfTheWeek(int week) {
+		
+		List<Date> dates = new ArrayList<>();
+
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK) + 1);
+		cal.add(Calendar.WEEK_OF_YEAR, week);
+		for(int i = 0; i < 7; ++i) {
+			dates.add(cal.getTime());
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		return dates;
+	} //TODO
 
 
 	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
@@ -241,10 +256,14 @@ public class User {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK) + 1);
 		cal.add(Calendar.WEEK_OF_YEAR, week);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
 		Date firstDayOfTheWeek = cal.getTime();
+		System.out.println(firstDayOfTheWeek);
 		
-		cal.add(Calendar.DATE, 7);
+		cal.add(Calendar.DATE, 8);
 		Date lastDayOfTheWeek = cal.getTime();
+		System.out.println(lastDayOfTheWeek);
+
 		
 		for(GroupAppointment g : groupAppointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());

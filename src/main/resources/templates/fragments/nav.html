@@ -25,25 +25,35 @@
   	<div class="nav-wrapper">
       <a href="#" th:href="@{/}" id="logo" class="brand-logo">UCMH</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down" th:if="${session.u}">      
-      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
-		  <li>
-		  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
-		  		<img class="circle responsive-img profile-image" th:src="@{/user/{id}/photo(id=${session.u.id})}">
-				<span th:text="${session.u.username}">Pepe</span>
-				<i class="material-icons right">arrow_drop_down</i>
-			</a>
-		</li>
-
+      <ul id="nav-mobile" class="right hide-on-med-and-down"> 
+      	  <div th:if="${session.u}">     
+	      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
+			  <li>
+			  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
+			  		<img class="circle responsive-img profile-image" th:src="@{/user/{id}/photo(id=${session.u.id})}">
+					<span th:text="${session.u.username}">Pepe</span>
+					<i class="material-icons right">arrow_drop_down</i>
+				</a>
+			</li>
+		</div>
+		<div th:unless="${session.u}">
+			<li><a th:href="@{/login/}">Iniciar sesión</a></li>
+		</div>
           <!--<li><a th:href="@{/logout/} class="waves-effect waves-light btn">Cerrar sesión</a></li> -->
       </ul>
+      
       </div>
    </nav>
    
-    <ul class="sidenav" id="mobile-demo" th:if="${session.u}">
-    <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
-    <li><a th:if="${session.u.hasRole('PSICOLOGO')}">Pacientes</a></li>
-    <li><a th:if="${session.u.hasRole('USER')}">Cerrar sesión</a></li>
+    <ul class="sidenav" id="mobile-demo">
+    	<div th:if="${session.u}">
+	   		 <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
+	  		 <li><a th:if="${session.u.hasRole('PSICOLOGO')}">Pacientes</a></li>
+	    	 <li><a th:if="${session.u.hasRole('USER')}">Cerrar sesión</a></li>
+    	 </div>
+  	     <div th:unless="${session.u}">
+	   		 <li><a th:href="@{/login/}">Iniciar sesión</a></li>
+    	 </div>
   	</ul>
   	
   	</div>

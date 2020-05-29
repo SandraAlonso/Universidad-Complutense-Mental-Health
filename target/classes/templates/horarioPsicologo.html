@@ -55,28 +55,12 @@
       <ul>
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
-          
-          <ul>
-           <li class="cd-schedule__event" th:each="gp : ${group_appointments}">
-	             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
-	                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
-	             </a>
-            </li>
-            
-            
-
-            <li class="cd-schedule__event">
-              <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">Grupal</em>
-              </a>
-            </li>
-
-            <li id="example" class="cd-schedule__event">
-              <a data-start="14:00" data-end="15:15"  data-content="event-yoga-1" data-event="event-3" href="#0">
-                <em class="cd-schedule__name">Marcos</em>
-              </a>
-            </li>
-            
+          	<ul>
+	           <li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[0]))}>
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+		             </a>
+	            </li>
           </ul>
         </li>
 
@@ -84,58 +68,21 @@
           <div class="cd-schedule__top-info"><span>Martes</span></div>
 
           <ul>
-            <li class="cd-schedule__event">
-              <a data-start="10:00" data-end="11:00"  data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">Grupal</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="11:30" data-end="13:00"  data-content="event-restorative-yoga" data-event="event-4" href="#0">
-                <em class="cd-schedule__name">Quedada de psicólogos</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="13:30" data-end="15:00" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">Antonio</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="15:45" data-end="16:45"  data-content="event-yoga-1" data-event="event-3" href="#0">
-                <em class="cd-schedule__name">Marcos</em>
-              </a>
+			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[1]))}>
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+		             </a>
             </li>
           </ul>
         </li>
 
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span>Miércoles</span></div>
-
           <ul>
-            <li class="cd-schedule__event">
-              <a data-start="09:00" data-end="10:15" data-content="event-restorative-yoga" data-event="event-4" href="#0">
-                <em class="cd-schedule__name">Quedada de psicólogos</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="10:45" data-end="11:45" data-content="event-yoga-1" data-event="event-3" href="#0">
-                <em class="cd-schedule__name">Marcos</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="12:00" data-end="13:45"  data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">Grupal</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="13:45" data-end="15:00" data-content="event-yoga-1" data-event="event-3" href="#0">
-                <em class="cd-schedule__name">Marcos</em>
-              </a>
+			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[2]))}>
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+		             </a>
             </li>
           </ul>
         </li>
@@ -143,29 +90,11 @@
         <li class="cd-schedule__group">
           <div class="cd-schedule__top-info"><span>Jueves</span></div>
 
-          <ul>
-            <li class="cd-schedule__event">
-              <a data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">Antonio</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="12:00" data-end="13:45" data-content="event-restorative-yoga" data-event="event-4" href="#0">
-                <em class="cd-schedule__name">Quedada de psicólogos</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="15:30" data-end="16:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">Antonio</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="17:00" data-end="18:30"  data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">Grupal</em>
-              </a>
+         <ul>
+			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[3]))}>
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="event-abs-circuit" data-event="event-1" href="#0">
+		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+		             </a>
             </li>
           </ul>
         </li>
@@ -221,6 +150,10 @@
   <script src="/js/vendor/schedule-util.js"></script>
   <script src="/js/vendor/schedule-main.js"></script>
 
+<div class="center-align">
+<a th:href="@{/psicologo/horario(weeks=-1)}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_back</i>Anterior semana</a>
+<a th:href="@{/psicologo/horario(weeks=1)}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_forward</i>Siguiente semana</a>
+</div>
 
   
   <!-- Botón estático y modales -->
@@ -281,6 +214,10 @@
    </div>
  </form>
  </div> 
+ 
+ 	<footer th:replace="fragments/footer.html :: footer">
+		Footer goes here
+	</footer>
 
 </body>
 
