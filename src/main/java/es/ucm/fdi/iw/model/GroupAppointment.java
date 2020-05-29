@@ -10,7 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,10 +24,13 @@ public class GroupAppointment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer ID;
 	
-	//@NotEmpty(message="Introduce la fecha de la cita")
+	@NotNull(message="Introduce la fecha de la cita")
+	@FutureOrPresent
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date date;
 	
+	
+	@NotEmpty(message="La cita debe tener nombre")
 	private String name;
 
 	private String description;
