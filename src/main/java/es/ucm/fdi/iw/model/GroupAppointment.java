@@ -1,5 +1,6 @@
 package es.ucm.fdi.iw.model;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Date;
@@ -11,8 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,35 +29,35 @@ public class GroupAppointment {
 	private Integer ID;
 	
 	@NotNull(message="Introduce la fecha de la cita")
-	@FutureOrPresent
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@FutureOrPresent(message="La fecha introducida tiene que ser posterior a la actual")//TODO no coge el presente
 	private Date date;
 	
 	
 	@NotEmpty(message="La cita debe tener nombre")
+	@Pattern (regexp="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+", message="El nombre solo puede contener caracteres alfanumericos")
 	private String name;
 
 	private String description;
 
-	//@NotEmpty(message="Introduce hora de inicio")
+	@NotNull(message="Introduce hora de inicio")
 	private LocalTime start_hour;
 	
-	//@NotEmpty(message="Introduce hora de fin")
+	@NotNull(message="Introduce hora de fin")
 	private LocalTime finish_hour;	
 	
-	//TODO mínimo dos
-	//@NotEmpty(message="Introduce al menos dos usuarios")
+	//@NotEmpty(message="La cita debe tener pacientes")
+	//@Size(min=2, message="Debes introducir al menos dos usuarios")
 	@ManyToMany
 	private Collection<User> patient;
 	
-	//@NotEmpty(message="Tienes que estar registrado")
 	@ManyToOne
 	private User pychologist;
 	
 	public Integer getID() {
 		return ID;
 	}
-
+	
 	public void setID(Integer iD) {
 		ID = iD;
 	}

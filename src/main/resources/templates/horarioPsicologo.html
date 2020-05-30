@@ -149,6 +149,9 @@
 
   <script src="/js/vendor/schedule-util.js"></script>
   <script src="/js/vendor/schedule-main.js"></script>
+  <script>var dt = new Date();
+	document.getElementById("datetime").innerHTML = dt.toLocaleString();
+	</script>
 
 <div class="center-align">
 <a th:with="semanas=(${week} - 1)" th:href="@{/psicologo/horario(weeks=${semanas})}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_back</i>Anterior semana</a>
@@ -176,8 +179,7 @@
      <!-- Recargar con usuarios -->
      
       <div class="input-field col s6">
-         <input name="name" placeholder="Nombre de la terapia" id="name"  type="text" class="validate">
-         
+         <input name="name"   placeholder="Nombre de la terapia" id="name"  type="text" class="validate" required pattern="[A-Za-z0-9]+">
      </div>
      
      
@@ -198,16 +200,15 @@
 
 
      <p> Selecciona día para la sesión </p>
-     <input name="date" type="date">
-
+     <input name="date" type="date" value="datetime" required>
 
 
      <p> Selecciona hora de la sesión </p>
-     <input name="start_hour" type="time">
+     <input name="start_hour" type="time" min="09:00" max="18:00" required>
 
 
      <p> Selecciona hora de fin de la sesión </p>
-     <input name="finish_hour" type="time">
+     <input name="finish_hour" type="time" min="${start_hour}" max="18:00" required><!-- TODO como definir el minimo -->
      
      <p> Descricpión de la cita </p>
      <div class="input-field col s12">
