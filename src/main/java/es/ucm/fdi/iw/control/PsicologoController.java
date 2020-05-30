@@ -83,6 +83,7 @@ public class PsicologoController {
 		model.addAttribute("u", stored);
 		model.addAttribute("group_appointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
 		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
+		model.addAttribute("week", weeks);
 		return "horarioPsicologo";
 	}
 	

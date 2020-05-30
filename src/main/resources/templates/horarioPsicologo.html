@@ -57,7 +57,7 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
           	<ul>
 	           <li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[0]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
+		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
 	            </li>
@@ -151,8 +151,8 @@
   <script src="/js/vendor/schedule-main.js"></script>
 
 <div class="center-align">
-<a th:href="@{/psicologo/horario(weeks=-1)}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_back</i>Anterior semana</a>
-<a th:href="@{/psicologo/horario(weeks=1)}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_forward</i>Siguiente semana</a>
+<a th:with="semanas=(${week} - 1)" th:href="@{/psicologo/horario(weeks=${semanas})}" class="waves-effect waves-light btn-small"><i class="material-icons left">arrow_back</i>Anterior semana</a>
+<a th:with="semanas=(${week} + 1)" th:href="@{/psicologo/horario(weeks=${semanas})}" class="waves-effect waves-light btn-small"><i class="material-icons right">arrow_forward</i>Siguiente semana</a>
 </div>
 
   
@@ -218,8 +218,8 @@
 
    </div>
    <div class="modal-footer">
-     <a href="" class="modal-close waves-effect waves-red btn-flat red">Cancelar</a>
-     <button type="submit" class="modal-close waves-effect waves-green btn-flat green">Aceptar</button>
+     <a class="modal-close waves-effect waves-red btn-flat red">Cancelar</a>
+     <button onclick="myFunction()" type="submit" class="modal-close waves-effect waves-green btn-flat green">Aceptar</button>
    </div>
  </form>
  </div> 
@@ -229,7 +229,10 @@
 	</footer>
 	
 <script th:inline="javascript">
-    // write code here
+function myFunction() {
+	var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
+}
+
 </script>
 
 	
