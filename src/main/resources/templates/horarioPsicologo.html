@@ -178,23 +178,24 @@
      
      
      <div class="chips"></div>
-	 <p> Selecciona día para la sesión </p>
-     <input name="date" type="date" required>
+
+
+     <p> Selecciona día para la sesión </p>
+     <input name="date" type="date">
+
 
 
      <p> Selecciona hora de la sesión </p>
-     <input name="start_hour" type="time" min="09:00" max="18:00" class="validate" required>
+     <input name="start_hour" type="time">
 
 
      <p> Selecciona hora de fin de la sesión </p>
-     <input name="finish_hour" type="time"  max="18:00" class="validate" required><!-- TODO como definir el minimo -->
+     <input name="finish_hour" type="time">
      
      <p> Descricpión de la cita </p>
      <div class="input-field col s12">
-          <textarea id="description" name="description" class="materialize-textarea"></textarea>
-          
+          <textarea id="textarea1" name="description" class="materialize-textarea"></textarea>
      </div>
-
      
 
    </div>
@@ -318,3 +319,4 @@ function changeBack() {
 </body>
 
 </html>
+
