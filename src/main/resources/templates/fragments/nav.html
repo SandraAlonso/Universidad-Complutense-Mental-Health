@@ -7,18 +7,16 @@
 </head>
 <body>
 
-<!-- Men√∫ -->
+<!-- Men˙ -->
 
   <div th:fragment="nav">
   
   <ul id="dropdown1" class="dropdown-content" th:if="${session.u}">
 	  <li th:if="${session.u.hasRole('USER')}"><a th:href="@{/user/{id}(id=${session.u.id})}">Modificar perfil</a></li>
 	  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>
-	  <li>
 	  	<form th:action="@{/logout}" method="post">
-				<button type="submit">logout</button>
+				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
 		</form>
-	  </li>
   </ul>
 
   <nav>
@@ -26,7 +24,9 @@
       <a href="#" th:href="@{/}" id="logo" class="brand-logo">UCMH</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down"> 
-      	  <div th:if="${session.u}">     
+      	  <div th:if="${session.u}">
+      	  	  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
+	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}">Pacientes</a></li>     
 	      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
 			  <li>
 			  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
@@ -37,9 +37,9 @@
 			</li>
 		</div>
 		<div th:unless="${session.u}">
-			<li><a th:href="@{/login/}">Iniciar sesi√≥n</a></li>
+			<li><a th:href="@{/login/}">Iniciar sesiÛn</a></li>
 		</div>
-          <!--<li><a th:href="@{/logout/} class="waves-effect waves-light btn">Cerrar sesi√≥n</a></li> -->
+          <!--<li><a th:href="@{/logout/} class="waves-effect waves-light btn">Cerrar sesiÛn</a></li> -->
       </ul>
       
       </div>
@@ -49,10 +49,12 @@
     	<div th:if="${session.u}">
 	   		 <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
 	  		 <li><a th:if="${session.u.hasRole('PSICOLOGO')}">Pacientes</a></li>
-	    	 <li><a th:if="${session.u.hasRole('USER')}">Cerrar sesi√≥n</a></li>
+	  		 <form th:action="@{/logout}" method="post">
+				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
+			</form>
     	 </div>
   	     <div th:unless="${session.u}">
-	   		 <li><a th:href="@{/login/}">Iniciar sesi√≥n</a></li>
+	   		 <li><a th:href="@{/login/}">Iniciar sesiÛn</a></li>
     	 </div>
   	</ul>
   	

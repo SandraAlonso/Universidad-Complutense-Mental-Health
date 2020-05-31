@@ -220,10 +220,12 @@ public class User {
 
 
 	public void addGroupAppointment(GroupAppointment ap) {
-		System.out.println(ap.getDate());
 		groupAppointments.add(ap);
 	}
 	
+	public void removeGroupAppointment(GroupAppointment ap) {
+		groupAppointments.remove(ap);
+	}
 
 	public List<GroupAppointment> getGroupAppointments() {
 		return groupAppointments;

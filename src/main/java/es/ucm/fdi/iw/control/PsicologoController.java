@@ -94,24 +94,62 @@ public class PsicologoController {
 	
    @PostMapping("/saveGroupAppointment")
    @Transactional
-	public String saveGroupAppointment(Model model, HttpServletResponse response, @RequestParam long id, @ModelAttribute @Valid GroupAppointment group_appointment,
+	public String saveGroupAppointment(Model model, HttpServletResponse response, @ModelAttribute @Valid GroupAppointment group_appointment,
          BindingResult result, HttpSession session) throws IOException {
 	   User requester = (User)session.getAttribute("u");
-	   User stored = entityManager.find(User.class, id);
-	   if(requester.getId() != stored.getId()) {                   //un usario no puede modificar un perfil que no sea el suyo
-		   response.sendError(HttpServletResponse.SC_FORBIDDEN, 
-					"Este no es tu perfil");
-	   }
-	 
-	   
+	   User stored = entityManager.find(User.class, requester.getId());
 	   group_appointment.setPychologist(stored);
 	   stored.addGroupAppointment(group_appointment);
-      
 	   entityManager.persist(group_appointment);
        entityManager.flush();
        return "redirect:/psicologo/horario";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
    }
+   
+   @RequestMapping("/deleteGroupAppointment")
+   @Transactional
+	public String deleteGroupAppointment(Model model, HttpServletResponse response, @ModelAttribute @Valid GroupAppointment group_appointment,
+         BindingResult result, HttpSession session, @RequestParam long id) throws IOException {
+	   User requester = (User)session.getAttribute("u");
+	   User stored = entityManager.find(User.class, requester.getId());
+	   GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
 	   
+	   for(GroupAppointment it : stored.getGroupAppointments()) {
+		   if(it.equals(ga)) {
+			   stored.removeGroupAppointment(ga);
+			   entityManager.remove(ga);
+			   break;
+		   }
+	   }
+	   
+       return "redirect:/psicologo/horario";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
+   }
+	  
+   
+   @RequestMapping("/modifyGroupAppointment")
+   @Transactional
+	public String modifyGroupAppointment(Model model, HttpServletResponse response, @ModelAttribute @Valid GroupAppointment group_appointment,
+         BindingResult result, HttpSession session) throws IOException {
+	   User requester = (User)session.getAttribute("u");
+	   User stored = entityManager.find(User.class, requester.getId());
+	   GroupAppointment ga = entityManager.find(GroupAppointment.class, group_appointment.getID());
+	   
+	  // int weeks = model.getAttribute("week"); //TODO podría usar directamente el requester?
+
+	   
+	   for(GroupAppointment it : stored.getGroupAppointments()) {
+		   if(it.equals(ga)) {
+			   ga.setName(group_appointment.getName());
+			   ga.setDate(group_appointment.getDate());
+			   ga.setStart_hour(group_appointment.getStart_hour());
+			   ga.setFinish_hour(group_appointment.getFinish_hour());
+			   ga.setDescription(group_appointment.getDescription());
+			   break;
+		   }
+	   }
+	   
+       return "redirect:/psicologo/horario";                    //devolvemos el model (los datos modificados) y la session para saber quien es el usuario en todo momento
+   }
+   
 	   
 	@GetMapping("/citas")
 	public String citasPsicologo()

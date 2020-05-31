@@ -26,7 +26,7 @@ public class GroupAppointment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer ID;
+	private long ID;
 	
 	@NotNull(message="Introduce la fecha de la cita")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -54,11 +54,11 @@ public class GroupAppointment {
 	@ManyToOne
 	private User pychologist;
 	
-	public Integer getID() {
+	public long getID() {
 		return ID;
 	}
 	
-	public void setID(Integer iD) {
+	public void setID(long iD) {
 		ID = iD;
 	}
 
