@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <!-- License: https://codyhouse.co/mit -->
 <html 
 	xmlns:th="http://www.thymeleaf.org"
@@ -77,7 +77,7 @@
         </li>
 
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span>Mi�rcoles</span></div>
+          <div class="cd-schedule__top-info"><span>Miércoles</span></div>
           <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[2]))}>
 		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
@@ -180,18 +180,18 @@
      <div class="chips"></div>
 
 
-      <p> Selecciona d�a para la sesi�n </p>
+      <p> Selecciona día para la sesi�n </p>
      <input name="date" type="date" required>
 
 
-     <p> Selecciona hora de la sesi�n </p>
+     <p> Selecciona hora de la sesión </p>
      <input name="start_hour" type="time" min="09:00" max="18:00" class="validate" required>
 
 
-     <p> Selecciona hora de fin de la sesi�n </p>
+     <p> Selecciona hora de fin de la sesión </p>
      <input name="finish_hour" type="time"  max="18:00" class="validate" required><!-- TODO como definir el minimo -->
      
-     <p> Descricpi�n de la cita </p>
+     <p> Descricpión de la cita </p>
      <div class="input-field col s12">
           <textarea name="description" class="materialize-textarea"></textarea>
           
@@ -208,8 +208,8 @@
   
   <div id="modal2" class="modal">
     <div class="modal-content">
-      <h4>�Est�s seguro que deseas eliminar esta cita grupal?</h4>
-      <p>Esta cita ser� eliminada del sistema y ya no podr� ser recuperada</p>
+      <h4>¿Estás seguro que deseas eliminar esta cita grupal?</h4>
+      <p>Esta cita será eliminada del sistema y ya no podrá ser recuperada</p>
     </div>
     <div class="modal-footer">
       <a id="delete" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
@@ -249,18 +249,18 @@
      
 
 
-     <p> Selecciona d�a para la sesi�n </p>
+     <p> Selecciona día para la sesión </p>
      <input id="date" name="date" type="date" required>
 
 
-     <p> Selecciona hora de la sesi�n </p>
+     <p> Selecciona hora de la sesión </p>
      <input id="start-hour" name="start_hour" type="time" min="09:00" max="18:00" class="validate" required>
 
 
-     <p> Selecciona hora de fin de la sesi�n </p>
+     <p> Selecciona hora de fin de la sesión </p>
      <input id="end-hour" name="finish_hour" type="time"  max="18:00" class="validate" required><!-- TODO como definir el minimo -->
      
-     <p> Descricpi�n de la cita </p>
+     <p> Descricpión de la cita </p>
      <div class="input-field col s12">
           <textarea id="description" name="description" class="materialize-textarea"></textarea>
           
