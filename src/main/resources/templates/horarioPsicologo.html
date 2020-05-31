@@ -57,7 +57,7 @@
           <div class="cd-schedule__top-info"><span>Lunes</span></div>
           	<ul>
 	           <li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[0]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
+		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
 	            </li>
@@ -69,21 +69,21 @@
 
           <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[1]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
+		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
-            </li>
+	            </li>
           </ul>
         </li>
 
         <li class="cd-schedule__group">
-          <div class="cd-schedule__top-info"><span>MiÃ©rcoles</span></div>
+          <div class="cd-schedule__top-info"><span>Miércoles</span></div>
           <ul>
 			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[2]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
+		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
-            </li>
+	            </li>
           </ul>
         </li>
 
@@ -91,11 +91,11 @@
           <div class="cd-schedule__top-info"><span>Jueves</span></div>
 
          <ul>
-			<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[3]))}>
-		             <a th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" data-content="${gp.description}" data-event="event-1" href="#0">
+<li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[3]))}>
+		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
 		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
 		             </a>
-            </li>
+	            </li>
           </ul>
         </li>
 
@@ -103,25 +103,11 @@
           <div class="cd-schedule__top-info"><span>Viernes</span></div>
 
           <ul>
-            <li class="cd-schedule__event">
-              <a data-start="10:00" data-end="11:00"  data-content="event-rowing-workout" data-event="event-2" href="#0">
-                <em class="cd-schedule__name">Grupal</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="12:30" data-end="14:00" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                <em class="cd-schedule__name">Antonio</em>
-              </a>
-            </li>
-
-            <li class="cd-schedule__event">
-              <a data-start="15:45" data-end="16:45"  data-content="event-yoga-1" data-event="event-3" href="#0">
-                <em class="cd-schedule__name">Marcos</em>
-              </a>
-            </li>
-          </ul>
-        </li>
+            <li class="cd-schedule__event" th:each="gp : ${group_appointments}" th:if=${#dates.day(gp.date).equals(#dates.day(days[4]))}>
+		             <a th:data-name="${gp.name}" th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}" th:data-end="${{gp.finish_hour}}" th:data-content="${gp.description}" th:with="variable=(${gp.ID} % 4 + 1)" th:data-event="${'event-' + variable}" th:data-id="${gp.ID}" href="#0">
+		                <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+		             </a>
+	            </li>
       </ul>
     </div>
 
@@ -156,9 +142,9 @@
 </div>
 
   
-  <!-- BotÃ³n estÃ¡tico y modales -->
+  <!-- Botón estático y modales -->
 
-  <div class="fixed-action-btn">
+  <div id="add-button" class="fixed-action-btn">
     <a class="btn-floating btn-large waves-effect waves-light red">
       <i class="material-icons">add</i>
     </a>
@@ -167,16 +153,82 @@
     </ul>
   </div>
   
-  <div id="modal1" class="modal">
-   <form th:action="@{/psicologo/saveGroupAppointment(id=${u.id})}" method="post" name="createGroupAppointmentForm">
+    <div id="options-button" class="fixed-action-btn hide">
+    <a class="btn-floating btn-large waves-effect waves-light deep-purple">
+      <i class="material-icons">settings</i>
+    </a>
+    <ul>
+      <li><a data-target="modal3" class="btn-floating blue modal-trigger" href="#modal3"><i class="material-icons">create</i></a></li>
+      <li><a data-target="modal2" class="btn-floating blue modal-trigger" href="#modal2"><i class="material-icons">delete</i></a></li>
+    </ul>
+  </div>
+  
+    <div id="modal1" class="modal">
+   <form th:action="@{/psicologo/saveGroupAppointment}" method="post" name="createGroupAppointmentForm">
    <div class="modal-content">
      <h4>Cita grupal</h4>
 
-     <!-- SelecciÃ³n del paciente -->
-     <!-- Recargar con usuarios -->
+     <!-- Selección del paciente -->
+     <!-- Recargar con usuarios -->     
      
       <div class="input-field col s6">
-         <input name="name"   placeholder="Nombre de la terapia" id="name"  type="text" class="validate" required pattern="[A-Za-z0-9]+">
+         <input name="name" placeholder="Nombre de la terapia"  type="text" class="validate">
+         
+     </div>
+     
+     
+     <div class="chips"></div>
+	 <p> Selecciona día para la sesión </p>
+     <input name="date" type="date" required>
+
+
+     <p> Selecciona hora de la sesión </p>
+     <input name="start_hour" type="time" min="09:00" max="18:00" class="validate" required>
+
+
+     <p> Selecciona hora de fin de la sesión </p>
+     <input name="finish_hour" type="time"  max="18:00" class="validate" required><!-- TODO como definir el minimo -->
+     
+     <p> Descricpión de la cita </p>
+     <div class="input-field col s12">
+          <textarea id="description" name="description" class="materialize-textarea"></textarea>
+          
+     </div>
+
+     
+
+   </div>
+   <div class="modal-footer">
+     <a class="modal-close waves-effect btn-flat">Cancelar</a>
+     <button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+   </div>
+ </form>
+ </div> 
+  
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <h4>¿Estás seguro que deseas eliminar esta cita grupal?</h4>
+      <p>Esta cita será eliminada del sistema y ya no podrá ser recuperada</p>
+    </div>
+    <div class="modal-footer">
+      <a id="delete" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+      <a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    </div>
+  </div>
+  
+  <div id="modal3" class="modal">
+   <form th:action="@{/psicologo/modifyGroupAppointment}" method="post" name="modifyGroupAppointmentForm">
+   <div class="modal-content">
+     <h4>Cita grupal</h4>
+
+     <!-- Selección del paciente -->
+     <!-- Recargar con usuarios -->
+     
+      <input id="ID" name="ID" type="hidden" >
+     
+     
+      <div class="input-field col s6">         <input name="name"   placeholder="Nombre de la terapia" id="name"  type="text" class="validate" required pattern="[A-Za-z0-9]+">
+
      </div>
      
      
@@ -196,28 +248,28 @@
      
 
 
-     <p> Selecciona dÃ­a para la sesiÃ³n </p>
+     <p> Selecciona día para la sesión </p>
      <input name="date" type="date" required>
 
 
-     <p> Selecciona hora de la sesiÃ³n </p>
+     <p> Selecciona hora de la sesión </p>
      <input name="start_hour" type="time" min="09:00" max="18:00" class="validate" required>
 
 
-     <p> Selecciona hora de fin de la sesiÃ³n </p>
+     <p> Selecciona hora de fin de la sesión </p>
      <input name="finish_hour" type="time"  max="18:00" class="validate" required><!-- TODO como definir el minimo -->
      
-     <p> DescricpiÃ³n de la cita </p>
+     <p> Descricpión de la cita </p>
      <div class="input-field col s12">
-          <textarea id="textarea1" name="description" class="materialize-textarea"></textarea>
+          <textarea id="description" name="description" class="materialize-textarea"></textarea>
           
      </div>
      
 
    </div>
    <div class="modal-footer">
-     <a class="modal-close waves-effect waves-red btn-flat red">Cancelar</a>
-     <button onclick="myFunction()" type="submit" class="modal-close waves-effect waves-green btn-flat green">Aceptar</button>
+     <a class="modal-close waves-effect btn-flat">Cancelar</a>
+     <button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
    </div>
  </form>
  </div> 
@@ -227,8 +279,36 @@
 	</footer>
 	
 <script th:inline="javascript">
-function myFunction() {
-	var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
+function change(arg) {
+	document.getElementById("add-button").classList.add('hide');
+	document.getElementById("options-button").classList.remove('hide');
+	
+	//Obtengo el id
+	var a = arg.getAttribute("data-id");
+	console.log(a);
+	
+	
+	var eliminate = document.getElementById("delete");
+	eliminate.href="/psicologo/deleteGroupAppointment?id=" + a;
+	
+	document.getElementById("ID").value = a;
+	document.getElementById("name").value = arg.getAttribute("data-name");
+	document.getElementById("date").value = arg.getAttribute("data-date");
+	document.getElementById("start-hour").value = arg.getAttribute("data-start");
+	document.getElementById("end-hour").value = arg.getAttribute("data-end");
+	document.getElementById("description").value = arg.getAttribute("data-content");
+
+	//var modify = document.getElementById("modify");
+	//modify.action="/psicologo/modifyGroupAppointment?id=" + a;
+
+
+	//var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
+}
+
+function changeBack() {
+	document.getElementById("options-button").classList.add('hide');
+	document.getElementById("add-button").classList.remove('hide')
+	//var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
 }
 
 </script>
