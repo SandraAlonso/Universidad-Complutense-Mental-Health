@@ -245,7 +245,7 @@ public class User {
 
 		
 		List<LocalDate> dates = new ArrayList<>();
-		LocalDate ahora = LocalDate.now();
+		LocalDate ahora = LocalDate.now().plusDays(week*7);
 		DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
 		LocalDate startOfCurrentWeek = ahora.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
 		
@@ -262,13 +262,13 @@ public class User {
 
 		List<GroupAppointment> ga = new ArrayList<>();
 
-		LocalDate now = LocalDate.now(); 
+		LocalDate now = LocalDate.now().plusDays(week*7); 
 		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
 		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
 		System.out.println(firstDayOfTheWeek);
 
 		
-		LocalDate lastDayOfTheWeek = LocalDate.now().plusDays(6);
+		LocalDate lastDayOfTheWeek = now.plusDays(4);
 
 		System.out.println(lastDayOfTheWeek);
 
