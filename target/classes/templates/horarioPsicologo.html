@@ -227,7 +227,7 @@
 
 				<div class="input-field col s6">
 					<input name="name" placeholder="Nombre de la terapia" type="text"
-						class="validate"  required>
+						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
 
 				</div>
 
@@ -281,20 +281,19 @@
 			<div class="modal-content">
 				<h4>Cita grupal</h4>
 
-				<!-- Selecci�n del paciente -->
-				<!-- Recargar con usuarios -->
-
 				<input id="ID" name="ID" type="hidden">
 
 
 				<div class="input-field col s6">
-					<input name="name" placeholder="Nombre de la terapia" type="text"
-						class="validate" required pattern="[A-Za-z0-9]+" required>
+					<input id="name" name="name" placeholder="Nombre de la terapia"
+						type="text" class="validate" required
+						pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+>
 
 				</div>
 
 				<p>Añade los usuarios que participarán en la sesión</p>
-				<div class="chips"></div>
+				<div class="chips">
+				</div>
 
 
 				<!--  <p> Selecciona los paciente con los que vas a tener la cita </p>
@@ -310,21 +309,22 @@
 
 
 				<p>Selecciona día para la sesión</p>
-				<input name="date" type="date" class="validate" required>
+				<input id="date" name="date" type="date" class="validate" required>
 
 
 				<p>Selecciona hora de la sesión</p>
-				<input name="start_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
+				<input id="start-hour" name="start_hour" type="time" min="09:00"
+					max="18:00" class="validate" required>
 
 
 				<p>Selecciona hora de fin de la sesión</p>
-				<input name="finish_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
+				<input id="end-hour" name="finish_hour" type="time" min="09:00"
+					max="18:00" class="validate" required>
 
 				<p>Descricpión de la cita</p>
 				<div class="input-field col s12">
-					<textarea name="description" class="materialize-textarea"></textarea>
+					<textarea id="description" name="description"
+						class="materialize-textarea"></textarea>
 
 				</div>
 
@@ -377,8 +377,18 @@
 		}
 	</script>
 
+	<!-- 
+	<script>
+	const date = document.getElementById("date");
 
-
+	date.addEventListener("input", function (event) { 
+	if	(date.validity.typeMismatch) { 
+		date.setCustomValidity("La fecha es anterior a la actual"); 
+		} 
+	else { date.setCustomValidity(""); } });
+	</script>
+	-->
+	
 </body>
 
 </html>

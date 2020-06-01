@@ -103,23 +103,27 @@ public class PsicologoController {
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		
-		int fecha=group_appointment.getDate().compareTo(LocalDate.now()); 
+
+		int fecha = group_appointment.getDate().compareTo(LocalDate.now());
 		int hora = group_appointment.getFinish_hour().compareTo(group_appointment.getStart_hour());
-		LocalTime ahora= LocalTime.now();
+		LocalTime ahora = LocalTime.now();
 		int horaActual = group_appointment.getStart_hour().compareTo(ahora);
-		
-		if(fecha==0 && horaActual>0 &&hora>0 || fecha>0 &&hora>0){
+
+		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
 			group_appointment.setPychologist(stored);
 			stored.addGroupAppointment(group_appointment);
 			entityManager.persist(group_appointment);
 			entityManager.flush();
-			 // devolvemos el model (los datos modificados) y la session para saber
-													// quien es el usuario en todo momento
 		}
 		return "redirect:/psicologo/horario";
-		
-		
+
+		// devolvemos el model (los datos modificados) y la session para saber
+		// quien es el usuario en todo momento
+
+		/*
+		 * else { return "redirect:/errorFormulario"; }
+		 */
+
 	}
 
 	@RequestMapping("/deleteGroupAppointment")

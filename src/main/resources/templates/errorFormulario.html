@@ -1,0 +1,16 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<th:block th:replace="fragments/head :: header" />
+<title>IW: Error en el formulario</title>
+</head>
+<body>
+	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
+	<h1>Has introducido valores incorrecto, revisa aquellos que están
+		subrayados en rojo</h1>
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
+</body>
+</html>
