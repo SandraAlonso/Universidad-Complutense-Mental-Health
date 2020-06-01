@@ -31,7 +31,7 @@ public class GroupAppointment {
 	@NotNull(message="Introduce la fecha de la cita")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@FutureOrPresent(message="La fecha introducida tiene que ser posterior a la actual")//TODO no coge el presente
-	private Date date;
+	private Date date; //TODO LocalDate
 	
 	
 	@NotEmpty(message="La cita debe tener nombre")
