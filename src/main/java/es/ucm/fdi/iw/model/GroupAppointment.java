@@ -1,5 +1,6 @@
 package es.ucm.fdi.iw.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
@@ -30,8 +31,7 @@ public class GroupAppointment {
 	
 	@NotNull(message="Introduce la fecha de la cita")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@FutureOrPresent(message="La fecha introducida tiene que ser posterior a la actual")//TODO no coge el presente
-	private Date date; //TODO LocalDate
+	private LocalDate date; //TODO LocalDate
 	
 	
 	@NotEmpty(message="La cita debe tener nombre")
@@ -48,6 +48,7 @@ public class GroupAppointment {
 	
 	//@NotEmpty(message="La cita debe tener pacientes")
 	//@Size(min=2, message="Debes introducir al menos dos usuarios")
+	
 	@ManyToMany
 	private Collection<User> patient;
 	
@@ -62,11 +63,11 @@ public class GroupAppointment {
 		ID = iD;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

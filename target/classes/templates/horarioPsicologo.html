@@ -60,7 +60,7 @@
 					<ul>
 						<li class="cd-schedule__event"
 							th:each="gp : ${group_appointments}"
-							th:if=${#dates.day(gp.date).equals(#dates.day(days[0]))}><a
+							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[0]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
@@ -80,7 +80,7 @@
 					<ul>
 						<li class="cd-schedule__event"
 							th:each="gp : ${group_appointments}"
-							th:if=${#dates.day(gp.date).equals(#dates.day(days[1]))}><a
+							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[1]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
@@ -99,7 +99,7 @@
 					<ul>
 						<li class="cd-schedule__event"
 							th:each="gp : ${group_appointments}"
-							th:if=${#dates.day(gp.date).equals(#dates.day(days[2]))}><a
+							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[2]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
@@ -119,7 +119,7 @@
 					<ul>
 						<li class="cd-schedule__event"
 							th:each="gp : ${group_appointments}"
-							th:if=${#dates.day(gp.date).equals(#dates.day(days[3]))}><a
+							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[3]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
@@ -139,7 +139,7 @@
 					<ul>
 						<li class="cd-schedule__event"
 							th:each="gp : ${group_appointments}"
-							th:if=${#dates.day(gp.date).equals(#dates.day(days[4]))}><a
+							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[4]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
@@ -223,21 +223,20 @@
 			<div class="modal-content">
 				<h4>Cita grupal</h4>
 
-				<!-- Selecci�n del paciente -->
-				<!-- Recargar con usuarios -->
+				<!-- Con el validate te sale la linea roja -->
 
 				<div class="input-field col s6">
 					<input name="name" placeholder="Nombre de la terapia" type="text"
-						class="validate">
+						class="validate"  required>
 
 				</div>
 
-
+				<p>Añade los usuarios que participarán en la sesión</p>
 				<div class="chips"></div>
-
+				<!-- Coge los pacientes por separado con chips -->
 
 				<p>Selecciona día para la sesión</p>
-				<input name="date" type="date" required>
+				<input name="date" type="date" class="validate" required>
 
 
 				<p>Selecciona hora de la sesión</p>
@@ -246,9 +245,8 @@
 
 
 				<p>Selecciona hora de fin de la sesión</p>
-				<input name="finish_hour" type="time" max="18:00" class="validate"
-					required>
-				<!-- TODO como definir el minimo -->
+				<input name="finish_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
 
 				<p>Descricpión de la cita</p>
 				<div class="input-field col s12">
@@ -290,12 +288,12 @@
 
 
 				<div class="input-field col s6">
-					<input name="name" id="name" placeholder="Nombre de la terapia"
-						type="text" class="validate" required pattern="[A-Za-z0-9]+">
+					<input name="name" placeholder="Nombre de la terapia" type="text"
+						class="validate" required pattern="[A-Za-z0-9]+" required>
 
 				</div>
 
-
+				<p>Añade los usuarios que participarán en la sesión</p>
 				<div class="chips"></div>
 
 
@@ -311,25 +309,22 @@
      </div> -->
 
 
-
 				<p>Selecciona día para la sesión</p>
-				<input id="date" name="date" type="date" required>
+				<input name="date" type="date" class="validate" required>
 
 
 				<p>Selecciona hora de la sesión</p>
-				<input id="start-hour" name="start_hour" type="time" min="09:00"
-					max="18:00" class="validate" required>
+				<input name="start_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
 
 
 				<p>Selecciona hora de fin de la sesión</p>
-				<input id="end-hour" name="finish_hour" type="time" max="18:00"
+				<input name="finish_hour" type="time" min="09:00" max="18:00"
 					class="validate" required>
-				<!-- TODO como definir el minimo -->
 
 				<p>Descricpión de la cita</p>
 				<div class="input-field col s12">
-					<textarea id="description" name="description"
-						class="materialize-textarea"></textarea>
+					<textarea name="description" class="materialize-textarea"></textarea>
 
 				</div>
 

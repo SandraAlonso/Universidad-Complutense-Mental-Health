@@ -1,5 +1,10 @@
 package es.ucm.fdi.iw.model;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -8,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -95,11 +101,12 @@ public class User {
 	@JoinColumn(name = "recipient_id")
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
-	
+
 	@OneToMany(targetEntity = GroupAppointment.class)
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
+
 	// utility methods
 	/**
 	 * Checks whether this user has a given role.
@@ -218,11 +225,10 @@ public class User {
 		this.received = received;
 	}
 
-
 	public void addGroupAppointment(GroupAppointment ap) {
 		groupAppointments.add(ap);
 	}
-	
+
 	public void removeGroupAppointment(GroupAppointment ap) {
 		groupAppointments.remove(ap);
 	}
@@ -234,56 +240,50 @@ public class User {
 	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
 		this.groupAppointments = groupAppointments;
 	}
-	
-	public List<Date> getDaysOfTheWeek(int week) {
-		
-		List<Date> dates = new ArrayList<>();
+
+	public List<LocalDate> getDaysOfTheWeek(int week) {
 
 		
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK) + 1);
-		cal.add(Calendar.WEEK_OF_YEAR, week);
-		for(int i = 0; i < 7; ++i) {
-			dates.add(cal.getTime());
-			cal.add(Calendar.DAY_OF_YEAR, 1);
+		List<LocalDate> dates = new ArrayList<>();
+		LocalDate ahora = LocalDate.now();
+		DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
+		LocalDate startOfCurrentWeek = ahora.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+		
+		LocalDate printDate = startOfCurrentWeek;
+		for (int i = 0; i < 5; i++) {
+			dates.add(printDate);
+			printDate = printDate.plusDays(1);
 		}
 		return dates;
-	} //TODO
 
+	} 
 
 	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
-		
+
 		List<GroupAppointment> ga = new ArrayList<>();
-		
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK) + 1);
-		cal.add(Calendar.WEEK_OF_YEAR, week);
-		cal.add(Calendar.DAY_OF_YEAR, -1);
-		Date firstDayOfTheWeek = cal.getTime();
+
+		LocalDate now = LocalDate.now(); 
+		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
+		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
 		System.out.println(firstDayOfTheWeek);
+
 		
-		cal.add(Calendar.DATE, 8);
-		Date lastDayOfTheWeek = cal.getTime();
+		LocalDate lastDayOfTheWeek = LocalDate.now().plusDays(6);
+
 		System.out.println(lastDayOfTheWeek);
 
-		
-		for(GroupAppointment g : groupAppointments) {
+		for (GroupAppointment g : groupAppointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
-			if(g.getDate().after(firstDayOfTheWeek) && g.getDate().before(lastDayOfTheWeek)) ga.add(g);
-			if(g.getDate().equals(lastDayOfTheWeek) || g.getDate().after(lastDayOfTheWeek)) break;
+			int comp = g.getDate().compareTo(firstDayOfTheWeek);
+			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
+			if (comp > 0 && comp2 < 0)
+				ga.add(g);
+			if (comp == 0 && comp2 > 0)
+				break;
+			
 		}
-		
-		return ga;
-		
 
-		// ahora calendar tiene el dia del lunes.
-		/*group_appointments.clear();// borramos las ultima consultas si las hubiera.
-		int i = 0;
-		while (i < 7) {
-			addGroupAppointment(All_group_appointments.get(calendar));// buscamos por fecha y añadimos a la lista
-			i++;
-			calendar.add(Calendar.DATE, +1);// sumamos hasta llegar al domingo
-		}
-		return group_appointments;*/
+		return ga;
+
 	}
 }
