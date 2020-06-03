@@ -126,10 +126,10 @@ public class PsicologoController {
 
 	}
 
+
 	@RequestMapping("/deleteGroupAppointment")
 	@Transactional
-	public String deleteGroupAppointment(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid GroupAppointment group_appointment, BindingResult result, HttpSession session,
+	public String deleteGroupAppointment(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
@@ -172,6 +172,14 @@ public class PsicologoController {
 
 		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
+	}
+	
+	@RequestMapping("/getUsersOfGroupAppointments")
+	public String receiveArrayOfValues(@RequestParam String[] values) 
+	{
+		
+		
+		return "redirect:/psicologo/horario";
 	}
 
 	@GetMapping("/citas")
