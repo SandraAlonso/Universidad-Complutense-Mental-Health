@@ -6,6 +6,8 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
  	<script>document.getElementsByTagName("html")[0].className += " js";</script>
  	<link rel="manifest" href="site.webmanifest">
   	<link rel="apple-touch-icon" href="icon.png">

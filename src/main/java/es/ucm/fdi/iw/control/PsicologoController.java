@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -176,15 +177,14 @@ public class PsicologoController {
 												// quien es el usuario en todo momento
 	}
 	
-	@RequestMapping("/getUsersOfGroupAppointments")
+	@RequestMapping("/addUsersOfGroupAppointments")
 	@Transactional
-	public String receiveArrayOfValues(HttpServletResponse response, @RequestParam long[] values, @RequestParam long id,  HttpSession session) throws IOException 
+	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long[] values, @RequestParam long id,  HttpSession session) throws IOException 
 	{
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
 
-		
 		for (GroupAppointment it : stored.getGroupAppointments()) {
 			if (it.equals(ga)) {
 				List<User> ul = new ArrayList<>();
@@ -203,6 +203,24 @@ public class PsicologoController {
 			}
 		}
 		return "redirect:/psicologo/horario";
+	}
+	
+	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public List<User> getUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long id,  HttpSession session) throws IOException 
+	{
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
+
+		List<User> ul = null;
+		for (GroupAppointment it : stored.getGroupAppointments()) {
+			if (it.equals(ga)) {
+				ul = it.getPatient();
+				break;
+			}
+		}
+		return ul;
 	}
 
 	@GetMapping("/citas")

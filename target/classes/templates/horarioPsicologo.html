@@ -199,7 +199,7 @@
 		</a>
 		<ul>
 			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
-					class="material-icons">group</i></a></li>
+					class="material-icons">group_add</i></a></li>
 		</ul>
 	</div>
 
@@ -208,6 +208,9 @@
 			<i class="material-icons">settings</i>
 		</a>
 		<ul>
+			<li><a data-target="modal4"
+				class="btn-floating blue modal-trigger" href="#modal4"><i
+					class="material-icons">group</i></a></li>
 			<li><a data-target="modal3"
 				class="btn-floating blue modal-trigger" href="#modal3"><i
 					class="material-icons">create</i></a></li>
@@ -231,8 +234,6 @@
 
 				</div>
 
-				<p>Añade los usuarios que participarán en la sesión</p>
-				<div class="chips"></div>
 				<!-- Coge los pacientes por separado con chips -->
 
 				<p>Selecciona día para la sesión</p>
@@ -287,25 +288,9 @@
 				<div class="input-field col s6">
 					<input id="name" name="name" placeholder="Nombre de la terapia"
 						type="text" class="validate" required
-						pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+>
+						pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
 
 				</div>
-
-				<p>Añade los usuarios que participarán en la sesión</p>
-				<div class="chips">
-				</div>
-
-
-				<!--  <p> Selecciona los paciente con los que vas a tener la cita </p>
-     <div class="input-field col s12 m6">
-       <select class="icons">
-         <option value="" disabled selected>Selecciona paciente</option>
-         <option value="" data-icon="img/ejemplo.jpg">Paco</option>
-         <option value="" data-icon="img/ejemplo.jpg">Antonio</option>
-         <option value="" data-icon="img/ejemplo.jpg">Marco</option>
-       </select>
-       <label>Pacientes disponibles</label>
-     </div> -->
 
 
 				<p>Selecciona día para la sesión</p>
@@ -337,22 +322,67 @@
 		</form>
 	</div>
 
+	<div id="modal4" class="modal">
+			<div class="modal-content">
+				<h4>Añade los usuarios que participarán en la sesión</h4>
+
+				<!-- Con el validate te sale la linea roja -->
+				<input id="ID-users" name="ID" type="hidden">
+
+				<p>Añade los usuarios que participarán en la sesión</p>
+				<div id="chip1" class="chips"></div>
+
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect btn-flat">Cancelar</a>
+				<button type="submit" id="button-add-users" class="modal-close waves-effect btn-flat" onclick="addUsers()">Aceptar</button>
+			</div>
+	</div>
+
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
 
 	<script th:inline="javascript">
+	
+		 $.getUsers = function() {
+			 
+			 var token = $('#_csrf').attr('content');
+			 var header = $('#_csrf_header').attr('content');
+			 
+			 var data = {id:1};
+			 
+			 $.ajax({
+			      url: '/psicologo/getUsersOfGroupAppointments',
+			      data: JSON.stringify(data),
+			      type: 'post',
+			      contentType: "application/json; charset=utf-8",
+			      dataType: "json",
+			      beforeSend: function(xhr) {
+                      xhr.setRequestHeader(header, token);
+                  },
+			      success: function(result) {
+			          alert(result);
+			      }, error: function(error) {
+			          // Here you can handle exceptions thrown by the server or your controller.
+			      }
+			   })
+     	 };
+	
 		function change(arg) {
+
+			var a = arg.getAttribute("data-id");
+			console.log(a);
+
 			document.getElementById("add-button").classList.add('hide');
 			document.getElementById("options-button").classList.remove('hide');
 
 			//Obtengo el id
-			var a = arg.getAttribute("data-id");
-			console.log(a);
 
 			var eliminate = document.getElementById("delete");
 			eliminate.href = "/psicologo/deleteGroupAppointment?id=" + a;
 
 			document.getElementById("ID").value = a;
+			document.getElementById("ID-users").value = a;
 			document.getElementById("name").value = arg
 					.getAttribute("data-name");
 			document.getElementById("date").value = arg
@@ -363,18 +393,54 @@
 					.getAttribute("data-end");
 			document.getElementById("description").value = arg
 					.getAttribute("data-content");
-
-			//var modify = document.getElementById("modify");
-			//modify.action="/psicologo/modifyGroupAppointment?id=" + a;
-
-			//var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
+			
+			$.getUsers();
 		}
+		
 
 		function changeBack() {
 			document.getElementById("options-button").classList.add('hide');
 			document.getElementById("add-button").classList.remove('hide')
-			//var chipInstance = M.Chips.getInstance($(".chips")); console.log(chipInstance.chipsData);
 		}
+		
+		function addUsers() {
+			 var instance = M.Chips.getInstance($('.chips'));
+	            var value =  null;
+	            for(var i=0; i<instance.chipsData.length; i++){
+	                if(value == null)
+	                    value = instance.chipsData[i].tag;
+	                else{
+	                    value += ','+instance.chipsData[i].tag;
+	                }
+	            }
+	            
+	            
+	            var id = document.getElementById("ID-users").value;
+
+	            window.location = "/psicologo/getUsersOfGroupAppointments?values=" + value + "&id=" +id;
+	           /* var users = new Object();
+			    //users.Id = ; // id of user to be deleted
+			    users.Values = value;
+
+			    $.ajax({
+			        type : 'POST',
+			        url : "/psicologo/getUsersOfGroupAppointments",
+			        dataType : 'json',
+			        data : JSON.stringify(users),
+			        contentType : 'application/json',
+			        success : function(data) {
+			           //here in data variable, you will get list of all users sent from 
+			           // spring controller in json format, currently its object
+			           // iterate it and show users on page
+
+			           //showUsers(data);
+			        },
+			        error : function() {
+			            alert('error');
+			        }
+			    });*/
+		}
+		
 	</script>
 
 	<!-- 
@@ -388,7 +454,7 @@
 	else { date.setCustomValidity(""); } });
 	</script>
 	-->
-	
+
 </body>
 
 </html>
