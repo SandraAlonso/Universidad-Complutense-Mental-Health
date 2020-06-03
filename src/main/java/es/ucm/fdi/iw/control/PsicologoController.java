@@ -11,9 +11,11 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
@@ -175,10 +177,31 @@ public class PsicologoController {
 	}
 	
 	@RequestMapping("/getUsersOfGroupAppointments")
-	public String receiveArrayOfValues(@RequestParam String[] values) 
+	@Transactional
+	public String receiveArrayOfValues(HttpServletResponse response, @RequestParam long[] values, @RequestParam long id,  HttpSession session) throws IOException 
 	{
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
+
 		
-		
+		for (GroupAppointment it : stored.getGroupAppointments()) {
+			if (it.equals(ga)) {
+				List<User> ul = new ArrayList<>();
+				for(int i = 0; i < values.length; ++i) {
+					User u = entityManager.find(User.class, values[i]);
+					if(u != null) { ul.add(u); }
+					else {
+						response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No eres administrador, y éste no es tu perfil"); //TODO devuelve error
+						return "redirect:/psicologo/horario";
+					}
+				}
+				ga.removeAllPatients();
+				ga.setPatient(ul);
+				for (User u: ul) { u.addCita(ga); }
+				break;
+			}
+		}
 		return "redirect:/psicologo/horario";
 	}
 

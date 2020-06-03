@@ -27,6 +27,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -106,6 +107,11 @@ public class User {
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
+
+	@ManyToMany(targetEntity= GroupAppointment.class)
+	//@JsonIgnore
+	//@OrderBy("date ASC, start_hour ASC")
+	private List<GroupAppointment> citas = new ArrayList<GroupAppointment>();
 
 	// utility methods
 	/**
@@ -228,11 +234,17 @@ public class User {
 	public void addGroupAppointment(GroupAppointment ap) {
 		groupAppointments.add(ap);
 	}
+	
 
 	public void removeGroupAppointment(GroupAppointment ap) {
 		groupAppointments.remove(ap);
 	}
 
+	public void addCita(GroupAppointment ap) {
+		citas.add(ap);
+	}
+	
+	
 	public List<GroupAppointment> getGroupAppointments() {
 		return groupAppointments;
 	}

@@ -327,6 +327,7 @@
 				<h4>Añade los usuarios que participarán en la sesión</h4>
 
 				<!-- Con el validate te sale la linea roja -->
+				<input id="ID-users" name="ID" type="hidden">
 
 				<p>Añade los usuarios que participarán en la sesión</p>
 				<div id="chip1" class="chips"></div>
@@ -356,6 +357,7 @@
 			eliminate.href = "/psicologo/deleteGroupAppointment?id=" + a;
 
 			document.getElementById("ID").value = a;
+			document.getElementById("ID-users").value = a;
 			document.getElementById("name").value = arg
 					.getAttribute("data-name");
 			document.getElementById("date").value = arg
@@ -384,8 +386,10 @@
 	                }
 	            }
 	            
-	            window.location = "/psicologo/getUsersOfGroupAppointments?values=" + value; //Falta añádir id
+	            
+	            var id = document.getElementById("ID-users").value;
 
+	            window.location = "/psicologo/getUsersOfGroupAppointments?values=" + value + "&id=" +id;
 	           /* var users = new Object();
 			    //users.Id = ; // id of user to be deleted
 			    users.Values = value;

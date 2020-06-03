@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,8 +50,8 @@ public class GroupAppointment {
 	//@NotEmpty(message="La cita debe tener pacientes")
 	//@Size(min=2, message="Debes introducir al menos dos usuarios")
 	
-	@ManyToMany
-	private Collection<User> patient;
+	@ManyToMany(targetEntity=User.class)
+	private List<User> patient;
 	
 	@ManyToOne
 	private User pychologist;
@@ -87,11 +88,11 @@ public class GroupAppointment {
 		this.finish_hour = finish_hour;
 	}
 
-	public Collection<User> getPatient() {
+	public List<User> getPatient() {
 		return patient;
 	}
 
-	public void setPatient(Collection<User> patient) {
+	public void setPatient(List<User> patient) {
 		this.patient = patient;
 	}
 
@@ -117,5 +118,13 @@ public class GroupAppointment {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public void removeAllPatients() {
+		patient.clear();
+	}
+	
+	public void addPatient(User u) {
+		patient.add(u);
 	}
 }
