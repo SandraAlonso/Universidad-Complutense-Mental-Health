@@ -180,12 +180,12 @@
 	<script src="/js/vendor/schedule-main.js"></script>
 
 	<div class="center-align">
-		<a th:with="semanas=(${week} - 1)"
-			th:href="@{/psicologo/horario(weeks=${semanas})}"
+		<a  th:with="semanas=(${week} - 1)"
+			th:href="@{/user/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
-			class="material-icons left">arrow_back</i>Anterior semana</a> <a
-			th:with="semanas=(${week} + 1)"
-			th:href="@{/psicologo/horario(weeks=${semanas})}"
+			class="material-icons left">arrow_back</i>Anterior semana</a> 
+		<a	th:with="semanas=(${week} + 1)"
+			th:href="@{/user/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
 			class="material-icons right">arrow_forward</i>Siguiente semana</a>
 	</div>
@@ -198,8 +198,10 @@
 			class="material-icons">add</i>
 		</a>
 		<ul>
-			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+			<li th:if="${session.u.hasRole('PSICOLOGO')}"><a class="btn-floating blue modal-trigger" href="#modal1"><i
 					class="material-icons">group_add</i></a></li>
+			<li th:if="${session.u.hasRole('PACIENTE')}"><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">person_add</i></a></li>
 		</ul>
 	</div>
 
@@ -208,7 +210,7 @@
 			<i class="material-icons">settings</i>
 		</a>
 		<ul>
-			<li><a data-target="modal4"
+			<li th:if="${session.u.hasRole('PSICOLOGO')}"><a data-target="modal4"
 				class="btn-floating blue modal-trigger" href="#modal4"><i
 					class="material-icons">group</i></a></li>
 			<li><a data-target="modal3"
@@ -221,14 +223,17 @@
 	</div>
 
 	<div id="modal1" class="modal">
-		<form th:action="@{/psicologo/saveGroupAppointment}" method="post"
+		<form th:action="@{/user/saveAppointment}" method="post"
 			name="createGroupAppointmentForm">
+			
 			<div class="modal-content">
-				<h4>Cita grupal</h4>
+				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
+				<h4 th:if="${session.u.hasRole('PACIENTE')}">Cita inidividual</h4>
+				
 
 				<!-- Con el validate te sale la linea roja -->
 
-				<div class="input-field col s6">
+				<div class="input-field col s6" th:if="${session.u.hasRole('PSICOLOGO')}">
 					<input name="name" placeholder="Nombre de la terapia" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
 
@@ -249,8 +254,8 @@
 				<input name="finish_hour" type="time" min="09:00" max="18:00"
 					class="validate" required>
 
-				<p>Descricpión de la cita</p>
-				<div class="input-field col s12">
+				<p th:if="${session.u.hasRole('PSICOLOGO')}">Descricpión de la cita</p>
+				<div th:if="${session.u.hasRole('PSICOLOGO')}" class="input-field col s12">
 					<textarea name="description" class="materialize-textarea"></textarea>
 
 				</div>
@@ -277,15 +282,16 @@
 	</div>
 
 	<div id="modal3" class="modal">
-		<form th:action="@{/psicologo/modifyGroupAppointment}" method="post"
+		<form th:action="@{/user/modifyAppointment}" method="post"
 			name="modifyGroupAppointmentForm">
 			<div class="modal-content">
-				<h4>Cita grupal</h4>
+				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
+				<h4 th:if="${session.u.hasRole('PACIENTE')}">Cita inidividual</h4>
 
 				<input id="ID" name="ID" type="hidden">
 
 
-				<div class="input-field col s6">
+				<div class="input-field col s6" th:if="${session.u.hasRole('PSICOLOGO')}">
 					<input id="name" name="name" placeholder="Nombre de la terapia"
 						type="text" class="validate" required
 						pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
@@ -306,7 +312,7 @@
 				<input id="end-hour" name="finish_hour" type="time" min="09:00"
 					max="18:00" class="validate" required>
 
-				<p>Descricpión de la cita</p>
+				<p th:if="${session.u.hasRole('PSICOLOGO')}">Descricpión de la cita</p>
 				<div class="input-field col s12">
 					<textarea id="description" name="description"
 						class="materialize-textarea"></textarea>
@@ -322,7 +328,7 @@
 		</form>
 	</div>
 
-	<div id="modal4" class="modal">
+	<div id="modal4" class="modal" th:if="${session.u.hasRole('PSICOLOGO')}">
 			<div class="modal-content">
 				<h4>Añade los usuarios que participarán en la sesión</h4>
 
@@ -379,7 +385,7 @@
 			//Obtengo el id
 
 			var eliminate = document.getElementById("delete");
-			eliminate.href = "/psicologo/deleteGroupAppointment?id=" + a;
+			eliminate.href = "/user/deleteAppointment?id=" + a;
 
 			document.getElementById("ID").value = a;
 			document.getElementById("ID-users").value = a;

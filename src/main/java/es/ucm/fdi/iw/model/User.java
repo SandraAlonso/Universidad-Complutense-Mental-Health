@@ -103,15 +103,11 @@ public class User {
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
 
-	@OneToMany(targetEntity = GroupAppointment.class)
+	@OneToMany(targetEntity = Appointment.class)
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
-	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
+	private List<Appointment> appointments = new ArrayList<Appointment>();
 
-	@ManyToMany(targetEntity= GroupAppointment.class)
-	//@JsonIgnore
-	//@OrderBy("date ASC, start_hour ASC")
-	private List<GroupAppointment> citas = new ArrayList<GroupAppointment>();
 
 	// utility methods
 	/**
@@ -231,26 +227,22 @@ public class User {
 		this.received = received;
 	}
 
-	public void addGroupAppointment(GroupAppointment ap) {
-		groupAppointments.add(ap);
+	public void addGroupAppointment(Appointment ap) {
+		appointments.add(ap);
 	}
 	
 
-	public void removeGroupAppointment(GroupAppointment ap) {
-		groupAppointments.remove(ap);
-	}
-
-	public void addCita(GroupAppointment ap) {
-		citas.add(ap);
+	public void removeGroupAppointment(Appointment ap) {
+		appointments.remove(ap);
 	}
 	
 	
-	public List<GroupAppointment> getGroupAppointments() {
-		return groupAppointments;
+	public List<Appointment> getAppointments() {
+		return appointments;
 	}
 
-	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
-		this.groupAppointments = groupAppointments;
+	public void setGroupAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
 	}
 
 	public List<LocalDate> getDaysOfTheWeek(int week) {
@@ -270,9 +262,9 @@ public class User {
 
 	} 
 
-	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
+	public List<Appointment> getAppointmentsOfTheWeek(int week) {
 
-		List<GroupAppointment> ga = new ArrayList<>();
+		List<Appointment> ga = new ArrayList<>();
 
 		LocalDate now = LocalDate.now().plusDays(week*7); 
 		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
@@ -284,7 +276,7 @@ public class User {
 
 		System.out.println(lastDayOfTheWeek);
 
-		for (GroupAppointment g : groupAppointments) {
+		for (Appointment g : appointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);

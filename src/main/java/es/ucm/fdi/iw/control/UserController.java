@@ -8,27 +8,35 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +48,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Appointment;
+import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
@@ -199,5 +209,148 @@ public class UserController {
 			log.info("Successfully uploaded photo for {} into {}!", id, f.getAbsolutePath());
 		}
 		return "user";
+	}
+	
+	@RequestMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
+		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User stored = entityManager.find(User.class, requester.getId());
+		if (weeks == null)
+			weeks = 0;
+		model.addAttribute("u", stored);
+		model.addAttribute("appointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
+		model.addAttribute("week", weeks);
+		return "horarioPsicologo";
+	}
+
+	// Requester es el usuario que solicita la accion.
+	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
+	// queremos cambiar
+	// Target es el resultado final que obtenemos despues de completar la accion y
+	// lo que guardamos en la BBDD
+
+	@PostMapping("/saveAppointment")
+	@Transactional
+	public String saveAppointment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid Appointment appointment, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+
+		int fecha = appointment.getDate().compareTo(LocalDate.now());
+		int hora = appointment.getFinish_hour().compareTo(appointment.getStart_hour());
+		LocalTime ahora = LocalTime.now();
+		int horaActual = appointment.getStart_hour().compareTo(ahora);
+
+		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+			appointment.setPychologist(stored);
+			stored.addGroupAppointment(appointment);
+			entityManager.persist(appointment);
+			entityManager.flush();
+		}
+		return "redirect:/user/horario";
+
+		// devolvemos el model (los datos modificados) y la session para saber
+		// quien es el usuario en todo momento
+
+		/*
+		 * else { return "redirect:/errorFormulario"; }
+		 */
+
+	}
+
+
+	@RequestMapping("/deleteAppointment")
+	@Transactional
+	public String deleteGroupAppointment(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam long id) throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga = entityManager.find(Appointment.class, id);
+
+		for (Appointment it : stored.getAppointments()) {
+			if (it.equals(ga)) {
+				stored.removeGroupAppointment(ga);
+				entityManager.remove(ga);
+				break;
+			}
+		}
+
+		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
+												// quien es el usuario en todo momento
+	}
+
+	@RequestMapping("/modifyAppointment")
+	@Transactional
+	public String modifyGroupAppointment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid Appointment appointment, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga = entityManager.find(Appointment.class, appointment.getID());
+
+		// int weeks = model.getAttribute("week"); //TODO podría usar directamente el
+		// requester?
+
+		for (Appointment it : stored.getAppointments()) {
+			if (it.equals(ga)) {
+				ga.setName(appointment.getName());
+				ga.setDate(appointment.getDate());
+				ga.setStart_hour(appointment.getStart_hour());
+				ga.setFinish_hour(appointment.getFinish_hour());
+				ga.setDescription(appointment.getDescription());
+				break;
+			}
+		}
+
+		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
+												// quien es el usuario en todo momento
+	}
+	
+	@RequestMapping("/addUsersOfGroupAppointments")
+	@Transactional
+	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long[] values, @RequestParam long id,  HttpSession session) throws IOException 
+	{
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga = entityManager.find(Appointment.class, id);
+
+		for (Appointment it : stored.getAppointments()) {
+			if (it.equals(ga)) {
+				List<User> ul = new ArrayList<>();
+				for(int i = 0; i < values.length; ++i) {
+					User u = entityManager.find(User.class, values[i]);
+					if(u != null) { ul.add(u); }
+					else {
+						response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No eres administrador, y éste no es tu perfil"); //TODO devuelve error
+						return "redirect:/psicologo/horario";
+					}
+				}
+				ga.removeAllPatients();
+				ga.setPatient(ul);
+				for (User u: ul) { u.addCita(ga); }
+				break;
+			}
+		}
+		return "redirect:/user/horario";
+	}
+	
+	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public List<User> getUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long id,  HttpSession session) throws IOException 
+	{
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga = entityManager.find(Appointment.class, id);
+
+		List<User> ul = null;
+		for (Appointment it : stored.getGroupAppointments()) {
+			if (it.equals(ga)) {
+				ul = it.getPatient();
+				break;
+			}
+		}
+		return ul;
 	}
 }
