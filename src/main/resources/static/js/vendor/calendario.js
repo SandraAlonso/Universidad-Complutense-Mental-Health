@@ -86,11 +86,10 @@ function renderDate() {
     		document.getElementsByClassName("day-click-by-user")[0].innerHTML = value_string;
     		console.log("!!!"+ document.getElementsByClassName("day-click-by-user")[0]);
     		
-    	    var dd = selected_date.getDate();
-    	    var mm = selected_date.getMonth()+1; //January is 0!
-    	    var yyyy = selected_date.getFullYear();
-    	    if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm}
-    	    today = yyyy+""+mm+""+dd;
+    		var day = ("0" + selected_date.getDate()).slice(-2);
+    		var month = ("0" + (selected_date.getMonth() + 1)).slice(-2);
+    		
+    	    var today = selected_date.getFullYear() + '-' + (month) + '-' + (day);
 
     	    document.getElementById("selectedDate").value = today;
     	})

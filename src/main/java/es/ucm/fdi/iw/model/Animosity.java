@@ -30,6 +30,10 @@ public class Animosity {
 	@ManyToOne
 	private User patient;
 
+	public void setPatient(User patient) {
+		this.patient = patient;
+	}
+
 	public long getID() {
 		return ID;
 	}

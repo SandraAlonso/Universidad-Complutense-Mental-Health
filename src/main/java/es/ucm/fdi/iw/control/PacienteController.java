@@ -51,6 +51,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import es.ucm.fdi.iw.model.Animosity;
 import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.LocalData;
@@ -77,4 +78,20 @@ public class PacienteController {
 		return "estadisticas";
 	}
 
+	@PostMapping("/saveAnimosity")
+	@Transactional
+	public String saveAnimosity(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid Animosity animosity, BindingResult result, HttpSession session) {
+		
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		
+		animosity.setPatient(stored);
+		
+		entityManager.persist(animosity);
+		entityManager.flush();
+	
+		return "redirect:/paciente/estadisticas";
+		
+	}
 }

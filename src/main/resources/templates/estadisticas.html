@@ -72,29 +72,35 @@
 
 				<input id="selectedDate" name="date" type="hidden"> <input
 					id="animosity" name="animosity" type="hidden">
-					
+
 
 				<p>Selecciona tu estado de ánimo</p>
 				<div class="emotion-state">
-					<a class="waves-effect waves-light btn-small"> <i
+					<a onclick="very_dissatisfied();"
+						class="waves-effect waves-light btn-small"> <i
 						class="material-icons">sentiment_very_dissatisfied</i>
-					</a> <a class="waves-effect waves-light btn-small"> <i
+					</a> <a onclick="dissatisfied();"
+						class="waves-effect waves-light btn-small"> <i
 						class="material-icons">sentiment_dissatisfied</i>
-					</a> <a class="waves-effect waves-light btn-small"> <i
+					</a> <a onclick="satisfied();"
+						class="waves-effect waves-light btn-small"> <i
 						class="material-icons">sentiment_satisfied</i>
-					</a> <a class="waves-effect waves-light btn-small"> <i
+					</a> <a onclick="satisfied_alt();"
+						class="waves-effect waves-light btn-small"> <i
 						class="material-icons">sentiment_satisfied_alt</i>
-					</a> <a class="waves-effect waves-light btn-small"> <i
+					</a> <a onclick="very_satisfied();"
+						class="waves-effect waves-light btn-small"> <i
 						class="material-icons">sentiment_very_satisfied</i>
 					</a>
 				</div>
-			</div>
+				<h5 id="emotion">Hoy te sientes:</h5>
 
-			<p>Explica porqué te siente así</p>
-			<div class="input-field col s12">
-				<textarea id="description" name="description"
-					class="materialize-textarea"></textarea>
+				<p>Explica porqué te siente así</p>
+				<div class="input-field col s12">
+					<textarea id="description" name="description"
+						class="materialize-textarea"></textarea>
 
+				</div>
 			</div>
 
 			<div class="modal-footer">
@@ -109,41 +115,57 @@
 		goes here </footer>
 
 	<script type="text/javascript" th:inline="javascript">
-	
-	var dt = new Date();
-	
-	function renderDays() {
-	    //TODO: CONNECT THIS PART WITH OUR MODEL
-		 dt.setDate(1);
-		    var dayOne = dt.getDay();
-		    var today = new Date();
-		    //Takes a new Date object with the last day of the current month
-		    //Outside Spain, the week starts on Sunday
-		    var endDate = new Date(
-		        dt.getFullYear(),
-		        dt.getMonth() + 1,
-		        0
-		    ).getDate();
-		    
-		    //Takes the last day of the previous month
-		    var prevDate = new Date(
-		        dt.getFullYear(),
-		        dt.getMonth(),
-		        0
-		    ).getDate();
-		    
-	    for (i = 1; i <= endDate; i++) {
-            cells += "<div>" + 
-            			"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" +
-            				i +
-            			"</a>" +
-            		  "</div>";
-	        
-	    }
-	
-	    //TODO aquí thymeleaf
-	
-	
+		var dt = new Date();
+
+		function renderDays() {
+			//TODO: CONNECT THIS PART WITH OUR MODEL
+			dt.setDate(1);
+			var dayOne = dt.getDay();
+			var today = new Date();
+			//Takes a new Date object with the last day of the current month
+			//Outside Spain, the week starts on Sunday
+			var endDate = new Date(dt.getFullYear(), dt.getMonth() + 1, 0)
+					.getDate();
+
+			//Takes the last day of the previous month
+			var prevDate = new Date(dt.getFullYear(), dt.getMonth(), 0)
+					.getDate();
+
+			for (i = 1; i <= endDate; i++) {
+				cells += "<div>"
+						+ "<a style='color: #000000; display:block' class='modal-trigger' href=#modal>"
+						+ i + "</a>" + "</div>";
+
+			}
+
+			//TODO aquí thymeleaf
+
+		}
+
+		function very_dissatisfied() {
+			document.getElementById("animosity").value = 1;
+			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy triste';
+		}
+
+		function dissatisfied() {
+			document.getElementById("animosity").value = 2;
+			document.getElementById("emotion").innerHTML = 'Hoy te sientes: triste';
+		}
+
+		function satisfied() {
+			document.getElementById("animosity").value = 3;
+			document.getElementById("emotion").innerHTML = 'Hoy te sientes: bien';
+		}
+
+		function satisfied_alt() {
+			document.getElementById("animosity").value = 4;
+			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy bien';
+		}
+
+		function very_satisfied() {
+			document.getElementById("animosity").value = 5;
+			document.getElementById("emotion").innerHTML = 'Hoy te sientes: genial';
+		}
 	</script>
 
 
