@@ -54,6 +54,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.model.Animosity;
 import es.ucm.fdi.iw.model.GroupAppointment;
+import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
@@ -113,20 +114,20 @@ public class PacienteController {
 	@PostMapping("/saveAppointment")
 	@Transactional
 	public String saveAppointment(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
+			@ModelAttribute @Valid IndividualAppointment appointment, BindingResult result, HttpSession session)
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
-		int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
-		int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+		int fecha = appointment.getDate().compareTo(LocalDate.now());
+		int hora = appointment.getFinish_hour().compareTo(appointment.getStart_hour());
 		LocalTime ahora = LocalTime.now();
-		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+		int horaActual = appointment.getStart_hour().compareTo(ahora);
 
 		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-			groupAppointment.setPsychologist(stored);
-			stored.addGroupAppointment(groupAppointment);
-			entityManager.persist(groupAppointment);
+			appointment.setPatient(stored);
+			stored.addAppointment(appointment);
+			entityManager.persist(appointment);
 			entityManager.flush();
 		}
 		return "redirect:/user/horario";

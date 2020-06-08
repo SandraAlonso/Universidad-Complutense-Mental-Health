@@ -13,64 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-public class IndividualAppointment {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long ID;
-	
-	@NotNull(message="Introduce la fecha de la cita")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate date;
-
-	@NotNull(message="Introduce hora de inicio")
-	private LocalTime start_hour;
-	
-	@NotNull(message="Introduce hora de fin")
-	private LocalTime finish_hour;
-	
-	@ManyToOne
-	private User pychologist;
-
-	public long getID() {
-		return ID;
-	}
-	
-	public void setID(long iD) {
-		ID = iD;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
-	public LocalTime getStart_hour() {
-		return start_hour;
-	}
-
-	public void setStart_hour(LocalTime start_hour) {
-		this.start_hour = start_hour;
-	}
-
-	public LocalTime getFinish_hour() {
-		return finish_hour;
-	}
-
-	public void setFinish_hour(LocalTime finish_hour) {
-		this.finish_hour = finish_hour;
-	}
-
-	public User getPychologist() {
-		return pychologist;
-	}
-
-	public void setPychologist(User pychologist) {
-		this.pychologist = pychologist;
-	}
+public class IndividualAppointment extends Appointment {
 
 	@ManyToOne
 	User patient;

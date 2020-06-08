@@ -24,64 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-public class GroupAppointment{
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long ID;
-	
-	@NotNull(message="Introduce la fecha de la cita")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate date;
-
-	@NotNull(message="Introduce hora de inicio")
-	private LocalTime start_hour;
-	
-	@NotNull(message="Introduce hora de fin")
-	private LocalTime finish_hour;
-	
-	@ManyToOne
-	private User psychologist;
-
-	public long getID() {
-		return ID;
-	}
-	
-	public void setID(long iD) {
-		ID = iD;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
-	public LocalTime getStart_hour() {
-		return start_hour;
-	}
-
-	public void setStart_hour(LocalTime start_hour) {
-		this.start_hour = start_hour;
-	}
-
-	public LocalTime getFinish_hour() {
-		return finish_hour;
-	}
-
-	public void setFinish_hour(LocalTime finish_hour) {
-		this.finish_hour = finish_hour;
-	}
-
-	public User getPsychologist() {
-		return psychologist;
-	}
-
-	public void setPsychologist(User pychologist) {
-		this.psychologist = pychologist;
-	}
+public class GroupAppointment extends Appointment{
 	
 	@NotEmpty(message="La cita debe tener nombre")
 	@Pattern (regexp="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+", message="El nombre solo puede contener caracteres alfanumericos")

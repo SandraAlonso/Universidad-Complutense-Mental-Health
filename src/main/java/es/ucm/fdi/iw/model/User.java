@@ -287,6 +287,10 @@ public class User {
 	public void setAppointments(List<IndividualAppointment> appointments) {
 		this.appointments = appointments;
 	}
+	
+	public void addAppointment(IndividualAppointment a) {
+		appointments.add(a);
+	}
 
 	public List<LocalDate> getDaysOfTheWeek(int week) {
 
@@ -305,9 +309,9 @@ public class User {
 
 	} 
 
-	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
+	public List<Appointment> getAppointmentsOfTheWeek(int week) {
 
-		List<GroupAppointment> ga = new ArrayList<>();
+		List<Appointment> ga = new ArrayList<>();
 
 		LocalDate now = LocalDate.now().plusDays(week*7); 
 		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
@@ -327,9 +331,18 @@ public class User {
 				ga.add(g);
 			if (comp == 0 && comp2 > 0)
 				break;
-			
 		}
-
+		
+		for (IndividualAppointment g : appointments) {
+			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
+			int comp = g.getDate().compareTo(firstDayOfTheWeek);
+			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
+			if (comp > 0 && comp2 < 0)
+				ga.add(g);
+			if (comp == 0 && comp2 > 0)
+				break;
+		}
+		
 		return ga;
 
 	}
