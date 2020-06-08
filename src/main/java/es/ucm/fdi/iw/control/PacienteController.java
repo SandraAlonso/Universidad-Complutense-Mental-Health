@@ -26,6 +26,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,18 +81,32 @@ public class PacienteController {
 
 	@PostMapping("/saveAnimosity")
 	@Transactional
-	public String saveAnimosity(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid Animosity animosity, BindingResult result, HttpSession session) {
+	public String saveAnimosity(Model model, HttpServletResponse response, @ModelAttribute @Valid Animosity animosity,
+			BindingResult result, HttpSession session) {
+
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+
+		animosity.setPatient(stored);
+		stored.addAnimosity(animosity);
+
+		entityManager.persist(animosity);
+		entityManager.flush();
+
+		return "redirect:/paciente/estadisticas";
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getMonthAnimosity", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Animosity> obtenerOferta(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date, BindingResult result, HttpSession session) {
 		
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+
+		//TODO cambiar para que sean las de solo un mes, esto solo es una prueba
 		
-		animosity.setPatient(stored);
 		
-		entityManager.persist(animosity);
-		entityManager.flush();
-	
-		return "redirect:/paciente/estadisticas";
-		
+		return stored.getAnimosity();
 	}
 }

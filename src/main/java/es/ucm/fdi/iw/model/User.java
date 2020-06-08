@@ -110,9 +110,21 @@ public class User {
 	
 	@OneToMany(targetEntity = Animosity.class)
 	@JsonIgnore
+	@JoinColumn(name="patient_id")
 	@OrderBy("date ASC")
 	private List<Animosity> animosity = new ArrayList<Animosity>();
 
+	public void addAnimosity(Animosity a) {
+		animosity.add(a);
+	}
+
+	public List<Animosity> getAnimosity() {
+		return animosity;
+	}
+
+	public void setAnimosity(List<Animosity> animosity) {
+		this.animosity = animosity;
+	}
 
 	// utility methods
 	/**
