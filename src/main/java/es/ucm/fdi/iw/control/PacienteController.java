@@ -53,7 +53,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.model.Animosity;
-import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
@@ -109,4 +108,36 @@ public class PacienteController {
 		
 		return stored.getAnimosity();
 	}
+	
+	
+	@PostMapping("/saveAppointment")
+	@Transactional
+	public String saveAppointment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+
+		int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
+		int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+		LocalTime ahora = LocalTime.now();
+		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+
+		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+			groupAppointment.setPsychologist(stored);
+			stored.addGroupAppointment(groupAppointment);
+			entityManager.persist(groupAppointment);
+			entityManager.flush();
+		}
+		return "redirect:/user/horario";
+
+		// devolvemos el model (los datos modificados) y la session para saber
+		// quien es el usuario en todo momento
+
+		/*
+		 * else { return "redirect:/errorFormulario"; }
+		 */
+
+	}
+
 }

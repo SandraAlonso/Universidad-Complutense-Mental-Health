@@ -21,15 +21,7 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 
-	<!-- Menú desplegable mobile-->
-
-	<ul class="sidenav" id="mobile-demo">
-		<li><a>Mis citas</a></li>
-		<li class="active"><a href="estadisticasPaciente">Estadisticas</a></li>
-		<li><a href="ajustesPaciente">Ajustes</a></li>
-		<li><a>Cerrar sesión</a></li>
-	</ul>
-
+	
 	<h4 class="center-align">Estadísticas de ánimo</h4>
 
 	<div class="calendar">
@@ -61,7 +53,7 @@
 
 	<div id="modal" class="modal">
 		<form th:action="@{/paciente/saveAnimosity}" method="post"
-			name="modifyGroupAppointmentForm">
+			name="modifyAnimosityForm">
 			<div class="modal-content">
 				<div>
 					<h4 class="center-align">¿Cómo te sientes?</h4>
@@ -70,8 +62,8 @@
 					</h5>
 				</div>
 
-				<input id="selectedDate" name="date" type="hidden"> <input
-					id="animosity" name="animosity" type="hidden">
+				<input id="selectedDate" name="date" type="hidden"> 
+				<input id="animosity" name="animosity" type="hidden">
 
 
 				<p>Selecciona tu estado de ánimo</p>

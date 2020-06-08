@@ -59,7 +59,7 @@
 					</div>
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[0]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -79,7 +79,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[1]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -98,7 +98,7 @@
 					</div>
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[2]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -118,7 +118,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[3]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -138,7 +138,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[4]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -223,17 +223,16 @@
 	</div>
 
 	<div id="modal1" class="modal">
-		<form th:action="@{/user/saveAppointment}" method="post"
+		<form th:if="${session.u.hasRole('PSICOLOGO')}" th:action="@{/psicologo/saveAppointment}" method="post"
 			name="createGroupAppointmentForm">
 			
 			<div class="modal-content">
 				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
-				<h4 th:if="${session.u.hasRole('PACIENTE')}">Cita inidividual</h4>
 				
 
 				<!-- Con el validate te sale la linea roja -->
 
-				<div class="input-field col s6" th:if="${session.u.hasRole('PSICOLOGO')}">
+				<div class="input-field col s6">
 					<input name="name" placeholder="Nombre de la terapia" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
 
@@ -254,12 +253,42 @@
 				<input name="finish_hour" type="time" min="09:00" max="18:00"
 					class="validate" required>
 
-				<p th:if="${session.u.hasRole('PSICOLOGO')}">Descricpión de la cita</p>
-				<div th:if="${session.u.hasRole('PSICOLOGO')}" class="input-field col s12">
+				<p>Descricpión de la cita</p>
+				<div class="input-field col s12">
 					<textarea name="description" class="materialize-textarea"></textarea>
 
 				</div>
 
+
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect btn-flat">Cancelar</a>
+				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+			</div>
+		</form>
+		
+		
+		
+		<form th:if="${session.u.hasRole('PACIENTE')}" th:action="@{/paciente/saveAppointment}" method="post"
+			name="createGroupAppointmentForm">
+			
+			<div class="modal-content">
+				<h4>Cita inidividual</h4>
+
+				<!-- Coge los pacientes por separado con chips -->
+
+				<p>Selecciona día para la sesión</p>
+				<input name="date" type="date" class="validate" required>
+
+
+				<p>Selecciona hora de la sesión</p>
+				<input name="start_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
+
+
+				<p>Selecciona hora de fin de la sesión</p>
+				<input name="finish_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
 
 			</div>
 			<div class="modal-footer">
@@ -282,7 +311,7 @@
 	</div>
 
 	<div id="modal3" class="modal">
-		<form th:action="@{/user/modifyAppointment}" method="post"
+		<form th:action="@{/psicologo/modifyAppointment}" method="post"
 			name="modifyGroupAppointmentForm">
 			<div class="modal-content">
 				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
@@ -385,7 +414,7 @@
 			//Obtengo el id
 
 			var eliminate = document.getElementById("delete");
-			eliminate.href = "/user/deleteAppointment?id=" + a;
+			eliminate.href = "/psicologo/deleteAppointment?id=" + a;
 
 			document.getElementById("ID").value = a;
 			document.getElementById("ID-users").value = a;

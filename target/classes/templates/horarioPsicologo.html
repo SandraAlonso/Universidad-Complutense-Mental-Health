@@ -59,7 +59,7 @@
 					</div>
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[0]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -79,7 +79,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[1]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -98,7 +98,7 @@
 					</div>
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[2]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -118,7 +118,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[3]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -138,7 +138,7 @@
 
 					<ul>
 						<li class="cd-schedule__event"
-							th:each="gp : ${group_appointments}"
+							th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[4]))}><a
 							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
 							th:data-start="${{gp.start_hour}}"
@@ -223,12 +223,19 @@
 	</div>
 
 	<div id="modal1" class="modal">
+<<<<<<< HEAD
 		<form th:action="@{/user/saveAppointment}" method="post"
+=======
+		<form th:if="${session.u.hasRole('PSICOLOGO')}" th:action="@{/psicologo/saveAppointment}" method="post"
+>>>>>>> 712f2da46a6b5dd60902b2e84878627cee31159c
 			name="createGroupAppointmentForm">
 			
 			<div class="modal-content">
 				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
+<<<<<<< HEAD
 				<h4 th:if="${session.u.hasRole('PACIENTE')}">Cita inidividual</h4>
+=======
+>>>>>>> 712f2da46a6b5dd60902b2e84878627cee31159c
 				
 
 				<!-- Con el validate te sale la linea roja -->
@@ -267,6 +274,36 @@
 				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
 			</div>
 		</form>
+		
+		
+		
+		<form th:if="${session.u.hasRole('PACIENTE')}" th:action="@{/paciente/saveAppointment}" method="post"
+			name="createGroupAppointmentForm">
+			
+			<div class="modal-content">
+				<h4>Cita inidividual</h4>
+
+				<!-- Coge los pacientes por separado con chips -->
+
+				<p>Selecciona día para la sesión</p>
+				<input name="date" type="date" class="validate" required>
+
+
+				<p>Selecciona hora de la sesión</p>
+				<input name="start_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
+
+
+				<p>Selecciona hora de fin de la sesión</p>
+				<input name="finish_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
+
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect btn-flat">Cancelar</a>
+				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+			</div>
+		</form>
 	</div>
 
 	<div id="modal2" class="modal">
@@ -282,7 +319,11 @@
 	</div>
 
 	<div id="modal3" class="modal">
+<<<<<<< HEAD
 		<form th:action="@{/user/modifyAppointment}" method="post"
+=======
+		<form th:action="@{/psicologo/modifyAppointment}" method="post"
+>>>>>>> 712f2da46a6b5dd60902b2e84878627cee31159c
 			name="modifyGroupAppointmentForm">
 			<div class="modal-content">
 				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
@@ -385,7 +426,11 @@
 			//Obtengo el id
 
 			var eliminate = document.getElementById("delete");
+<<<<<<< HEAD
 			eliminate.href = "/user/deleteAppointment?id=" + a;
+=======
+			eliminate.href = "/psicologo/deleteAppointment?id=" + a;
+>>>>>>> 712f2da46a6b5dd60902b2e84878627cee31159c
 
 			document.getElementById("ID").value = a;
 			document.getElementById("ID-users").value = a;
