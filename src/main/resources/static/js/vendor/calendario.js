@@ -80,9 +80,19 @@ function renderDate() {
     	let key_string = "marked-day-" + element.innerText;
     	let value_string = element.innerText;
     	
+    	
     	element.addEventListener("click", function(e){
+        	var selected_date = new Date(dt.getFullYear(), dt.getMonth(), value_string);
     		document.getElementsByClassName("day-click-by-user")[0].innerHTML = value_string;
     		console.log("!!!"+ document.getElementsByClassName("day-click-by-user")[0]);
+    		
+    	    var dd = selected_date.getDate();
+    	    var mm = selected_date.getMonth()+1; //January is 0!
+    	    var yyyy = selected_date.getFullYear();
+    	    if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm}
+    	    today = yyyy+""+mm+""+dd;
+
+    	    document.getElementById("selectedDate").value = today;
     	})
     	
     	console.log(key_string+ ": "+ value_string);

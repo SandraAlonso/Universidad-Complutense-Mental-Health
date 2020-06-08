@@ -1,0 +1,166 @@
+<!-- Calendar MIT License -> https://codepen.io/mgrsskls/pen/KgQQgL -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Estadisticas</title>
+
+<link rel="stylesheet" href="/css/calendario.css">
+<link rel="stylesheet" href="/css/estadisticasPaciente.css">
+
+<th:block th:replace="fragments/head :: header" />
+
+
+</head>
+<body onload="renderDate()">
+
+	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
+
+
+	<!-- Menú desplegable mobile-->
+
+	<ul class="sidenav" id="mobile-demo">
+		<li><a>Mis citas</a></li>
+		<li class="active"><a href="estadisticasPaciente">Estadisticas</a></li>
+		<li><a href="ajustesPaciente">Ajustes</a></li>
+		<li><a>Cerrar sesión</a></li>
+	</ul>
+
+	<h4 class="center-align">Estadísticas de ánimo</h4>
+
+	<div class="calendar">
+		<div class="month">
+			<div class="prev" onclick="moveDate('prev')">
+				<span>&#10094;</span>
+			</div>
+			<div>
+				<h2 id="month"></h2>
+				<p id="date_str"></p>
+			</div>
+			<div class="next" onclick="moveDate('next')">
+				<span>&#10095;</span>
+			</div>
+		</div>
+		<div class="weekdays">
+			<div>Dom</div>
+			<div>Lun</div>
+			<div>Mar</div>
+			<div>Mie</div>
+			<div>Jue</div>
+			<div>Vie</div>
+			<div>Sab</div>
+		</div>
+
+		<div class="days"></div>
+
+	</div>
+
+	<div id="modal" class="modal">
+		<form th:action="@{/paciente/saveAnimosity}" method="post"
+			name="modifyGroupAppointmentForm">
+			<div class="modal-content">
+				<div>
+					<h4 class="center-align">¿Cómo te sientes?</h4>
+					<h5 class="center-align">
+						Dia <span class="day-click-by-user"></span>
+					</h5>
+				</div>
+
+				<input id="selectedDate" name="date" type="hidden"> <input
+					id="animosity" name="animosity" type="hidden">
+					
+
+				<p>Selecciona tu estado de ánimo</p>
+				<div class="emotion-state">
+					<a class="waves-effect waves-light btn-small"> <i
+						class="material-icons">sentiment_very_dissatisfied</i>
+					</a> <a class="waves-effect waves-light btn-small"> <i
+						class="material-icons">sentiment_dissatisfied</i>
+					</a> <a class="waves-effect waves-light btn-small"> <i
+						class="material-icons">sentiment_satisfied</i>
+					</a> <a class="waves-effect waves-light btn-small"> <i
+						class="material-icons">sentiment_satisfied_alt</i>
+					</a> <a class="waves-effect waves-light btn-small"> <i
+						class="material-icons">sentiment_very_satisfied</i>
+					</a>
+				</div>
+			</div>
+
+			<p>Explica porqué te siente así</p>
+			<div class="input-field col s12">
+				<textarea id="description" name="description"
+					class="materialize-textarea"></textarea>
+
+			</div>
+
+			<div class="modal-footer">
+				<a
+					class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+			</div>
+		</form>
+	</div>
+
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
+
+	<script type="text/javascript" th:inline="javascript">
+	
+	var dt = new Date();
+	
+	function renderDays() {
+	    //TODO: CONNECT THIS PART WITH OUR MODEL
+		 dt.setDate(1);
+		    var dayOne = dt.getDay();
+		    var today = new Date();
+		    //Takes a new Date object with the last day of the current month
+		    //Outside Spain, the week starts on Sunday
+		    var endDate = new Date(
+		        dt.getFullYear(),
+		        dt.getMonth() + 1,
+		        0
+		    ).getDate();
+		    
+		    //Takes the last day of the previous month
+		    var prevDate = new Date(
+		        dt.getFullYear(),
+		        dt.getMonth(),
+		        0
+		    ).getDate();
+		    
+	    for (i = 1; i <= endDate; i++) {
+            cells += "<div>" + 
+            			"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" +
+            				i +
+            			"</a>" +
+            		  "</div>";
+	        
+	    }
+	
+	    //TODO aquí thymeleaf
+	
+	
+	</script>
+
+
+	<script src="/js/vendor/calendario.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('.sidenav').sidenav();
+			$('.collapsible').collapsible();
+			$('select').formSelect();
+			$('.modal').modal();
+			$('.trigger-modal').modal();
+		});
+	</script>
+
+
+
+
+</body>
+</html>

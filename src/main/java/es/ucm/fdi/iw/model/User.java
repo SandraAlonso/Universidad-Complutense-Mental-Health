@@ -107,6 +107,11 @@ public class User {
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
 	private List<Appointment> appointments = new ArrayList<Appointment>();
+	
+	@OneToMany(targetEntity = Animosity.class)
+	@JsonIgnore
+	@OrderBy("date ASC")
+	private List<Animosity> animosity = new ArrayList<Animosity>();
 
 
 	// utility methods
