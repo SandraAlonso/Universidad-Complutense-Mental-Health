@@ -76,18 +76,6 @@ public class PsicologoController {
 		return "misPacientes";
 	}
 
-	@RequestMapping("/horario")
-	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
-		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
-		User stored = entityManager.find(User.class, requester.getId());
-		if (weeks == null)
-			weeks = 0;
-		model.addAttribute("u", stored);
-		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
-		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
-		model.addAttribute("week", weeks);
-		return "horarioPsicologo";
-	}
 
 	// Requester es el usuario que solicita la accion.
 	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
@@ -114,7 +102,7 @@ public class PsicologoController {
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
 		}
-		return "redirect:/psicologo/horario";
+		return "redirect:/user/horario";
 
 		// devolvemos el model (los datos modificados) y la session para saber
 		// quien es el usuario en todo momento
@@ -142,7 +130,7 @@ public class PsicologoController {
 			}
 		}
 
-		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
+		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
 
@@ -169,7 +157,7 @@ public class PsicologoController {
 			}
 		}
 
-		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
+		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
 	
@@ -198,7 +186,7 @@ public class PsicologoController {
 				break;
 			}
 		}
-		return "redirect:/psicologo/horario";
+		return "redirect:/user/horario";
 	}
 	
 	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)

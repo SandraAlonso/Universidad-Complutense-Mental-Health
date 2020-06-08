@@ -108,4 +108,36 @@ public class PacienteController {
 		
 		return stored.getAnimosity();
 	}
+	
+	
+	@PostMapping("/saveAppointment")
+	@Transactional
+	public String saveAppointment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+
+		int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
+		int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+		LocalTime ahora = LocalTime.now();
+		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+
+		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+			groupAppointment.setPsychologist(stored);
+			stored.addGroupAppointment(groupAppointment);
+			entityManager.persist(groupAppointment);
+			entityManager.flush();
+		}
+		return "redirect:/user/horario";
+
+		// devolvemos el model (los datos modificados) y la session para saber
+		// quien es el usuario en todo momento
+
+		/*
+		 * else { return "redirect:/errorFormulario"; }
+		 */
+
+	}
+
 }
