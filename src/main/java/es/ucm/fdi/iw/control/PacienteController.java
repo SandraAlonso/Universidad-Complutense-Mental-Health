@@ -53,7 +53,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.model.Animosity;
-import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;

@@ -102,11 +102,18 @@ public class User {
 	@JoinColumn(name = "recipient_id")
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
-
-	@OneToMany(targetEntity = Appointment.class)
+	
+	@OneToMany(targetEntity = GroupAppointment.class)
 	@JsonIgnore
+	@JoinColumn(name="psychologist_id")
 	@OrderBy("date ASC, start_hour ASC")
-	private List<Appointment> appointments = new ArrayList<Appointment>();
+	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
+
+	@OneToMany(targetEntity = IndividualAppointment.class)
+	@JsonIgnore
+	@JoinColumn(name="patient_id")
+	@OrderBy("date ASC, start_hour ASC")
+	private List<IndividualAppointment> appointments = new ArrayList<IndividualAppointment>();
 	
 	@OneToMany(targetEntity = Animosity.class)
 	@JsonIgnore
@@ -244,21 +251,30 @@ public class User {
 		this.received = received;
 	}
 
-	public void addGroupAppointment(Appointment ap) {
-		appointments.add(ap);
+	public void addGroupAppointment(GroupAppointment ap) {
+		groupAppointments.add(ap);
 	}
 	
 
-	public void removeGroupAppointment(Appointment ap) {
-		appointments.remove(ap);
+	public void removeGroupAppointment(GroupAppointment ap) {
+		groupAppointments.remove(ap);
 	}
 	
 	
-	public List<Appointment> getAppointments() {
+	public List<IndividualAppointment> getAppointments() {
 		return appointments;
 	}
+	
 
-	public void setGroupAppointments(List<Appointment> appointments) {
+	public List<GroupAppointment> getGroupAppointments() {
+		return groupAppointments;
+	}
+
+	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
+		this.groupAppointments = groupAppointments;
+	}
+
+	public void setAppointments(List<IndividualAppointment> appointments) {
 		this.appointments = appointments;
 	}
 
@@ -279,9 +295,9 @@ public class User {
 
 	} 
 
-	public List<Appointment> getAppointmentsOfTheWeek(int week) {
+	public List<GroupAppointment> getAppointmentsOfTheWeek(int week) {
 
-		List<Appointment> ga = new ArrayList<>();
+		List<GroupAppointment> ga = new ArrayList<>();
 
 		LocalDate now = LocalDate.now().plusDays(week*7); 
 		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
@@ -293,7 +309,7 @@ public class User {
 
 		System.out.println(lastDayOfTheWeek);
 
-		for (Appointment g : appointments) {
+		for (GroupAppointment g : groupAppointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
