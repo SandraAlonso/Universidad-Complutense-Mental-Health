@@ -68,13 +68,34 @@ import es.ucm.fdi.iw.model.User.Role;
 public class PsicologoController {
 
 	private static final Logger log = LogManager.getLogger(PsicologoController.class);
-
+	
 	@Autowired
-	private EntityManager entityManager;
-
-	@GetMapping("/citas")
-	public String citasPsicologo() {
+	EntityManager entityManager;
+	
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
+	
+	@Autowired // this makes httpSession always available in each method
+	private HttpSession session;
+	
+	private User userFromSession() {
+		return (User)session.getAttribute("u");
+	}
+	
+	private User refreshUser(User u) {
+		return entityManager.find(User.class, u.getId());
+	}
+	
+	@GetMapping(value = {"", "/pacientes"})
+	public String getUser(Model model) {
+		User psy = refreshUser(userFromSession());
+		model.addAttribute("pacientes", entityManager.createNamedQuery(
+			"User.findPatientsOf", User.class).setParameter("psychologistId", psy.getId())
+			.getResultList());
+		
 		return "misPacientes";
 	}
+	
+	
 
 }

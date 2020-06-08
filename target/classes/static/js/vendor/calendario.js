@@ -49,6 +49,27 @@ function renderDate() {
     
     console.log(dayOne);
     
+    var day_to_send = ("0" + dt.getDate()).slice(-2);
+	var month_to_send = ("0" + (dt.getMonth() + 1)).slice(-2);
+	var date_to_send = dt.toISOString().split("T")[0];
+    
+	
+    $.ajax({
+        url: "/paciente/getMonthAnimosity",
+        data: {
+        	"date" : date_to_send
+        },
+        type: "GET",
+        success: function(result) {
+        	console.log(result);
+            // Do something with the response.
+            // Might want to check for errors here.
+        }, error: function(error) {
+            // Here you can handle exceptions thrown by the server or your controller.
+        }
+     })
+    
+    
     //TODO: CONNECT THIS PART WITH OUR MODEL
     for (i = 1; i <= endDate; i++) {
         if (i == today.getDate() && dt.getMonth() == today.getMonth()){ 
@@ -80,9 +101,18 @@ function renderDate() {
     	let key_string = "marked-day-" + element.innerText;
     	let value_string = element.innerText;
     	
+    	
     	element.addEventListener("click", function(e){
+        	var selected_date = new Date(dt.getFullYear(), dt.getMonth(), value_string);
     		document.getElementsByClassName("day-click-by-user")[0].innerHTML = value_string;
     		console.log("!!!"+ document.getElementsByClassName("day-click-by-user")[0]);
+    		
+    		var day = ("0" + selected_date.getDate()).slice(-2);
+    		var month = ("0" + (selected_date.getMonth() + 1)).slice(-2);
+    		
+    	    var today = selected_date.getFullYear() + '-' + (month) + '-' + (day);
+
+    	    document.getElementById("selectedDate").value = today;
     	})
     	
     	console.log(key_string+ ": "+ value_string);

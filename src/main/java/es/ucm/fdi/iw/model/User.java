@@ -28,6 +28,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -65,7 +66,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		@NamedQuery(name = "User.byUsername", query = "SELECT u FROM User u "
 				+ "WHERE u.username = :username AND u.enabled = 1"),
 		@NamedQuery(name = "User.hasUsername", query = "SELECT COUNT(u) " + "FROM User u "
-				+ "WHERE u.username = :username") })
+				+ "WHERE u.username = :username"),
+		@NamedQuery(name = "User.findPatientsOf",
+		query = "SELECT u "
+				+ "FROM User u "
+				+ "WHERE u.psychologist.id = :psychologistId ")
+		})
 
 public class User {
 
@@ -89,11 +95,15 @@ public class User {
 	@Column(nullable = false)
 	private String roles; // split by ',' to separate roles
 	private byte enabled;
+	
+	@ManyToOne
+	private User psychologist;
 
 	// application-specific fields
 	private String firstName;
 	private String lastName;
-
+	private String mail;
+	
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "sender_id")
 	@JsonIgnore
@@ -306,5 +316,21 @@ public class User {
 
 		return ga;
 
+	}
+
+	public User getPsychologist() {
+		return psychologist;
+	}
+
+	public void setPsychologist(User psychologist) {
+		this.psychologist = psychologist;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 }
