@@ -1,20 +1,9 @@
 package es.ucm.fdi.iw.control;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,33 +16,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.model.GroupAppointment;
-import es.ucm.fdi.iw.LocalData;
-import es.ucm.fdi.iw.model.Message;
+import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
 import es.ucm.fdi.iw.transfer.UserTransferData;
@@ -71,9 +48,6 @@ public class PsicologoController {
 	
 	@Autowired
 	EntityManager entityManager;
-	
-	@Autowired
-	private SimpMessagingTemplate messagingTemplate;
 	
 	@Autowired // this makes httpSession always available in each method
 	private HttpSession session;
@@ -125,6 +99,19 @@ public class PsicologoController {
 	// Target es el resultado final que obtenemos despues de completar la accion y
 	// lo que guardamos en la BBDD
 
+	@RequestMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
+		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User stored = entityManager.find(User.class, requester.getId());
+		if (weeks == null)
+			weeks = 0;
+		model.addAttribute("u", stored);
+		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
+		model.addAttribute("week", weeks);
+		return "horarioPsicologo";
+	}
+
 	@PostMapping("/saveAppointment")
 	@Transactional
 	public String saveAppointment(Model model, HttpServletResponse response,
@@ -144,36 +131,38 @@ public class PsicologoController {
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
 		}
-		return "redirect:/user/horario";
-
-		// devolvemos el model (los datos modificados) y la session para saber
-		// quien es el usuario en todo momento
-
-		/*
-		 * else { return "redirect:/errorFormulario"; }
-		 */
-
+		return "redirect:/psicologo/horario";
 	}
 
 
 	@RequestMapping("/deleteAppointment")
 	@Transactional
-	public String deleteGroupAppointment(Model model, HttpServletResponse response, HttpSession session,
+	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-
-		for (GroupAppointment it : stored.getGroupAppointments()) {
-			if (it.equals(ga)) {
-				stored.removeGroupAppointment(ga);
-				entityManager.remove(ga);
-				break;
+		if(ga != null) {
+			for (GroupAppointment it : stored.getGroupAppointments()) {
+				if (it.equals(ga)) {
+					stored.removeGroupAppointment(ga);
+					entityManager.remove(ga);
+					break;
+				}
+			}
+		}
+		else {
+			IndividualAppointment ia = entityManager.find(IndividualAppointment.class, id);
+			for (IndividualAppointment it : stored.getAppointments()) {
+				if (it.equals(ia)) {
+					stored.removeAppointment(ia);
+					entityManager.remove(ia);
+					break;
+				}
 			}
 		}
 
-		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
-												// quien es el usuario en todo momento
+		return "redirect:/psicologo/horario";
 	}
 
 	@RequestMapping("/modifyAppointment")
@@ -199,7 +188,8 @@ public class PsicologoController {
 			}
 		}
 
-		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
+		
+		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
 	
@@ -224,11 +214,11 @@ public class PsicologoController {
 				}
 				ga.removeAllPatients();
 				ga.setPatient(ul);
-//				for (User u: ul) { u.addCita(ga); }
+				for (User u: ul) { u.addGroupAppointment(ga); }
 				break;
 			}
 		}
-		return "redirect:/user/horario";
+		return "redirect:/psicologo/horario";
 	}
 	
 	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)

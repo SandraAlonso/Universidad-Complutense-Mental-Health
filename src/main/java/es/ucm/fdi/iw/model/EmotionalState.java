@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-public class Animosity {
+public class EmotionalState {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Animosity {
 	private LocalDate date;
 
 	//TODO comprobar entre 0 y 5
-	private Integer animosity;
+	private Integer emotionalState;
 	
 	private String description;
 	
@@ -50,12 +50,12 @@ public class Animosity {
 		this.date = date;
 	}
 	
-	public Integer getAnimosity() {
-		return animosity;
+	public Integer getEmotionalState() {
+		return emotionalState;
 	}
 
-	public void setAnimosity(Integer animosity) {
-		this.animosity = animosity;
+	public void setEmotionalState(Integer emotionalState) {
+		this.emotionalState = emotionalState;
 	}
 
 	public String getDescription() {

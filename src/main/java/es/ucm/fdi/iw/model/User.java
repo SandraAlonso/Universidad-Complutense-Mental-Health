@@ -2,24 +2,13 @@ package es.ucm.fdi.iw.model;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -36,10 +24,7 @@ import javax.persistence.OrderBy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortComparator;
-import org.hibernate.annotations.SortType;
-import org.hibernate.collection.internal.PersistentSet;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -100,7 +85,7 @@ public class User {
 	@Column(nullable = false)
 	private String roles; // split by ',' to separate roles
 	private byte enabled;
-	
+
 	@ManyToOne
 	private User psychologist;
 
@@ -110,7 +95,6 @@ public class User {
 	private String mail;
 	private String disorder;
 	private String treatment;
-	
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "sender_id")
 	@JsonIgnore
@@ -119,35 +103,35 @@ public class User {
 	@JoinColumn(name = "recipient_id")
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
-	
+
 	@OneToMany(targetEntity = GroupAppointment.class)
 	@JsonIgnore
-	@JoinColumn(name="psychologist_id")
+	@JoinColumn(name = "psychologist_id")
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
 
 	@OneToMany(targetEntity = IndividualAppointment.class)
 	@JsonIgnore
-	@JoinColumn(name="patient_id")
+	@JoinColumn(name = "patient_id")
 	@OrderBy("date ASC, start_hour ASC")
 	private List<IndividualAppointment> appointments = new ArrayList<IndividualAppointment>();
-	
-	@OneToMany(targetEntity = Animosity.class)
+
+	@OneToMany(targetEntity = EmotionalState.class)
 	@JsonIgnore
-	@JoinColumn(name="patient_id")
+	@JoinColumn(name = "patient_id")
 	@OrderBy("date ASC")
-	private List<Animosity> animosity = new ArrayList<Animosity>();
+	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();
 
-	public void addAnimosity(Animosity a) {
-		animosity.add(a);
+	public void addEmotionalState(EmotionalState a) {
+		emotionalState.add(a);
 	}
 
-	public List<Animosity> getAnimosity() {
-		return animosity;
+	public List<EmotionalState> getEmotionalState() {
+		return emotionalState;
 	}
 
-	public void setAnimosity(List<Animosity> animosity) {
-		this.animosity = animosity;
+	public void setEmotionalState(List<EmotionalState> emotionalState) {
+		this.emotionalState = emotionalState;
 	}
 
 	// utility methods
@@ -271,17 +255,14 @@ public class User {
 	public void addGroupAppointment(GroupAppointment ap) {
 		groupAppointments.add(ap);
 	}
-	
 
 	public void removeGroupAppointment(GroupAppointment ap) {
 		groupAppointments.remove(ap);
 	}
-	
-	
+
 	public List<IndividualAppointment> getAppointments() {
 		return appointments;
 	}
-	
 
 	public List<GroupAppointment> getGroupAppointments() {
 		return groupAppointments;
@@ -294,19 +275,18 @@ public class User {
 	public void setAppointments(List<IndividualAppointment> appointments) {
 		this.appointments = appointments;
 	}
-	
+
 	public void addAppointment(IndividualAppointment a) {
 		appointments.add(a);
 	}
 
 	public List<LocalDate> getDaysOfTheWeek(int week) {
 
-		
 		List<LocalDate> dates = new ArrayList<>();
-		LocalDate ahora = LocalDate.now().plusDays(week*7);
+		LocalDate ahora = LocalDate.now().plusDays(week * 7);
 		DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
 		LocalDate startOfCurrentWeek = ahora.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-		
+
 		LocalDate printDate = startOfCurrentWeek;
 		for (int i = 0; i < 5; i++) {
 			dates.add(printDate);
@@ -314,18 +294,17 @@ public class User {
 		}
 		return dates;
 
-	} 
+	}
 
 	public List<Appointment> getAppointmentsOfTheWeek(int week) {
 
 		List<Appointment> ga = new ArrayList<>();
 
-		LocalDate now = LocalDate.now().plusDays(week*7); 
+		LocalDate now = LocalDate.now().plusDays(week * 7);
 		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
 		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
 		System.out.println(firstDayOfTheWeek);
 
-		
 		LocalDate lastDayOfTheWeek = now.plusDays(4);
 
 		System.out.println(lastDayOfTheWeek);
@@ -339,7 +318,7 @@ public class User {
 			if (comp == 0 && comp2 > 0)
 				break;
 		}
-		
+
 		for (IndividualAppointment g : appointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
@@ -349,9 +328,17 @@ public class User {
 			if (comp == 0 && comp2 > 0)
 				break;
 		}
-		
+
 		return ga;
 
+	}
+
+	public void addGroupAppointments(GroupAppointment g) {
+		groupAppointments.add(g);
+	}
+
+	public void addIndividualAppointment(IndividualAppointment g) {
+		appointments.add(g);
 	}
 
 	public User getPsychologist() {
@@ -369,7 +356,7 @@ public class User {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-
+	
 	public String getDisorder() {
 		return disorder;
 	}
@@ -384,5 +371,9 @@ public class User {
 
 	public void setTreatment(String treatment) {
 		this.treatment = treatment;
+	}
+	
+	public void removeAppointment(IndividualAppointment ap) {
+		appointments.remove(ap);
 	}
 }

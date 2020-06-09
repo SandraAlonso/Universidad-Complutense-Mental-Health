@@ -211,17 +211,4 @@ public class UserController {
 		return "user";
 	}
 	
-	@RequestMapping("/horario")
-	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
-		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
-		User stored = entityManager.find(User.class, requester.getId());
-		if (weeks == null)
-			weeks = 0;
-		model.addAttribute("u", stored);
-		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
-		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
-		model.addAttribute("week", weeks);
-		return "horarioPsicologo";
-	}
-	
 }

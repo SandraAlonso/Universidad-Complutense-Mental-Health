@@ -52,8 +52,8 @@
 	</div>
 
 	<div id="modal" class="modal">
-		<form th:action="@{/paciente/saveAnimosity}" method="post"
-			name="modifyAnimosityForm">
+		<form th:action="@{/paciente/saveEmotionalState}" method="post"
+			name="modifyEmotionalStateForm">
 			<div class="modal-content">
 				<div>
 					<h4 class="center-align">¿Cómo te sientes?</h4>
@@ -63,7 +63,7 @@
 				</div>
 
 				<input id="selectedDate" name="date" type="hidden"> 
-				<input id="animosity" name="animosity" type="hidden">
+				<input id="emotionalState" name="emotionalState" type="hidden">
 
 
 				<p>Selecciona tu estado de ánimo</p>
@@ -135,27 +135,27 @@
 		}
 
 		function very_dissatisfied() {
-			document.getElementById("animosity").value = 1;
+			document.getElementById("emotionalState").value = 1;
 			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy triste';
 		}
 
 		function dissatisfied() {
-			document.getElementById("animosity").value = 2;
+			document.getElementById("emotionalState").value = 2;
 			document.getElementById("emotion").innerHTML = 'Hoy te sientes: triste';
 		}
 
 		function satisfied() {
-			document.getElementById("animosity").value = 3;
+			document.getElementById("emotionalState").value = 3;
 			document.getElementById("emotion").innerHTML = 'Hoy te sientes: bien';
 		}
 
 		function satisfied_alt() {
-			document.getElementById("animosity").value = 4;
+			document.getElementById("emotionalState").value = 4;
 			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy bien';
 		}
 
 		function very_satisfied() {
-			document.getElementById("animosity").value = 5;
+			document.getElementById("emotionalState").value = 5;
 			document.getElementById("emotion").innerHTML = 'Hoy te sientes: genial';
 		}
 	</script>
