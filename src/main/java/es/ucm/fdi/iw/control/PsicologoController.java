@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.User;
@@ -153,7 +154,7 @@ public class PsicologoController {
 		}
 		else {
 			IndividualAppointment ia = entityManager.find(IndividualAppointment.class, id);
-			for (IndividualAppointment it : stored.getAppointments()) {
+			for (Appointment it : stored.getAppointments()) {
 				if (it.equals(ia)) {
 					stored.removeAppointment(ia);
 					entityManager.remove(ia);
@@ -214,28 +215,11 @@ public class PsicologoController {
 				}
 				ga.removeAllPatients();
 				ga.setPatient(ul);
-				for (User u: ul) { u.addGroupAppointment(ga); }
+				for (User u: ul) { u.addAppointment(ga); }
 				break;
 			}
 		}
 		return "redirect:/psicologo/horario";
 	}
 	
-	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)
-	@Transactional
-	public List<User> getUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long id,  HttpSession session) throws IOException 
-	{
-		User requester = (User) session.getAttribute("u");
-		User stored = entityManager.find(User.class, requester.getId());
-		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-
-		List<User> ul = null;
-		for (GroupAppointment it : stored.getGroupAppointments()) {
-			if (it.equals(ga)) {
-				ul = it.getPatient();
-				break;
-			}
-		}
-		return ul;
-	}
 }

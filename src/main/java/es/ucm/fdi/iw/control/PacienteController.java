@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.EmotionalState;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
@@ -130,7 +131,8 @@ public class PacienteController {
 		User stored = entityManager.find(User.class, requester.getId());
 		IndividualAppointment ga = entityManager.find(IndividualAppointment.class, id);
 
-		for (IndividualAppointment it : stored.getAppointments()) {
+		
+		for (Appointment it : stored.getAppointments()) {
 			if (it.equals(ga)) {
 				stored.removeAppointment(ga);
 				entityManager.remove(ga);

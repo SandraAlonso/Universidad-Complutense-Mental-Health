@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -110,11 +111,10 @@ public class User {
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
 
-	@OneToMany(targetEntity = IndividualAppointment.class)
+	@ManyToMany(targetEntity = Appointment.class)
 	@JsonIgnore
-	@JoinColumn(name = "patient_id")
 	@OrderBy("date ASC, start_hour ASC")
-	private List<IndividualAppointment> appointments = new ArrayList<IndividualAppointment>();
+	private List<Appointment> appointments = new ArrayList<Appointment>();
 
 	@OneToMany(targetEntity = EmotionalState.class)
 	@JsonIgnore
@@ -260,7 +260,7 @@ public class User {
 		groupAppointments.remove(ap);
 	}
 
-	public List<IndividualAppointment> getAppointments() {
+	public List<Appointment> getAppointments() {
 		return appointments;
 	}
 
@@ -272,11 +272,11 @@ public class User {
 		this.groupAppointments = groupAppointments;
 	}
 
-	public void setAppointments(List<IndividualAppointment> appointments) {
+	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
 
-	public void addAppointment(IndividualAppointment a) {
+	public void addAppointment(Appointment a) {
 		appointments.add(a);
 	}
 
@@ -319,7 +319,7 @@ public class User {
 				break;
 		}
 
-		for (IndividualAppointment g : appointments) {
+		for (Appointment g : appointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
@@ -335,10 +335,6 @@ public class User {
 
 	public void addGroupAppointments(GroupAppointment g) {
 		groupAppointments.add(g);
-	}
-
-	public void addIndividualAppointment(IndividualAppointment g) {
-		appointments.add(g);
 	}
 
 	public User getPsychologist() {
