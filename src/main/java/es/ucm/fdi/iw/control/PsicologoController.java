@@ -56,6 +56,7 @@ import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
+import es.ucm.fdi.iw.transfer.UserTransferData;
 
 /**
  * User-administration controller
@@ -95,7 +96,27 @@ public class PsicologoController {
 		return "misPacientes";
 	}
 	
+	@GetMapping(value = "/patient/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
+	@Transactional
+	@ResponseBody
+	public UserTransferData getPatient(@PathVariable("id") long id)
+	{
+		User patient = entityManager.find(User.class, id);
+		return new UserTransferData(patient);
+	}
 	
+	@PostMapping (value = "/modify/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@Transactional
+	@ResponseBody
+	public UserTransferData modifyUser(@ModelAttribute User user, @RequestParam(required=false) String disorder,
+			@RequestParam(required=false) String treatment,@PathVariable("id") long id)
+	{
+		User target = entityManager.find(User.class, id);
+		target.setDisorder(disorder);
+		target.setTreatment(treatment);
+		entityManager.merge(target);
+		return new UserTransferData(target); 
+	}
 
 
 	// Requester es el usuario que solicita la accion.
@@ -203,7 +224,7 @@ public class PsicologoController {
 				}
 				ga.removeAllPatients();
 				ga.setPatient(ul);
-				for (User u: ul) { u.addCita(ga); }
+//				for (User u: ul) { u.addCita(ga); }
 				break;
 			}
 		}

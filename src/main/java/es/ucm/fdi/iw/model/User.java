@@ -70,8 +70,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		@NamedQuery(name = "User.findPatientsOf",
 		query = "SELECT u "
 				+ "FROM User u "
-				+ "WHERE u.psychologist.id = :psychologistId ")
+				+ "WHERE u.psychologist.id = :psychologistId "),
+		@NamedQuery(name = "User.byMail",
+		query = "SELECT u "
+				+ "FROM User u "
+				+ "WHERE u.mail = :email ")
 		})
+
 
 public class User {
 
@@ -103,6 +108,8 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String mail;
+	private String disorder;
+	private String treatment;
 	
 	@OneToMany(targetEntity = Message.class)
 	@JoinColumn(name = "sender_id")
@@ -361,5 +368,21 @@ public class User {
 
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	public String getDisorder() {
+		return disorder;
+	}
+
+	public void setDisorder(String disorder) {
+		this.disorder = disorder;
+	}
+
+	public String getTreatment() {
+		return treatment;
+	}
+
+	public void setTreatment(String treatment) {
+		this.treatment = treatment;
 	}
 }

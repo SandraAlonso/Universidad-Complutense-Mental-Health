@@ -19,6 +19,21 @@ INSERT INTO user(id,enabled,username,password,roles,first_name,last_name) VALUES
 	'Berta', 'Muéstrez'
 );
 
+-- Otro usuario de ejemplo con username = c y contraseña = aa  
+INSERT INTO user(id,enabled,username,password,mail,roles,first_name,last_name,psychologist_id) VALUES (
+	3, 1, 'c', 
+	'{bcrypt}$2a$10$xLFtBIXGtYvAbRqM95JhcOaG23fHRpDoZIJrsF2cCff9xEHTTdK1u','albertuko@gmail.com',
+	'USER,PACIENTE',
+	'Alberto', 'López',2
+);
+
+-- Otro usuario de ejemplo con username = d y contraseña = aa  
+INSERT INTO user(id,enabled,username,password,mail,roles,first_name,last_name,psychologist_id) VALUES (
+	4, 1, 'd', 
+	'{bcrypt}$2a$10$xLFtBIXGtYvAbRqM95JhcOaG23fHRpDoZIJrsF2cCff9xEHTTdK1u','manolakbsa@gmail.com',
+	'USER,PACIENTE',
+	'Manola', 'Cabezabola',2
+);
 -- Unos pocos auto-mensajes de prueba
 INSERT INTO MESSAGE VALUES(1,NULL,'2020-03-23 10:48:11.074000','probando 1',1,1);
 INSERT INTO MESSAGE VALUES(2,NULL,'2020-03-23 10:48:15.149000','probando 2',1,1);

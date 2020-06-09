@@ -33,7 +33,7 @@
         <ul class="collection">
         	<li th:if="${pacientes.empty}"> No hay pacientes </li>
 	        <li class="collection-item avatar" th:each="u, itemstat: *{pacientes}">
-	          <img src="/image/ejemplo_opt.jpg" alt="" class="circle">
+	         //<img src="/image/ejemplo_opt.jpg" alt="" class="circle">
 	          <span th:text="${u.firstName}"> Title </span>
 	          <span th:text="${u.lastName}"> Title </span>
 	          <p>
@@ -43,12 +43,12 @@
 	          <p>Trastorno de ansiedad <br>
 	             Receta: Pastillas fuertes
 	          </p>-->
-	          <button th:attr="data-user-mail=${u.mail}" class="waves-effect blue lighten-5 blue-text text-darken-2 btn pacientBTN">ver info</button>
+	          <button th:attr="user-id=${u.id}" class="waves-effect blue lighten-5 blue-text text-darken-2 btn pacientBTN">ver info</button>
 	        </li>
       </ul>
     </div>
     
-    <!--  <div class="col s6">
+    <div class="col s6">
       <div class="card">
         <div class="card-content">
           <span class="card-title" id="pacientName"></span>
@@ -61,7 +61,7 @@
 	             <span class = "title"></span>
 	          	 <p>Trastorno: <input type = "text" id="pacientDisorder"/></p>
 	          	 <p>Tratamiento: <input type = "text" id="pacientTreatment"/></p>
-	          	 <a class="savePacient" href="#">Guardar cambios</a>
+	          	 <a th:attr="user-id=-1"class="savePacient" href="#">Guardar cambios</a>
 	          	 <span></span>
 	          	 <span></span>
 	          	 <span></span>
@@ -97,6 +97,13 @@
 					<a class="modal-action modal-close waves-effect waves-red btn-flat reject-entry">Cancelar</a>
 				</div>
 			</div>
-		</div>-->
+		</div>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$('.modal').modal();
+			$('.modal-trigger').modal();
+		});
+	</script>
+		<script src="/js/misPacientes.js"></script>
 </body>
 </html>
