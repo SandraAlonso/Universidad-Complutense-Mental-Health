@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!-- License: https://codyhouse.co/mit -->
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -181,11 +181,11 @@
 
 	<div class="center-align">
 		<a th:with="semanas=(${week} - 1)"
-			th:href="@{/psicologo/horario(weeks=${semanas})}"
+			th:href="@{/paciente/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
 			class="material-icons left">arrow_back</i>Anterior semana</a> <a
 			th:with="semanas=(${week} + 1)"
-			th:href="@{/psicologo/horario(weeks=${semanas})}"
+			th:href="@{/paciente/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
 			class="material-icons right">arrow_forward</i>Siguiente semana</a>
 	</div>
@@ -198,9 +198,9 @@
 			class="material-icons">add</i>
 		</a>
 		<ul>
-			<li><a
+			<li th:if="${session.u.hasRole('PACIENTE')}"><a
 				class="btn-floating blue modal-trigger" href="#modal1"><i
-					class="material-icons">group_add</i></a></li>
+					class="material-icons">person_add</i></a></li>
 		</ul>
 	</div>
 
@@ -209,10 +209,7 @@
 			<i class="material-icons">settings</i>
 		</a>
 		<ul>
-			<li><a id="add-people"
-				data-target="modal4" class="btn-floating blue modal-trigger"
-				href="#modal4"><i class="material-icons">group</i></a></li>
-			<li><a id="modify-appointment" data-target="modal3"
+			<li><a data-target="modal3"
 				class="btn-floating blue modal-trigger" href="#modal3"><i
 					class="material-icons">create</i></a></li>
 			<li><a data-target="modal2"
@@ -222,55 +219,8 @@
 	</div>
 
 	<div id="modal1" class="modal">
-		<form th:if="${session.u.hasRole('PSICOLOGO')}"
-			th:action="@{/psicologo/saveAppointment}" method="post"
-			name="createGroupAppointmentForm">
 
-			<div class="modal-content">
-				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
-
-
-				<!-- Con el validate te sale la linea roja -->
-
-				<div class="input-field col s6">
-					<input name="name" placeholder="Nombre de la terapia" type="text"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
-				</div>
-
-				<!-- Coge los pacientes por separado con chips -->
-
-				<p>Selecciona día para la sesión</p>
-				<input name="date" type="date" class="validate" required>
-
-
-				<p>Selecciona hora de la sesión</p>
-				<input name="start_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
-
-
-				<p>Selecciona hora de fin de la sesión</p>
-				<input name="finish_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
-
-				<p>Descricpión de la cita</p>
-				<div class="input-field col s12">
-					<textarea name="description" class="materialize-textarea"></textarea>
-
-				</div>
-
-
-			</div>
-			<div class="modal-footer">
-				<a class="modal-close waves-effect btn-flat">Cancelar</a>
-				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
-			</div>
-		</form>
-
-
-
-		<form th:if="${session.u.hasRole('PACIENTE')}"
-			th:action="@{/paciente/saveAppointment}" method="post"
+		<form th:action="@{/paciente/saveAppointment}" method="post"
 			name="createGroupAppointmentForm">
 
 			<div class="modal-content">
@@ -312,23 +262,12 @@
 	</div>
 
 	<div id="modal3" class="modal">
-		<form th:action="@{/psicologo/modifyAppointment}" method="post"
+		<form th:action="@{/paciente/modifyAppointment}" method="post"
 			name="modifyGroupAppointmentForm">
 			<div class="modal-content">
-				<h4 th:if="${session.u.hasRole('PSICOLOGO')}">Cita grupal</h4>
-				<h4 th:if="${session.u.hasRole('PACIENTE')}">Cita inidividual</h4>
+				<h4>Cita inidividual</h4>
 
 				<input id="ID" name="ID" type="hidden">
-
-
-				<div class="input-field col s6"
-					th:if="${session.u.hasRole('PSICOLOGO')}">
-					<input id="name" name="name" placeholder="Nombre de la terapia"
-						type="text" class="validate" required
-						pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
-				</div>
-
 
 				<p>Selecciona día para la sesión</p>
 				<input id="date" name="date" type="date" class="validate" required>
@@ -343,15 +282,6 @@
 				<input id="end-hour" name="finish_hour" type="time" min="09:00"
 					max="18:00" class="validate" required>
 
-				<p th:if="${session.u.hasRole('PSICOLOGO')}">Descricpión de la
-					cita</p>
-				<div class="input-field col s12">
-					<textarea id="description" name="description"
-						class="materialize-textarea"></textarea>
-
-				</div>
-
-
 			</div>
 			<div class="modal-footer">
 				<a class="modal-close waves-effect btn-flat">Cancelar</a>
@@ -360,122 +290,52 @@
 		</form>
 	</div>
 
-	<div id="modal4" class="modal"
-		th:if="${session.u.hasRole('PSICOLOGO')}">
-		<div class="modal-content">
-			<h4>Añade los usuarios que participarán en la sesión</h4>
-
-			<!-- Con el validate te sale la linea roja -->
-			<input id="ID-users" name="ID" type="hidden">
-
-			<p>Añade los usuarios que participarán en la sesión</p>
-			<div id="chip1" class="chips"></div>
-
-		</div>
-		<div class="modal-footer">
-			<a class="modal-close waves-effect btn-flat">Cancelar</a>
-			<button type="submit" id="button-add-users"
-				class="modal-close waves-effect btn-flat" onclick="addUsers()">Aceptar</button>
-		</div>
-	</div>
-
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
 
 	<script th:inline="javascript">
 
-		function change(arg) {
 
-			var a = arg.getAttribute("data-id");
+	function change(arg) {
 
-			/*<![CDATA[*/
+		var a = arg.getAttribute("data-id");
 
-			    var appointments = /*[[${groupAppointments}]]*/ 'default';
-				for(var i = 0; i < appointments.length; ++i) {
-					if(appointments[i].id == a) {
-						if("name" in appointments[i]) {
-							//Es grupal
-							document.getElementById("modify-appointment").classList.remove('hide');
-							document.getElementById("add-people").classList.remove('hide');
-							document.getElementById("ID").value = a;
-							document.getElementById("ID-users").value = a;
-							document.getElementById("name").value = arg
-									.getAttribute("data-name");
-							document.getElementById("date").value = arg
-									.getAttribute("data-date");
-							document.getElementById("start-hour").value = arg
-									.getAttribute("data-start");
-							document.getElementById("end-hour").value = arg
-									.getAttribute("data-end");
-							document.getElementById("description").value = arg
-									.getAttribute("data-content");
-							
-							//console.log(appointments[i].patient);
-							
-						    //var instance = M.Chips.getInstance(chips1);
+		/*<![CDATA[*/
 
-						    //console.log(instance);
-						}
-						else {
-							//Es individual	
-							document.getElementById("modify-appointment").classList.add('hide');
-							document.getElementById("add-people").classList.add('hide');
-						}
+		    var appointments = /*[[${groupAppointments}]]*/ 'default';
+			for(var i = 0; i < appointments.length; ++i) {
+				if(appointments[i].id == a) {
+					if("name" in appointments[i]) {
+						//Es grupal
 					}
-				}
+					else {
+						//Es individual	
+						document.getElementById("ID").value = a;
+						document.getElementById("date").value = arg
+								.getAttribute("data-date");
+						document.getElementById("start-hour").value = arg
+								.getAttribute("data-start");
+						document.getElementById("end-hour").value = arg
+								.getAttribute("data-end");
+						
+						document.getElementById("add-button").classList.add('hide');
+						document.getElementById("options-button").classList.remove('hide');
 
-			/*]]>*/
-			
-			document.getElementById("add-button").classList.add('hide');
-			document.getElementById("options-button").classList.remove('hide');
+						var eliminate = document.getElementById("delete");
+						eliminate.href = "/paciente/deleteAppointment?id=" + a;
 
-			var eliminate = document.getElementById("delete");
-			eliminate.href = "/psicologo/deleteAppointment?id=" + a;
-
-		}
-
-		function changeBack() {
-			document.getElementById("options-button").classList.add('hide');
-			document.getElementById("add-button").classList.remove('hide')
-		}
-
-		function addUsers() {
-			var instance = M.Chips.getInstance($('.chips'));
-			var value = null;
-			for (var i = 0; i < instance.chipsData.length; i++) {
-				if (value == null)
-					value = instance.chipsData[i].tag;
-				else {
-					value += ',' + instance.chipsData[i].tag;
+					}
 				}
 			}
 
-			var id = document.getElementById("ID-users").value;
+		/*]]>*/
+	}
 
-			window.location = "/psicologo/getUsersOfGroupAppointments?values="
-					+ value + "&id=" + id;
-			/* var users = new Object();
-			 //users.Id = ; // id of user to be deleted
-			 users.Values = value;
-
-			 $.ajax({
-			     type : 'POST',
-			     url : "/psicologo/getUsersOfGroupAppointments",
-			     dataType : 'json',
-			     data : JSON.stringify(users),
-			     contentType : 'application/json',
-			     success : function(data) {
-			        //here in data variable, you will get list of all users sent from 
-			        // spring controller in json format, currently its object
-			        // iterate it and show users on page
-
-			        //showUsers(data);
-			     },
-			     error : function() {
-			         alert('error');
-			     }
-			 });*/
-		}
+	function changeBack() {
+		document.getElementById("options-button").classList.add('hide');
+		document.getElementById("add-button").classList.remove('hide')
+	}
+	
 	</script>
 
 	<!-- 

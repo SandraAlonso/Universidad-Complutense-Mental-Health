@@ -1,12 +1,9 @@
 package es.ucm.fdi.iw.control;
 
-
 import java.io.IOException;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,10 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 import es.ucm.fdi.iw.model.GroupAppointment;
-
+import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.User;
 
 /**
@@ -50,9 +44,6 @@ public class PsicologoController {
 	
 	@Autowired
 	EntityManager entityManager;
-	
-	@Autowired
-	private SimpMessagingTemplate messagingTemplate;
 	
 	@Autowired // this makes httpSession always available in each method
 	private HttpSession session;
@@ -75,14 +66,18 @@ public class PsicologoController {
 		return "misPacientes";
 	}
 	
-	
-
-
-	// Requester es el usuario que solicita la accion.
-	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
-	// queremos cambiar
-	// Target es el resultado final que obtenemos despues de completar la accion y
-	// lo que guardamos en la BBDD
+	@RequestMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
+		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User stored = entityManager.find(User.class, requester.getId());
+		if (weeks == null)
+			weeks = 0;
+		model.addAttribute("u", stored);
+		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
+		model.addAttribute("week", weeks);
+		return "horarioPsicologo";
+	}
 
 	@PostMapping("/saveAppointment")
 	@Transactional
@@ -103,36 +98,38 @@ public class PsicologoController {
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
 		}
-
-		// devolvemos el model (los datos modificados) y la session para saber
-		// quien es el usuario en todo momento
-
-		else {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Los datos de la cita son incorrectos"); //TODO devuelve error
-		}
-		return "redirect:/user/horario";
-
+		return "redirect:/psicologo/horario";
 	}
 
 
 	@RequestMapping("/deleteAppointment")
 	@Transactional
-	public String deleteGroupAppointment(Model model, HttpServletResponse response, HttpSession session,
+	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-
-		for (GroupAppointment it : stored.getGroupAppointments()) {
-			if (it.equals(ga)) {
-				stored.removeGroupAppointment(ga);
-				entityManager.remove(ga);
-				break;
+		if(ga != null) {
+			for (GroupAppointment it : stored.getGroupAppointments()) {
+				if (it.equals(ga)) {
+					stored.removeGroupAppointment(ga);
+					entityManager.remove(ga);
+					break;
+				}
+			}
+		}
+		else {
+			IndividualAppointment ia = entityManager.find(IndividualAppointment.class, id);
+			for (IndividualAppointment it : stored.getAppointments()) {
+				if (it.equals(ia)) {
+					stored.removeAppointment(ia);
+					entityManager.remove(ia);
+					break;
+				}
 			}
 		}
 
-		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
-												// quien es el usuario en todo momento
+		return "redirect:/psicologo/horario";
 	}
 
 	@RequestMapping("/modifyAppointment")
@@ -158,7 +155,8 @@ public class PsicologoController {
 			}
 		}
 
-		return "redirect:/user/horario"; // devolvemos el model (los datos modificados) y la session para saber
+		
+		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
 	
@@ -177,8 +175,8 @@ public class PsicologoController {
 					User u = entityManager.find(User.class, values[i]);
 					if(u != null) { ul.add(u); }
 					else {
-						response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El paciente al que intentas agregar no existe"); //TODO devuelve error
-						return "redirect:/user/horario";
+						response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No eres administrador, y éste no es tu perfil"); //TODO devuelve error
+						return "redirect:/psicologo/horario";
 					}
 				}
 				ga.removeAllPatients();
@@ -187,7 +185,7 @@ public class PsicologoController {
 				break;
 			}
 		}
-		return "redirect:/user/horario";
+		return "redirect:/psicologo/horario";
 	}
 	
 	@RequestMapping(value = "/getUsersOfGroupAppointments", method = RequestMethod.POST,  consumes=MediaType.APPLICATION_JSON_VALUE)

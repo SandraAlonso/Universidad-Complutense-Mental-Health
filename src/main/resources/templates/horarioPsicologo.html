@@ -60,13 +60,14 @@
 					<ul>
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[0]))}><a
-							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
-							th:data-start="${{gp.start_hour}}"
+							th:attrappend="data-name=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}, 
+							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}"
+							th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
-							th:data-content="${gp.description}"
 							th:with="variable=(${gp.ID} % 4 + 1)"
 							th:data-event="${'event-' + variable}" th:data-id="${gp.ID}"
-							href="#0"> <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+							href="#0"> <em class="cd-schedule__name"
+								th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
 						</a></li>
 					</ul>
 				</li>
@@ -80,12 +81,13 @@
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[1]))}><a
 							th:attrappend="data-name=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}, 
-							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}" th:data-date="${{gp.date}}"
-							th:data-start="${{gp.start_hour}}"
+							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}"
+							th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
 							th:with="variable=(${gp.ID} % 4 + 1)"
 							th:data-event="${'event-' + variable}" th:data-id="${gp.ID}"
-							href="#0"> <em class="cd-schedule__name" th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
+							href="#0"> <em class="cd-schedule__name"
+								th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
 						</a></li>
 					</ul>
 				</li>
@@ -97,13 +99,14 @@
 					<ul>
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[2]))}><a
-							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
-							th:data-start="${{gp.start_hour}}"
+							th:attrappend="data-name=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}, 
+							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}"
+							th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
-							th:data-content="${gp.description}"
 							th:with="variable=(${gp.ID} % 4 + 1)"
 							th:data-event="${'event-' + variable}" th:data-id="${gp.ID}"
-							href="#0"> <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+							href="#0"> <em class="cd-schedule__name"
+								th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
 						</a></li>
 					</ul>
 				</li>
@@ -116,13 +119,14 @@
 					<ul>
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[3]))}><a
-							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
-							th:data-start="${{gp.start_hour}}"
+							th:attrappend="data-name=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}, 
+							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}"
+							th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
-							th:data-content="${gp.description}"
 							th:with="variable=(${gp.ID} % 4 + 1)"
 							th:data-event="${'event-' + variable}" th:data-id="${gp.ID}"
-							href="#0"> <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+							href="#0"> <em class="cd-schedule__name"
+								th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
 						</a></li>
 					</ul>
 				</li>
@@ -135,13 +139,14 @@
 					<ul>
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"
 							th:if=${#temporals.day(gp.date).equals(#temporals.day(days[4]))}><a
-							th:data-name="${gp.name}" th:data-date="${{gp.date}}"
-							th:data-start="${{gp.start_hour}}"
+							th:attrappend="data-name=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}, 
+							data-content=${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.description}}"
+							th:data-date="${{gp.date}}" th:data-start="${{gp.start_hour}}"
 							th:data-end="${{gp.finish_hour}}"
-							th:data-content="${gp.description}"
 							th:with="variable=(${gp.ID} % 4 + 1)"
 							th:data-event="${'event-' + variable}" th:data-id="${gp.ID}"
-							href="#0"> <em class="cd-schedule__name" th:text="${gp.name}">Ejemplo</em>
+							href="#0"> <em class="cd-schedule__name"
+								th:text="${gp instanceof T(es.ucm.fdi.iw.model.GroupAppointment)}?@{${gp.name}}:'Cita individual'">Ejemplo</em>
 						</a></li>
 					</ul>
 				</li>
@@ -176,11 +181,11 @@
 
 	<div class="center-align">
 		<a th:with="semanas=(${week} - 1)"
-			th:href="@{/user/horario(weeks=${semanas})}"
+			th:href="@{/psicologo/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
 			class="material-icons left">arrow_back</i>Anterior semana</a> <a
 			th:with="semanas=(${week} + 1)"
-			th:href="@{/user/horario(weeks=${semanas})}"
+			th:href="@{/psicologo/horario(weeks=${semanas})}"
 			class="waves-effect waves-light btn-small"><i
 			class="material-icons right">arrow_forward</i>Siguiente semana</a>
 	</div>
@@ -193,12 +198,9 @@
 			class="material-icons">add</i>
 		</a>
 		<ul>
-			<li th:if="${session.u.hasRole('PSICOLOGO')}"><a
+			<li><a
 				class="btn-floating blue modal-trigger" href="#modal1"><i
 					class="material-icons">group_add</i></a></li>
-			<li th:if="${session.u.hasRole('PACIENTE')}"><a
-				class="btn-floating blue modal-trigger" href="#modal1"><i
-					class="material-icons">person_add</i></a></li>
 		</ul>
 	</div>
 
@@ -207,10 +209,10 @@
 			<i class="material-icons">settings</i>
 		</a>
 		<ul>
-			<li th:if="${session.u.hasRole('PSICOLOGO')}"><a
+			<li><a id="add-people"
 				data-target="modal4" class="btn-floating blue modal-trigger"
 				href="#modal4"><i class="material-icons">group</i></a></li>
-			<li><a data-target="modal3"
+			<li><a id="modify-appointment" data-target="modal3"
 				class="btn-floating blue modal-trigger" href="#modal3"><i
 					class="material-icons">create</i></a></li>
 			<li><a data-target="modal2"
@@ -381,60 +383,55 @@
 		goes here </footer>
 
 	<script th:inline="javascript">
-		$.getUsers = function() {
-
-			var token = $('#_csrf').attr('content');
-			var header = $('#_csrf_header').attr('content');
-
-			var data = {
-				id : 1
-			};
-
-			$.ajax({
-				url : '/psicologo/getUsersOfGroupAppointments',
-				data : JSON.stringify(data),
-				type : 'post',
-				contentType : "application/json; charset=utf-8",
-				dataType : "json",
-				beforeSend : function(xhr) {
-					xhr.setRequestHeader(header, token);
-				},
-				success : function(result) {
-					alert(result);
-				},
-				error : function(error) {
-					// Here you can handle exceptions thrown by the server or your controller.
-				}
-			})
-		};
 
 		function change(arg) {
 
 			var a = arg.getAttribute("data-id");
-			console.log(a);
 
+			/*<![CDATA[*/
+
+			    var appointments = /*[[${groupAppointments}]]*/ 'default';
+				for(var i = 0; i < appointments.length; ++i) {
+					if(appointments[i].id == a) {
+						if("name" in appointments[i]) {
+							//Es grupal
+							document.getElementById("modify-appointment").classList.remove('hide');
+							document.getElementById("add-people").classList.remove('hide');
+							document.getElementById("ID").value = a;
+							document.getElementById("ID-users").value = a;
+							document.getElementById("name").value = arg
+									.getAttribute("data-name");
+							document.getElementById("date").value = arg
+									.getAttribute("data-date");
+							document.getElementById("start-hour").value = arg
+									.getAttribute("data-start");
+							document.getElementById("end-hour").value = arg
+									.getAttribute("data-end");
+							document.getElementById("description").value = arg
+									.getAttribute("data-content");
+							
+							//console.log(appointments[i].patient);
+							
+						    //var instance = M.Chips.getInstance(chips1);
+
+						    //console.log(instance);
+						}
+						else {
+							//Es individual	
+							document.getElementById("modify-appointment").classList.add('hide');
+							document.getElementById("add-people").classList.add('hide');
+						}
+					}
+				}
+
+			/*]]>*/
+			
 			document.getElementById("add-button").classList.add('hide');
 			document.getElementById("options-button").classList.remove('hide');
-
-			//Obtengo el id
 
 			var eliminate = document.getElementById("delete");
 			eliminate.href = "/psicologo/deleteAppointment?id=" + a;
 
-			document.getElementById("ID").value = a;
-			document.getElementById("ID-users").value = a;
-			document.getElementById("name").value = arg
-					.getAttribute("data-name");
-			document.getElementById("date").value = arg
-					.getAttribute("data-date");
-			document.getElementById("start-hour").value = arg
-					.getAttribute("data-start");
-			document.getElementById("end-hour").value = arg
-					.getAttribute("data-end");
-			document.getElementById("description").value = arg
-					.getAttribute("data-content");
-
-			$.getUsers();
 		}
 
 		function changeBack() {

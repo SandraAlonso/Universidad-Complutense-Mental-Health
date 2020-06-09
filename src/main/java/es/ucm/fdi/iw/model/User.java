@@ -348,4 +348,7 @@ public class User {
 		this.mail = mail;
 	}
 
+	public void removeAppointment(IndividualAppointment ap) {
+		appointments.remove(ap);
+	}
 }

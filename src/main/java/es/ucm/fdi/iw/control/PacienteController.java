@@ -1,12 +1,9 @@
 package es.ucm.fdi.iw.control;
 
-
 import java.io.IOException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,11 +29,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-
 import es.ucm.fdi.iw.model.EmotionalState;
+import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
-
 import es.ucm.fdi.iw.model.User;
 
 /**
@@ -49,7 +43,8 @@ import es.ucm.fdi.iw.model.User;
 @RequestMapping("paciente")
 public class PacienteController {
 
-	private static final Logger log = LogManager.getLogger(PacienteController.class);
+	//TODO usar?
+	//private static final Logger log = LogManager.getLogger(PacienteController.class);
 
 	@Autowired
 	private EntityManager entityManager;
@@ -59,25 +54,25 @@ public class PacienteController {
 		return "estadisticas";
 	}
 
-	@PostMapping("/saveEmotionalState")
+	@PostMapping("/saveAnimosity")
 	@Transactional
-	public String saveEmotionalState(Model model, HttpServletResponse response, @ModelAttribute @Valid EmotionalState emotionalState,
+	public String saveAnimosity(Model model, HttpServletResponse response, @ModelAttribute @Valid EmotionalState emotionalEstate,
 			BindingResult result, HttpSession session) {
 
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
-		emotionalState.setPatient(stored);
-		stored.addEmotionalState(emotionalState);
+		emotionalEstate.setPatient(stored);
+		stored.addEmotionalState(emotionalEstate);
 
-		entityManager.persist(emotionalState);
+		entityManager.persist(emotionalEstate);
 		entityManager.flush();
 
 		return "redirect:/paciente/estadisticas";
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getMonthEmotionalState", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, value = "/getMonthAnimosity", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<EmotionalState> obtenerOferta(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date, BindingResult result, HttpSession session) {
 		
@@ -88,6 +83,19 @@ public class PacienteController {
 		
 		
 		return stored.getEmotionalState();
+	}
+	
+	@RequestMapping("/horario")
+	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
+		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User stored = entityManager.find(User.class, requester.getId());
+		if (weeks == null)
+			weeks = 0;
+		model.addAttribute("u", stored);
+		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
+		model.addAttribute("week", weeks);
+		return "horarioPaciente";
 	}
 	
 	
@@ -110,15 +118,27 @@ public class PacienteController {
 			entityManager.persist(appointment);
 			entityManager.flush();
 		}
-		return "redirect:/user/horario";
+		return "redirect:/paciente/horario";
+	}
+	
 
-		// devolvemos el model (los datos modificados) y la session para saber
-		// quien es el usuario en todo momento
+	@RequestMapping("/deleteAppointment")
+	@Transactional
+	public String deleteGroupAppointment(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam long id) throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		IndividualAppointment ga = entityManager.find(IndividualAppointment.class, id);
 
-		/*
-		 * else { return "redirect:/errorFormulario"; }
-		 */
+		for (IndividualAppointment it : stored.getAppointments()) {
+			if (it.equals(ga)) {
+				stored.removeAppointment(ga);
+				entityManager.remove(ga);
+				break;
+			}
+		}
 
+		return "redirect:/paciente/horario";
 	}
 
 }
