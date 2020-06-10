@@ -61,11 +61,7 @@ public class PsicologoController {
 		return entityManager.find(User.class, u.getId());
 	}
 	
-	@RequestMapping("/pacientes")
-	public String getPacientes() {
-		return "pacientes";
-	}
-	
+
 	
 	
 	/*@GetMapping(value = {"", "/pacientes"})
