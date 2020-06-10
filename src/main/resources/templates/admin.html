@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- License: https://codyhouse.co/mit -->
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet" th:href="@{/css/schedule-style.css}"
+	href="../css/schedule-style.css">
+<th:block th:replace="fragments/head :: header" />
+<title>Horario</title>
+
+</head>
+
+<body>
+	<!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+	<!-- Add your site or application content here -->
+
+	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
+
+	<header class="cd-main-header text-center flex flex-column flex-center">
+		<h4 class="center-align">Panel de administración</h4>
+	</header>
+
+	<div class="row">
+		<div class="col s12">
+			<ul class="tabs">
+				<li class="tab col s4"><a class="active" href="#test1">Psicólogos</a></li>
+				<li class="tab col s4"><a href="#test2">Pacientes</a></li>
+				<li class="tab col s4"><a href="#test3">Administradores</a></li>
+			</ul>
+		</div>
+		<div id="test1" class="col s12">Test 1</div>
+		<div id="test2" class="col s12">Test 2</div>
+		<div id="test3" class="col s12">Test 3</div>
+	</div>
+
+	<div id="add-button" class="fixed-action-btn">
+		<a class="btn-floating btn-large waves-effect waves-light red"> <i
+			class="material-icons">add</i>
+		</a>
+		<ul>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">sentiment_satisfied</i></a></li>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">supervisor_account</i></a></li>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">verified_user</i></a></li>
+		</ul>
+	</div>
+
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
+
+</body>
+
+</html>
