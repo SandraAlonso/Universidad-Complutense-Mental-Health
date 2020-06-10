@@ -182,24 +182,15 @@ public class PsicologoController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-
-		for (GroupAppointment it : stored.getGroupAppointments()) {
-			if (it.equals(ga)) {
-				List<User> ul = new ArrayList<>();
-				for(int i = 0; i < values.length; ++i) {
-					User u = entityManager.find(User.class, values[i]);
-					if(u != null) { ul.add(u); }
-					else {
-						response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No eres administrador, y éste no es tu perfil"); //TODO devuelve error
-						return "redirect:/psicologo/horario";
-					}
-				}
-				ga.removeAllPatients();
-				ga.setPatient(ul);
-				for (User u: ul) { u.addAppointment(ga); }
-				break;
-			}
+		
+		List<User> lu = new ArrayList<User>();
+		for(int i = 0; i < values.length; ++i) {
+			User u = entityManager.find(User.class, values[i]);
+			if(u != null) lu.add(u);
+			else break;
 		}
+		
+		if(lu != null) ga.setPatient(lu);
 		return "redirect:/psicologo/horario";
 	}
 	

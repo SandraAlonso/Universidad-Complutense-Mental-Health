@@ -3,6 +3,8 @@ package es.ucm.fdi.iw.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -18,7 +20,11 @@ public class GroupAppointment extends Appointment {
 
 	// @NotEmpty(message="La cita debe tener pacientes")
 	// @Size(min=2, message="Debes introducir al menos dos usuarios")
-	@ManyToMany(mappedBy = "groupAppointmentsPatient")
+	@ManyToMany
+	@JoinTable(
+			  name = "patient_group_appointment", 
+			  joinColumns = @JoinColumn(name = "patient_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "group_appointment_id"))
 	private List<User> patient;
 	
 	public List<User> getPatient() {

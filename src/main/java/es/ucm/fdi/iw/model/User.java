@@ -115,11 +115,7 @@ public class User {
 	private List<Appointment> creatorAppointments = new ArrayList<Appointment>();
 	
 	//Las que tienen los pacientes asignados a un group appointment
-	@ManyToMany(targetEntity = GroupAppointment.class)
-	@JoinTable(
-			  name = "patient_group_appointment", 
-			  joinColumns = @JoinColumn(name = "patient_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "group_appointment_id"))
+	@ManyToMany(mappedBy = "patient")
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointmentsPatient = new ArrayList<GroupAppointment>();
