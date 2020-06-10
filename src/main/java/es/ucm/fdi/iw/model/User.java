@@ -120,6 +120,8 @@ public class User {
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointmentsPatient = new ArrayList<GroupAppointment>();
 
+
+
 	//Citas que individuales que tiene un psicologo
 	@OneToMany(targetEntity = IndividualAppointment.class)
 	@JsonIgnore
@@ -437,5 +439,12 @@ public class User {
 	
 	public void removePatientAppointment(GroupAppointment ap) {
 		groupAppointmentsPatient.remove(ap);
+	}
+	public List<User> getPacientes() {
+		return pacientes;
+	}
+
+	public void setPacientes(List<User> pacientes) {
+		this.pacientes = pacientes;
 	}
 }
