@@ -215,5 +215,22 @@ public class PsicologoController {
 		if(lu != null) ga.setPatient(lu);
 		return "redirect:/psicologo/horario";
 	}
-	
+	@PostMapping("/addTreatment")
+	@Transactional
+	public String addTreatment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid User user, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		User u = entityManager.find(User.class, user.getId());
+
+		if(u != null) {
+			u.setTreatment(user.getTreatment());
+			u.setDisorder(user.getDisorder());
+			
+		}
+		
+		return "redirect:/psicologo/pacientes"; // devolvemos el model (los datos modificados) y la session para saber
+												// quien es el usuario en todo momento
+	}
 }

@@ -19,10 +19,15 @@
 			<ul class="collection">
 
 				<li class="collection-item avatar" th:each="pat : ${pacientes}">
-					<span class="title" th:text="${pat.firstName}">Nombre</span>
+					<img id== "" alt="" class="circle"> <span class="title"
+					th:text="${pat.firstName}">Nombre</span>
 					<p th:text="${pat.lastName}">Apellido</p>
-					<p th:text="${pat.mail}">Email</p>
-					<button class="patient waves-effect blue lighten-5 blue-text text-darken-2 btn pacientBTN" th:onclick="|mostrarPaciente('${pat.id}')|">Mas
+					<button th:data-name="${pat.firstName}"
+						th:data-lastname="${pat.lastName}" th:data-mail="${pat.mail}"
+						th:data-disorder="${pat.disorder}"
+						th:data-treatment="${pat.treatment}"
+						th:data-emotionalState="${pat.emotionalState}"
+						class="patient waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
 						sobre el paciente</button>
 
 				</li>
@@ -31,59 +36,118 @@
 
 		</div>
 
-
-		<div class="col s6">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title" id="pacientName"></span>
-					<div class="row valign-wrapper">
-						<div class="col s4"></div>
-						<div class="col s8">
-							<form action="#" method="post">
-								<span class="title">Aqui va la foto</span><br> <span>Nombre:</span><br> <span>Apellidos:</span>
-								<span></span>
-							</form>
-						</div>
+		<div class="row">
+			<div class="col s6">
+				<div class="card">
+					<div class="card-image">
+						<img src="">
 					</div>
-
+					<div class="card-content">
+						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
+						</span><span id="name"></span><br> <span>Apellidos: </span> <span
+							id="lastname"></span><br> <span>Mail: </span> <span
+							id="mail"></span><br> <span>Tratamiento: </span> <span
+							id="treatment"></span><br> <span>Diagnostico: </span> <span
+							id="disorder"></span>
+					</div>
 					<div class="card-action">
-						<a href="#">Mis entradas</a> <a href="#">Entradas
-							del paciente</a>
-					</div>
 					
+						<form th:action="@{/psicologo/addTreatment}" method="post"
+							name="addTreatmentForm">
+							<p>
+								Tratamiento: <input type="text" id="treatment" />
+							</p>
+							<p>
+								Diagnostico: <input type="text" id="disorder" />
+
+							</p>
+							<button type="submit" class="modal-close waves-effect btn-flat">Guardar</button>
+
+						</form>
+
+
+					</div>
+					<div>
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header">
+									<i class="material-icons">border_color</i> Mis entradas
+								</div>
+								<div class="collapsible-body">
+									<p>Lorem ipsum dolor sit amet.</p>
+								</div>
+							</li>
+							<li>
+								<div class="collapsible-header">
+									<i class="material-icons">face</i> Entradas del paciente
+								</div>
+								<div class="collapsible-body">
+									<p>Lorem ipsum dolor sit amet.</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
 		<script th:inline="javascript">
 		
 		//Se debería de llamar al iniciar
 				
 		function iniciar() {
 			
-			document.querySelectorAll('.patient').forEach(item => {
-				  item.addEventListener('click', event => {
-					  event.preventDefault();
-					  var element = document.getElementsByTagName('button')[0];
-					  
+			document.querySelectorAll('.patient').forEach(item => {//coge todos los <> que tengan la palabra patient 
+				  item.addEventListener('click', event => {//para cada uno, espera a ser clicado
+					  event.preventDefault();//evita la accion por defecto del boton
+					  console.log("Hola";)
+					  console.log(document.getElementById("treatment").innerHTML);
+
+					  document.getElementById("name").innerHTML = item.getAttribute("data-name");
+					  document.getElementById("lastname").innerHTML =  item.getAttribute("data-lastname");
+					  document.getElementById("mail").innerHTML = item.getAttribute("data-mail");
+					  document.getElementById("disorder").innerHTML = item.getAttribute("data-disorder");
+					  document.getElementById("treatment").innerHTML = item.getAttribute("data-treatment");
+					  document.getElementById("emotionalState").innerHTML = item.getAttribute("data-emotionalState");
+console.log(document.getElementById("treatment").innerHTML);
 					  
 				  })
 				})
+				
+				
+				
 		}
 		
-		window.onload = iniciar;
+		window.onload = iniciar;//lo inicia al cargar la pagina
 
+		function capturar(){
+			 var porId=document.getElementById("treatment").value;
+			 var porId=document.getElementById("disorder").value;
+			 console.log(porId);
+			 iniciar();
+		}
 		
 	 	function mostrarPaciente(id) {
 	 		
 			/*<![CDATA[*/
 				
-				var appointments = /*[[${groupAppointments}]]*/ 'default';
+				var pacientes = /*[[${pacientes}]]*/ 'default';
 				
-				
-				var photo = '/user/' + element.id + '/photo?=' + element.id;
+				//var photo = '/user/' + element.id + '/photo?=' + element.id;
 
 			/*]]>*/
 
 	 		
 	 	}
 		</script>
+
+		<script>
+		$(document).ready(function(){
+				$('.collapsible').collapsible();
+		});
+				</script>
 </body>
 </html>
 
