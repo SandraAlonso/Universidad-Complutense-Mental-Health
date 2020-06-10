@@ -11,14 +11,14 @@ import javax.persistence.ManyToOne;
 public class IndividualAppointment extends Appointment {
 
 	@ManyToOne
-	User patient;
+	User psychologist;
 
-	public User getPatient() {
-		return patient;
+	public User getPsychologist() {
+		return psychologist;
 	}
 
-	public void setPatient(User patient) {
-		this.patient = patient;
+	public void setPsychologist(User psychologist) {
+		this.psychologist = psychologist;
 	}
 
 }

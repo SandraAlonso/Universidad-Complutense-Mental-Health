@@ -83,6 +83,7 @@ function go(url, method, data = {}) {
  * Actions to perform once the page is fully loaded
  */
 document.addEventListener("DOMContentLoaded", () => {
+	console.log(config);
 	if (config.socketUrl) {
 		let subs = config.admin ? 
 				["/topic/admin", "/user/queue/updates"] : ["/user/queue/updates"]

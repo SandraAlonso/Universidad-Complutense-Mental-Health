@@ -2,11 +2,13 @@ package es.ucm.fdi.iw.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -30,7 +32,15 @@ public abstract class Appointment {
 	private LocalTime finish_hour;
 	
 	@ManyToOne
-	private User psychologist;
+	private User creator;
+
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
 
 	public long getID() {
 		return ID;
@@ -62,14 +72,6 @@ public abstract class Appointment {
 
 	public void setFinish_hour(LocalTime finish_hour) {
 		this.finish_hour = finish_hour;
-	}
-
-	public User getPsychologist() {
-		return psychologist;
-	}
-
-	public void setPsychologist(User pychologist) {
-		this.psychologist = pychologist;
 	}
 
 }

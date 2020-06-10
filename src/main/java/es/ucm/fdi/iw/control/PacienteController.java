@@ -93,7 +93,7 @@ public class PacienteController {
 		if (weeks == null)
 			weeks = 0;
 		model.addAttribute("u", stored);
-		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeekPatient(weeks.intValue()));
 		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
 		model.addAttribute("week", weeks);
 		return "horarioPaciente";
@@ -107,18 +107,21 @@ public class PacienteController {
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-
-		int fecha = appointment.getDate().compareTo(LocalDate.now());
-		int hora = appointment.getFinish_hour().compareTo(appointment.getStart_hour());
-		LocalTime ahora = LocalTime.now();
-		int horaActual = appointment.getStart_hour().compareTo(ahora);
-
-		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-			appointment.setPatient(stored);
-			stored.addAppointment(appointment);
-			entityManager.persist(appointment);
-			entityManager.flush();
+		User psychologist = stored.getPsychologist();
+		if(psychologist != null) {
+			int fecha = appointment.getDate().compareTo(LocalDate.now());
+			int hora = appointment.getFinish_hour().compareTo(appointment.getStart_hour());
+			LocalTime ahora = LocalTime.now();
+			int horaActual = appointment.getStart_hour().compareTo(ahora);
+	
+			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+				appointment.setCreator(stored);
+				appointment.setPsychologist(psychologist);
+				entityManager.persist(appointment);
+				entityManager.flush();
+			}
 		}
+		//TODO sino error, debe tener un psicologo
 		return "redirect:/paciente/horario";
 	}
 	
@@ -130,17 +133,27 @@ public class PacienteController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		IndividualAppointment ga = entityManager.find(IndividualAppointment.class, id);
-
-		
-		for (Appointment it : stored.getAppointments()) {
-			if (it.equals(ga)) {
-				stored.removeAppointment(ga);
-				entityManager.remove(ga);
-				break;
-			}
-		}
-
+		if(ga != null) entityManager.remove(ga);
 		return "redirect:/paciente/horario";
+	}
+	
+	@RequestMapping("/modifyAppointment")
+	@Transactional
+	public String modifyGroupAppointment(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid IndividualAppointment appointment, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		IndividualAppointment a = entityManager.find(IndividualAppointment.class, appointment.getID());
+
+		if(a != null) {
+			a.setDate(appointment.getDate());
+			a.setStart_hour(appointment.getStart_hour());
+			a.setFinish_hour(appointment.getFinish_hour());
+		}
+		
+		return "redirect:/paciente/horario"; // devolvemos el model (los datos modificados) y la session para saber
+												// quien es el usuario en todo momento
 	}
 
 }

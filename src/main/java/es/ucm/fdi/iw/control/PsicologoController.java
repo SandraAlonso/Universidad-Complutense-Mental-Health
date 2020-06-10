@@ -61,7 +61,14 @@ public class PsicologoController {
 		return entityManager.find(User.class, u.getId());
 	}
 	
-	@GetMapping(value = {"", "/pacientes"})
+	@RequestMapping("/pacientes")
+	public String getPacientes() {
+		return "pacientes";
+	}
+	
+	
+	
+	/*@GetMapping(value = {"", "/pacientes"})
 	public String getUser(Model model) {
 		User psy = refreshUser(userFromSession());
 		model.addAttribute("pacientes", entityManager.createNamedQuery(
@@ -91,7 +98,7 @@ public class PsicologoController {
 		target.setTreatment(treatment);
 		entityManager.merge(target);
 		return new UserTransferData(target); 
-	}
+	}*/
 
 
 	// Requester es el usuario que solicita la accion.
@@ -104,10 +111,11 @@ public class PsicologoController {
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
 		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
 		User stored = entityManager.find(User.class, requester.getId());
+		System.out.println(stored.getCreatorAppointments());
 		if (weeks == null)
 			weeks = 0;
 		model.addAttribute("u", stored);
-		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeek(weeks.intValue()));
+		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeekPsychologist(weeks.intValue()));
 		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
 		model.addAttribute("week", weeks);
 		return "horarioPsicologo";
@@ -127,8 +135,7 @@ public class PsicologoController {
 		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
 
 		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-			groupAppointment.setPsychologist(stored);
-			stored.addGroupAppointment(groupAppointment);
+			groupAppointment.setCreator(stored);
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
 		}
@@ -143,26 +150,7 @@ public class PsicologoController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-		if(ga != null) {
-			for (GroupAppointment it : stored.getGroupAppointments()) {
-				if (it.equals(ga)) {
-					stored.removeGroupAppointment(ga);
-					entityManager.remove(ga);
-					break;
-				}
-			}
-		}
-		else {
-			IndividualAppointment ia = entityManager.find(IndividualAppointment.class, id);
-			for (Appointment it : stored.getAppointments()) {
-				if (it.equals(ia)) {
-					stored.removeAppointment(ia);
-					entityManager.remove(ia);
-					break;
-				}
-			}
-		}
-
+		if(ga != null) entityManager.remove(ga);
 		return "redirect:/psicologo/horario";
 	}
 
@@ -175,20 +163,13 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, groupAppointment.getID());
 
-		// int weeks = model.getAttribute("week"); //TODO podría usar directamente el
-		// requester?
-
-		for (GroupAppointment it : stored.getGroupAppointments()) {
-			if (it.equals(ga)) {
-				ga.setName(groupAppointment.getName());
-				ga.setDate(groupAppointment.getDate());
-				ga.setStart_hour(groupAppointment.getStart_hour());
-				ga.setFinish_hour(groupAppointment.getFinish_hour());
-				ga.setDescription(groupAppointment.getDescription());
-				break;
-			}
+		if(ga != null) {
+			ga.setName(groupAppointment.getName());
+			ga.setDate(groupAppointment.getDate());
+			ga.setStart_hour(groupAppointment.getStart_hour());
+			ga.setFinish_hour(groupAppointment.getFinish_hour());
+			ga.setDescription(groupAppointment.getDescription());
 		}
-
 		
 		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento

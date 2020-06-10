@@ -18,9 +18,9 @@ public class GroupAppointment extends Appointment {
 
 	// @NotEmpty(message="La cita debe tener pacientes")
 	// @Size(min=2, message="Debes introducir al menos dos usuarios")
-	@ManyToMany(targetEntity = User.class)
+	@ManyToMany(mappedBy = "groupAppointmentsPatient")
 	private List<User> patient;
-
+	
 	public List<User> getPatient() {
 		return patient;
 	}
@@ -52,4 +52,5 @@ public class GroupAppointment extends Appointment {
 	public void addPatient(User u) {
 		patient.add(u);
 	}
+	
 }

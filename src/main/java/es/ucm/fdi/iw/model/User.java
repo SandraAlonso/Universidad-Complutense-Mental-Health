@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -105,16 +106,30 @@ public class User {
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
 
-	@OneToMany(targetEntity = GroupAppointment.class)
+	
+	//Las que crea el usuario
+	@OneToMany(targetEntity = Appointment.class)
 	@JsonIgnore
-	@JoinColumn(name = "psychologist_id")
+	@JoinColumn(name = "creator_id")
 	@OrderBy("date ASC, start_hour ASC")
-	private List<GroupAppointment> groupAppointments = new ArrayList<GroupAppointment>();
+	private List<Appointment> creatorAppointments = new ArrayList<Appointment>();
+	
+	//Las que tienen los pacientes asignados a un group appointment
+	@ManyToMany(targetEntity = GroupAppointment.class)
+	@JoinTable(
+			  name = "patient_group_appointment", 
+			  joinColumns = @JoinColumn(name = "patient_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "group_appointment_id"))
+	@JsonIgnore
+	@OrderBy("date ASC, start_hour ASC")
+	private List<GroupAppointment> groupAppointmentsPatient = new ArrayList<GroupAppointment>();
 
-	@ManyToMany(targetEntity = Appointment.class)
+	//Citas que individuales que tiene un psicologo
+	@OneToMany(targetEntity = IndividualAppointment.class)
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
-	private List<Appointment> appointments = new ArrayList<Appointment>();
+	@JoinColumn(name = "psychologist_id")
+	private List<IndividualAppointment> appointments = new ArrayList<IndividualAppointment>();
 
 	@OneToMany(targetEntity = EmotionalState.class)
 	@JsonIgnore
@@ -248,36 +263,32 @@ public class User {
 		return received;
 	}
 
-	public void setReceived(List<Message> received) {
-		this.received = received;
+	public List<Appointment> getCreatorAppointments() {
+		return creatorAppointments;
 	}
 
-	public void addGroupAppointment(GroupAppointment ap) {
-		groupAppointments.add(ap);
+	public void setCreatorAppointments(List<Appointment> creatorAppointments) {
+		this.creatorAppointments = creatorAppointments;
 	}
 
-	public void removeGroupAppointment(GroupAppointment ap) {
-		groupAppointments.remove(ap);
+	public List<GroupAppointment> getGroupAppointmentsPatient() {
+		return groupAppointmentsPatient;
 	}
 
-	public List<Appointment> getAppointments() {
+	public void setGroupAppointmentsPatient(List<GroupAppointment> groupAppointmentsPatient) {
+		this.groupAppointmentsPatient = groupAppointmentsPatient;
+	}
+
+	public List<IndividualAppointment> getAppointments() {
 		return appointments;
 	}
 
-	public List<GroupAppointment> getGroupAppointments() {
-		return groupAppointments;
-	}
-
-	public void setGroupAppointments(List<GroupAppointment> groupAppointments) {
-		this.groupAppointments = groupAppointments;
-	}
-
-	public void setAppointments(List<Appointment> appointments) {
+	public void setAppointments(List<IndividualAppointment> appointments) {
 		this.appointments = appointments;
 	}
 
-	public void addAppointment(Appointment a) {
-		appointments.add(a);
+	public void setReceived(List<Message> received) {
+		this.received = received;
 	}
 
 	public List<LocalDate> getDaysOfTheWeek(int week) {
@@ -295,8 +306,8 @@ public class User {
 		return dates;
 
 	}
-
-	public List<Appointment> getAppointmentsOfTheWeek(int week) {
+	
+	public List<Appointment> getAppointmentsOfTheWeekPsychologist(int week) {
 
 		List<Appointment> ga = new ArrayList<>();
 
@@ -309,7 +320,7 @@ public class User {
 
 		System.out.println(lastDayOfTheWeek);
 
-		for (GroupAppointment g : groupAppointments) {
+		for (Appointment g : creatorAppointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
@@ -319,7 +330,7 @@ public class User {
 				break;
 		}
 
-		for (Appointment g : appointments) {
+		for (IndividualAppointment g : appointments) {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
@@ -333,8 +344,41 @@ public class User {
 
 	}
 
-	public void addGroupAppointments(GroupAppointment g) {
-		groupAppointments.add(g);
+	public List<Appointment> getAppointmentsOfTheWeekPatient(int week) {
+
+		List<Appointment> ga = new ArrayList<>();
+
+		LocalDate now = LocalDate.now().plusDays(week * 7);
+		DayOfWeek startOfCurrentWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
+		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
+		System.out.println(firstDayOfTheWeek);
+
+		LocalDate lastDayOfTheWeek = now.plusDays(4);
+
+		System.out.println(lastDayOfTheWeek);
+
+		for (Appointment g : creatorAppointments) {
+			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
+			int comp = g.getDate().compareTo(firstDayOfTheWeek);
+			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
+			if (comp > 0 && comp2 < 0)
+				ga.add(g);
+			if (comp == 0 && comp2 > 0)
+				break;
+		}
+
+		for (GroupAppointment g : groupAppointmentsPatient) {
+			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
+			int comp = g.getDate().compareTo(firstDayOfTheWeek);
+			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
+			if (comp > 0 && comp2 < 0)
+				ga.add(g);
+			if (comp == 0 && comp2 > 0)
+				break;
+		}
+
+		return ga;
+
 	}
 
 	public User getPsychologist() {
@@ -369,7 +413,27 @@ public class User {
 		this.treatment = treatment;
 	}
 	
-	public void removeAppointment(IndividualAppointment ap) {
+	public void addCreatorAppointment(Appointment ap) {
+		creatorAppointments.add(ap);
+	}
+	
+	public void removeCreatorAppointment(Appointment ap) {
+		creatorAppointments.remove(ap);
+	}
+	
+	public void addPsychologistAppointment(IndividualAppointment ap) {
+		appointments.add(ap);
+	}
+	
+	public void removePsychologistAppointment(Appointment ap) {
 		appointments.remove(ap);
+	}
+	
+	public void addPatientAppointment(GroupAppointment ap) {
+		groupAppointmentsPatient.add(ap);
+	}
+	
+	public void removePatientAppointment(GroupAppointment ap) {
+		groupAppointmentsPatient.remove(ap);
 	}
 }
