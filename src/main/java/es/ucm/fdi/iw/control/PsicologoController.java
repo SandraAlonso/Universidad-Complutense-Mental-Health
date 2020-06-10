@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -183,15 +184,16 @@ public class PsicologoController {
 	
 	@RequestMapping("/addUsersOfGroupAppointments")
 	@Transactional
-	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam long[] values, @RequestParam long id,  HttpSession session) throws IOException 
+	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam String[] values, @RequestParam long id,  HttpSession session) throws IOException 
 	{
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
 		
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byMail", User.class);		
 		List<User> lu = new ArrayList<User>();
 		for(int i = 0; i < values.length; ++i) {
-			User u = entityManager.find(User.class, values[i]);
+			User u = query.setParameter("email", values[i]).getSingleResult();
 			if(u != null) lu.add(u);
 			else break;
 		}
