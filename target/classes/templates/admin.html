@@ -1,93 +1,58 @@
 <!DOCTYPE html>
-<html 
-	xmlns:th="http://www.thymeleaf.org"
+<!-- License: https://codyhouse.co/mit -->
+<html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head><th:block th:replace="fragments/head :: header"/>
-	<title>Admin</title>
+<head>
+<link rel="stylesheet" th:href="@{/css/schedule-style.css}"
+	href="../css/schedule-style.css">
+<th:block th:replace="fragments/head :: header" />
+<title>Horario</title>
 
 </head>
+
 <body>
-	<div th:replace="fragments/nav.html :: nav">
-		Nav goes here
-	</div>
-	
-	<div class="container">
-	<div class="main">
-	<h1 th:text="#{admin.welcome}">Ojo solo admines</h1>			
-	
-	<h4>ConfiguraciÃ³n</h4>
-	<ul>
-	<li>Directorio local para archivos de usuario: <span th:text="${basePath}">tal</span>
-	<li>Perfiles activos: <span th:each="a: ${activeProfiles}" th:text="${a}">tal</span>
-	</ul>
-		<h4>Usuarios (ðŸ‘¤)</h4>
-	
-	<table class="adminTable">
-	<tr><th>Nombre & Enlace<th>Deshabilitar (ðŸ”’) Ã³ Habilitar (ðŸ”“)
-	<tr th:each="u: ${users}">
-		<td><a th:href="@{/user/{id}(id=${u.id})}" th:text="${u.username}">Pepe</a>
-		<td><form method="post" th:action="@{/admin/toggleuser(id=${u.id})}">
-			<button th:text="${u.enabled eq 1 ? 'ðŸ”“ â†’ ðŸ”’' : 'ðŸ”’ â†’ ðŸ”“'}" type="submit">ðŸ—‘</button>
-		</form>
-	</tr>
-	</table>
-		
-	</div>
-	<div id="modal1" class="modal">
-		<form th:if="${session.u.hasRole('ADMIN')}"
-			th:action="@{/admin/createUser}" method="post"
-			name="createUserForm">
+	<!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
 
-			<div class="modal-content">
-				<h4 th:if="${session.u.hasRole('ADMIN')}">Cita grupal</h4>
+	<!-- Add your site or application content here -->
 
+	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
-				<!-- Con el validate te sale la linea roja -->
+	<header class="cd-main-header text-center flex flex-column flex-center">
+		<h4 class="center-align">Panel de administraciÃ³n</h4>
+	</header>
 
-				<div class="input-field col s6">
-					<input name="name" placeholder="Nombre de la terapia" type="text"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
-				</div>
-
-				<!-- Coge los pacientes por separado con chips -->
-
-				<p>Selecciona día para la sesión</p>
-				<input name="date" type="date" class="validate" required>
-
-
-				<p>Selecciona hora de la sesión</p>
-				<input name="start_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
-
-
-				<p>Selecciona hora de fin de la sesión</p>
-				<input name="finish_hour" type="time" min="09:00" max="18:00"
-					class="validate" required>
-
-				<p>Descricpión de la cita</p>
-				<div class="input-field col s12">
-					<textarea name="description" class="materialize-textarea"></textarea>
-
-				</div>
-
-
-			</div>
-			<div class="modal-footer">
-				<a class="modal-close waves-effect btn-flat">Cancelar</a>
-				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
-			</div>
-		</form>
+	<div class="row">
+		<div class="col s12">
+			<ul class="tabs">
+				<li class="tab col s4"><a class="active" href="#test1">PsicÃ³logos</a></li>
+				<li class="tab col s4"><a href="#test2">Pacientes</a></li>
+				<li class="tab col s4"><a href="#test3">Administradores</a></li>
+			</ul>
 		</div>
+		<div id="test1" class="col s12">Test 1</div>
+		<div id="test2" class="col s12">Test 2</div>
+		<div id="test3" class="col s12">Test 3</div>
 	</div>
-		
-		
-		
-		
-		
-		
-	<footer th:replace="fragments/footer.html :: footer">
-		Footer goes here
-	</footer>
+
+	<div id="add-button" class="fixed-action-btn">
+		<a class="btn-floating btn-large waves-effect waves-light red"> <i
+			class="material-icons">add</i>
+		</a>
+		<ul>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">sentiment_satisfied</i></a></li>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">supervisor_account</i></a></li>
+			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+					class="material-icons">verified_user</i></a></li>
+		</ul>
+	</div>
+
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
+
 </body>
+
 </html>
