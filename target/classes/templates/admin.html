@@ -33,7 +33,58 @@
 	</table>
 		
 	</div>
+	<div id="modal1" class="modal">
+		<form th:if="${session.u.hasRole('ADMIN')}"
+			th:action="@{/admin/createUser}" method="post"
+			name="createUserForm">
+
+			<div class="modal-content">
+				<h4 th:if="${session.u.hasRole('ADMIN')}">Cita grupal</h4>
+
+
+				<!-- Con el validate te sale la linea roja -->
+
+				<div class="input-field col s6">
+					<input name="name" placeholder="Nombre de la terapia" type="text"
+						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
+
+				</div>
+
+				<!-- Coge los pacientes por separado con chips -->
+
+				<p>Selecciona día para la sesión</p>
+				<input name="date" type="date" class="validate" required>
+
+
+				<p>Selecciona hora de la sesión</p>
+				<input name="start_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
+
+
+				<p>Selecciona hora de fin de la sesión</p>
+				<input name="finish_hour" type="time" min="09:00" max="18:00"
+					class="validate" required>
+
+				<p>Descricpión de la cita</p>
+				<div class="input-field col s12">
+					<textarea name="description" class="materialize-textarea"></textarea>
+
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect btn-flat">Cancelar</a>
+				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+			</div>
+		</form>
+		</div>
 	</div>
+		
+		
+		
+		
+		
 		
 	<footer th:replace="fragments/footer.html :: footer">
 		Footer goes here

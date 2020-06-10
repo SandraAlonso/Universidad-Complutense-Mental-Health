@@ -22,8 +22,7 @@
 					<span class="title" th:text="${pat.firstName}">Nombre</span>
 					<p th:text="${pat.lastName}">Apellido</p>
 					<p th:text="${pat.mail}">Email</p>
-					<button th:attr="user-id=${u.id}"
-						class="waves-effect blue lighten-5 blue-text text-darken-2 btn pacientBTN">Mas
+					<button class="patient waves-effect blue lighten-5 blue-text text-darken-2 btn pacientBTN" th:onclick="|mostrarPaciente('${pat.id}')|">Mas
 						sobre el paciente</button>
 
 				</li>
@@ -51,6 +50,40 @@
 						<a href="#">Mis entradas</a> <a href="#">Entradas
 							del paciente</a>
 					</div>
+					
+		<script th:inline="javascript">
+		
+		//Se debería de llamar al iniciar
+				
+		function iniciar() {
+			
+			document.querySelectorAll('.patient').forEach(item => {
+				  item.addEventListener('click', event => {
+					  event.preventDefault();
+					  var element = document.getElementsByTagName('button')[0];
+					  
+					  
+				  })
+				})
+		}
+		
+		window.onload = iniciar;
+
+		
+	 	function mostrarPaciente(id) {
+	 		
+			/*<![CDATA[*/
+				
+				var appointments = /*[[${groupAppointments}]]*/ 'default';
+				
+				
+				var photo = '/user/' + element.id + '/photo?=' + element.id;
+
+			/*]]>*/
+
+	 		
+	 	}
+		</script>
 </body>
 </html>
 
