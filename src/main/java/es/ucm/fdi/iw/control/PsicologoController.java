@@ -106,6 +106,16 @@ public class PsicologoController {
 	// queremos cambiar
 	// Target es el resultado final que obtenemos despues de completar la accion y
 	// lo que guardamos en la BBDD
+	
+	
+	@RequestMapping("/pacientes")
+	public String getPacientes(Model model, HttpServletResponse response, HttpSession session) {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		model.addAttribute("u", stored);
+		model.addAttribute("pacientes", stored.getPacientes());
+		return "pacientes";
+	}
 
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {

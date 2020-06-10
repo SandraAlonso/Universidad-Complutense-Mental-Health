@@ -133,6 +133,12 @@ public class User {
 	@OrderBy("date ASC")
 	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();
 
+	@OneToMany(targetEntity = User.class)
+	@JoinColumn(name="psychologist_id")
+	@JsonIgnore
+	private List<User> pacientes=new ArrayList<User>();
+	
+	
 	public void addEmotionalState(EmotionalState a) {
 		emotionalState.add(a);
 	}
