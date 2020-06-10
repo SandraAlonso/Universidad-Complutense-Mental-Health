@@ -23,8 +23,8 @@ public class GroupAppointment extends Appointment {
 	@ManyToMany
 	@JoinTable(
 			  name = "patient_group_appointment", 
-			  joinColumns = @JoinColumn(name = "patient_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "group_appointment_id"))
+			  joinColumns = @JoinColumn(name = "group_appointment_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "patient_id"))
 	private List<User> patient;
 	
 	public List<User> getPatient() {

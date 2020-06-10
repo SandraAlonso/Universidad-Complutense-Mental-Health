@@ -190,11 +190,25 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
 		
-		TypedQuery<User> query = entityManager.createNamedQuery("User.byMail", User.class);		
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);		
 		List<User> lu = new ArrayList<User>();
 		for(int i = 0; i < values.length; ++i) {
-			User u = query.setParameter("email", values[i]).getSingleResult();
-			if(u != null) lu.add(u);
+			User u = query.setParameter("username", values[i]).getSingleResult();
+			if(u != null) {
+				
+				
+				String[] roles = u.getRoles().split(",");
+				boolean is_psycho = false;
+				for(int j = 0; j < roles.length; ++j) {
+					System.out.println(roles[j]);
+					if(roles[j].equals("PSICOLOGO")) {
+						is_psycho = true;
+						break;
+					}
+				}
+				if(is_psycho) break;
+				lu.add(u);
+			}
 			else break;
 		}
 		
