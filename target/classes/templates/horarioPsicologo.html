@@ -210,7 +210,7 @@
 		</a>
 		<ul>
 			<li><a id="add-people"
-				data-target="modal4" class="btn-floating blue modal-trigger"
+				data-target="modal4" class="btn-floating blue modal-trigger" onclick="getUsers()"
 				href="#modal4"><i class="material-icons">group</i></a></li>
 			<li><a id="modify-appointment" data-target="modal3"
 				class="btn-floating blue modal-trigger" href="#modal3"><i
@@ -383,10 +383,13 @@
 		goes here </footer>
 
 	<script th:inline="javascript">
+	
+		var clicked_id;
 
 		function change(arg) {
 
 			var a = arg.getAttribute("data-id");
+			clicked_id = a;
 
 			/*<![CDATA[*/
 
@@ -409,10 +412,9 @@
 									.getAttribute("data-end");
 							document.getElementById("description").value = arg
 									.getAttribute("data-content");
+														
 							
-							//console.log(appointments[i].patient);
 							
-						    //var instance = M.Chips.getInstance(chips1);
 
 						    //console.log(instance);
 						}
@@ -475,6 +477,33 @@
 			         alert('error');
 			     }
 			 });*/
+		}
+		
+		function getUsers() {
+			
+			/*<![CDATA[*/
+				
+
+		    var appointments = /*[[${groupAppointments}]]*/ 'default';
+			for(var i = 0; i < appointments.length; ++i) {
+				if(appointments[i].id == clicked_id) {
+					var patients = appointments[i].patient;
+					var instance = M.Chips.getInstance($('.chips'));
+					if(patients != null) {
+						patients.forEach(element => {
+							var photo = '/user/' + element.id + '/photo?=' + element.id;
+							instance.addChip({
+							    tag: element.mail,
+							    image: photo, // optional
+							  });
+						})
+					}
+					
+					
+				}
+			}
+			
+			/*]]>*/
 		}
 	</script>
 
