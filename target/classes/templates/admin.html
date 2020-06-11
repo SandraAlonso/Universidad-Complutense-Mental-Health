@@ -42,11 +42,39 @@
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
 						<a href="#borrar"><i class="material-icons">delete</i></a> 
 						<a href="#nuevo-psicolog"><i class="material-icons">autorenew</i></a>
-					</div></li>
+					</div>
+				</li>
 			</ul>
 		</div>
-		<div id="pacientes" class="col s12"></div>
-		<div id="administradores" class="col s12"></div>
+		<div id="pacientes" class="col s12">
+			<ul class="collection">
+				<li th:each="p : ${pacientes}" class="collection-item avatar"><img th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}"
+					alt="" class="circle"> <span class="title"><b th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+					<p th:text="${p.firstName}">Nombre</p>
+					<p th:text="${p.lastName}">Apellidos</p>
+					<div class="secondary-content">
+						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
+						<a href="#borrar"><i class="material-icons">delete</i></a> 
+						<a href="#nuevo-psicolog"><i class="material-icons">autorenew</i></a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="administradores" class="col s12">
+			<ul class="collection">
+				<li th:each="p : ${administradores}" class="collection-item avatar"><img th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}"
+					alt="" class="circle"> <span class="title"><b th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+					<p th:text="${p.firstName}">Nombre</p>
+					<p th:text="${p.lastName}">Apellidos</p>
+					<div class="secondary-content">
+						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
+						<a href="#borrar"><i class="material-icons">delete</i></a> 
+						<a href="#nuevo-psicolog"><i class="material-icons">autorenew</i></a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		
 		<div id="buscador" class="col s12">
 		
 		<h5 class="center-align">Buscador</h5>
