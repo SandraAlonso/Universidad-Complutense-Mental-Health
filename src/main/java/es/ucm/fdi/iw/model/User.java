@@ -73,7 +73,7 @@ public class User {
 	public enum Role {// los usuarios pueden tener varios roles.
 		USER, // usuario sin privilegios
 		ADMIN, // usuario con privilegios
-		PSICOLOGO, PACIENTE, MODERATOR, // remove or add roles as needed
+		PSICOLOGO, PACIENTE, // remove or add roles as needed
 	}
 
 	// do not change these fields
