@@ -26,31 +26,44 @@
 	<div class="row">
 		<div class="col s12">
 			<ul class="tabs">
-				<li class="tab col s4"><a class="active" href="#psicologos">Psicólogos</a></li>
-				<li class="tab col s4"><a href="#pacientes">Pacientes</a></li>
-				<li class="tab col s4"><a href="#administradores">Administradores</a></li>
+				<li class="tab col s3"><a class="active" href="#buscador">Buscador</a></li>
+				<li class="tab col s3"><a href="#psicologos">Psicólogos</a></li>
+				<li class="tab col s3"><a href="#pacientes">Pacientes</a></li>
+				<li class="tab col s3"><a href="#administradores">Administradores</a></li>
 			</ul>
 		</div>
 		<div id="psicologos" class="col s12">
 			<ul class="collection">
-				<li class="collection-item avatar"><img src="images/yuna.jpg"
-					alt="" class="circle"> <span class="title">Title</span>
-					<p>
-						First Line <br> Second Line
-					</p> 
+				<li th:each="p : ${psicologos}" class="collection-item avatar"><img th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}"
+					alt="" class="circle"> <span class="title"><b th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+					<p th:text="${p.firstName}">Nombre</p>
+					<p th:text="${p.lastName}">Apellidos</p>
 					<div class="secondary-content">
-					<a href="#!"><i
-						class="material-icons">remove_red_eye</i></a>
-					<a href="#!"><i
-						class="material-icons">delete</i></a>
-						<a href="#!"><i
-						class="material-icons">autorenew</i></a>
-						</div>
-				</li>
+						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
+						<a href="#borrar"><i class="material-icons">delete</i></a> 
+						<a href="#nuevo-psicolog"><i class="material-icons">autorenew</i></a>
+					</div></li>
 			</ul>
 		</div>
 		<div id="pacientes" class="col s12"></div>
 		<div id="administradores" class="col s12"></div>
+		<div id="buscador" class="col s12">
+		
+		<h5 class="center-align">Buscador</h5>
+
+
+			<div class="nav-wrapper">
+				<form>
+					<div class="input-field">
+						<input id="search" type="search" required> <label
+							class="label-icon" for="search"><i class="material-icons">search</i></label>
+						<i class="material-icons">close</i>
+					</div>
+				</form>
+			</div>
+
+
+		</div>
 	</div>
 
 	<div id="add-button" class="fixed-action-btn">
