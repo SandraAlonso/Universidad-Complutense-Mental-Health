@@ -88,4 +88,14 @@ public class AdminController {
 		return "redirect:/admin";
 	}
 
+	@RequestMapping("/deleteUser")
+	@Transactional
+	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam long id) throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		User delete = entityManager.find(User.class, id);
+		if(delete != null && delete != stored ) entityManager.remove(delete);
+		return "redirect:/admin/";
+	}
 }

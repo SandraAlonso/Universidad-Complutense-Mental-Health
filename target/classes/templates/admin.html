@@ -130,58 +130,62 @@
 				<!-- Con el validate te sale la linea roja -->
 
 				<div class="input-field col s6">
-					<input name="name" placeholder="Nombre del usuario" type="text"
+					<input id="name" name="name" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
+					<label for="name">Nombre del usuario</label>	
 				</div>
 				
 				<div class="input-field col s6">
-					<input name="name" placeholder="Apellidos del usuario" type="text"
+					<input id="last-name" name="name" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
+					<label for="last-name">Apellidos del usuario</label>	
 				</div>
 				
 				<div class="input-field col s6">
-					<input name="name" placeholder="Dirección de correo electrónico del usuario" type="text"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
+					<input id="email" name="name" type="email"
+						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">						
+					<label for="email">Dirección de correo electrónico</label>	
 				</div>
 				
 				<div class="input-field col s6">
-					<input name="name" placeholder="Nick del usuario en la plataforma" type="text"
+					<input id="nick" name="name" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
+					<label for="nick">Nick del usuario en la plataforma</label>
 				</div>
-				
 				
 				<div class="input-field col s6">
-					<input name="name" placeholder="Contraseña" type="text"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-
-				</div>
+          			<input id="password" type="password" class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
+         			 <label for="password">Contraseña del usuario</label>
+        		</div>
 				
-				<div id="chip1" class="chips"></div>
+				<!-- TODO hacer que se auto actualicen -->
+				<label>Selecciona los roles que va a tener el usuario</label>
 				
-				<p>Selecciona los roles del usuario</p>
-				<div class="emotion-state">
-					<a onclick="very_dissatisfied();"
-						class="waves-effect waves-light btn-small"> <i
-						class="material-icons">sentiment_very_dissatisfied</i>
-					</a> <a onclick="dissatisfied();"
-						class="waves-effect waves-light btn-small"> <i
-						class="material-icons">sentiment_dissatisfied</i>
-					</a> <a onclick="satisfied();"
-						class="waves-effect waves-light btn-small"> <i
-						class="material-icons">sentiment_satisfied</i>
-					</a> <a onclick="satisfied_alt();"
-						class="waves-effect waves-light btn-small"> <i
-						class="material-icons">sentiment_satisfied_alt</i>
-					</a> <a onclick="very_satisfied();"
-						class="waves-effect waves-light btn-small"> <i
-						class="material-icons">sentiment_very_satisfied</i>
-					</a>
-				</div>
-
+				 <p>
+			      <label>
+			        <input type="checkbox" />
+			        <span>User</span>
+			      </label>
+			    </p>
+			    <p>
+			      <label>
+			        <input type="checkbox" />
+			        <span>Admin</span>
+			      </label>
+			    </p>
+			    <p>
+			      <label>
+			        <input type="checkbox" />
+			        <span>Psicologo</span>
+			      </label>
+			    </p>
+			    <p>
+			      <label>
+			        <input type="checkbox" />
+			        <span>Paciente</span>
+			      </label>
+			    </p>
+			    
 			</div>
 			<div class="modal-footer">
 				<a class="modal-close waves-effect btn-flat">Cancelar</a>
