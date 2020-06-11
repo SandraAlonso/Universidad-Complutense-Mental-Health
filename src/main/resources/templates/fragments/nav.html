@@ -13,7 +13,6 @@
   
   <ul id="dropdown1" class="dropdown-content" th:if="${session.u}">
 	  <li th:if="${session.u.hasRole('USER')}"><a th:href="@{/user/{id}(id=${session.u.id})}">Modificar perfil</a></li>
-	  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>
 	  	<form th:action="@{/logout}" method="post">
 				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
 		</form>
@@ -28,7 +27,8 @@
       	  	  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
       	  	  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/horario/}">Mi horario</a></li>
 	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
-	  		  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>          
+	  		  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>
+	  		  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>        
 	      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
 			  <li>
 			  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
@@ -54,6 +54,7 @@
       	  	 <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/horario/}">Mi horario</a></li>
 	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
 	  		 <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>  
+	 		 <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>
 	  		 <form th:action="@{/logout}" method="post">
 				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
 			</form>

@@ -10,15 +10,42 @@
 		Nav goes here
 	</div>
 	
+	<header class="cd-main-header text-center flex flex-column flex-center">
+		<h4 class="center-align">Zona de usuario de  <span th:text="${user.username}">Pepe</span></h4>
+		<br>
+	</header>
+	
 	<div class="container">
 	<div class="main">
-	<h1 th:text="#{index.welcome}">Bienvenido a la plantilla de IW</h1>
-		
-	<h4>Información del usuario <span th:text="${user.username}">Pepe</span></h4>
-	
+			
 	<!--  TODO está bien esto?? -->
 	
 	<div th:if="(${session.u.id} eq ${user.id}) or ${session.u.hasRole('ADMIN')}">
+	<div class="center-align">
+		<img class="circle responsive-img" th:src="@{/user/{id}/photo(id=${user.id})}">
+		</div>
+		<h5 class="center-align">Cambiar foto de perfil</h5><br>
+		
+		<form th:action="@{/user/{id}/photo(id=${user.id})}" method="POST" enctype="multipart/form-data">
+		
+		
+		<div class="row">
+	    <div class="file-field input-field col s8">
+	     
+	    
+	      <div class="btn-large waves-effect waves-light col s2">
+	      	 <a class="white-text"><i class="material-icons left">cloud_upload</i>Foto</a>
+	        <input type="file" name="photo">
+	      </div>
+	      <div class="file-path-wrapper">
+	        <input class="file-path validate" type="text">
+	      </div>	   
+	         
+	    </div>
+	    <button class="btn-large waves-effect waves-light col s4" type="submit">Actualizar</button>
+	    </div>
+		
+		<h5 class="center-align">Cambiar datos del usuario</h5><br>
 		<!-- puedes cambiar todo -->
 		<form id="usermod" class="smallform" th:action="@{/user/{id}(id=${user.id})}" method="POST">
 			
@@ -36,23 +63,22 @@
 			<label for="pass2">(repetida)</label>
 			<input type="password" id="pass2" required name="pass2" placeholder="Confirmación"/>
 			
-			<label for="password">Roles</label>
-			<input id="roles" name="roles" required placeholder="Roles" th:value="${user.roles}"/>
-			<button type="submit">Modificar</button>
+			<label th:if="${session.u.hasRole('ADMIN')}" for="roles">Roles</label>
+			<input th:if="${session.u.hasRole('ADMIN')}" id="roles" name="roles" required placeholder="Roles" th:value="${user.roles}"/>
+			<button class="btn waves-effect waves-light col s4" type="submit">Modificar</button>
 		</form>
-		<form th:action="@{/user/{id}/photo(id=${user.id})}" method="POST" enctype="multipart/form-data">
-			Nueva foto <input type="file" name="photo"/>
-			<button type="submit">Actualizar</button>
-		</form>
-	</div>
-	<img th:src="@{/user/{id}/photo(id=${user.id})}">
-	</div>
+		
+		
+	    
+	  </form>
+	  </div>
 
-	<div class="sidebar">
+	<!-- <div class="sidebar">
 	<form th:action="@{/user/{id}/msg(id=${user.id})}" method="POST">
 	<textarea id="message" placeholder="escribe a este usuario" rows="4" cols="20"></textarea>
 	<button id="sendmsg" type="submit">Enviar</button>
 	</form>
+	</div> -->
 	</div>
 	</div>
 	
