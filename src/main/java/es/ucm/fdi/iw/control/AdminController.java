@@ -2,8 +2,11 @@ package es.ucm.fdi.iw.control;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -104,4 +107,30 @@ public class AdminController {
 		if(delete != null && delete != stored ) entityManager.remove(delete);
 		return "redirect:/admin/";
 	}
+	
+	@RequestMapping("/changePsychologist")
+	@Transactional
+	public String changePsychologist(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam long id, @RequestParam String psycho) throws IOException {
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);	
+		//Este user contiene el id del paciente y el nickname del usuario
+		User psychologist = query.setParameter("username", psycho).getSingleResult();
+		
+		//Comprobar si el usuario es un psicólgo
+		String[] roles = psychologist.getRoles().split(",");
+		boolean is_psycho = false;
+		for(int j = 0; j < roles.length; ++j) {
+			if(roles[j].equals("PSICOLOGO")) {
+				is_psycho = true;
+				break;
+			}
+		}
+		if(is_psycho) {
+			User u = entityManager.find(User.class, id);
+			u.setPsychologist(psychologist);
+		};
+
+		return "redirect:/admin/";
+	}
+	
 }

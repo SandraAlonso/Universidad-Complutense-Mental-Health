@@ -41,7 +41,7 @@
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
 						<a th:data-id="${p.id}" href="#modal2" class="borrar modal-trigger"><i class="material-icons">delete</i></a> 
-						<a th:data-id="${p.id}" href="#modal3" class="deshabilitar modal-trigger"><i class="material-icons" th:text="${p.enabled} ? 'lock_outline' : 'lock_open' ">lock_open</i></a> 
+						<a th:data-id="${p.id}" href="#modal3" class="deshabilitar modal-trigger"><i class="material-icons" th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a> 
 					</div>
 				</li>
 			</ul>
@@ -56,7 +56,7 @@
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a> 
 						<a th:data-id="${p.id}" href="#modal2" class="borrar modal-trigger"><i class="material-icons">delete</i></a> 
 						<a th:data-id="${p.id}" href="#modal3" class="deshabilitar modal-trigger"><i class="material-icons" th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a> 
-						<a href="#nuevo-psicologo"><i class="material-icons">autorenew</i></a>
+						<a th:data-id="${p.id}" href="#modal4" class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
 					</div>
 				</li>
 			</ul>
@@ -166,6 +166,9 @@
 					<input id="roles" name="roles" type="text">
 					<label for="roles">Roles del usuario en la plataforma</label>
 				</div>
+				
+				<input type="hidden" id="active" name="enabled" value="1">
+				
 				<!-- 
 				
 				 <p>
@@ -226,6 +229,26 @@
 		</div>
 	</div>
 	
+	<div id="modal4" class="modal">
+		<form th:action="@{/admin/changePsychologist}" method="post" name="saveUserForm">
+		
+		<input type="hidden" name="id" id="ID">
+		
+		<div class="modal-content">
+			<h4>Esta acción cambiará al usuario de psicólogo por el introducido</h4>
+			<div class="input-field col s6">
+					<input id="name" name="psycho" type="text"
+						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
+					<label for="name">Introduce el nombre del usuario</label>	
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="submit" class="modal-close waves-effect waves-green btn-flat">Aceptar</button>
+			<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+		</div>
+		</form>
+	</div>
+	
 	<script>
 	
 	function iniciar() {
@@ -242,6 +265,13 @@
 					var a = item.getAttribute("data-id");
 					var eliminate = document.getElementById("toggle");
 					eliminate.href = "/admin/toggleuser?id=" + a;
+			  });
+		});
+		
+		document.querySelectorAll('.renovar').forEach(item => {
+			  item.addEventListener('click', event => {
+					var a = item.getAttribute("data-id");
+					document.getElementById("ID").value = a;
 			  });
 		});
 	}
