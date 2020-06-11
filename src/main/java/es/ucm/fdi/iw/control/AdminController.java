@@ -58,21 +58,25 @@ public class AdminController {
 		return "admin";
 	}
 
-	@PostMapping("/toggleuser")
+	@RequestMapping("/toggleuser")
 	@Transactional
-	public String delUser(Model model, @RequestParam long id) {
+	public String delUser(Model model, HttpSession session, @RequestParam long id) {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
 		User target = entityManager.find(User.class, id);
-		if (target.getEnabled() == 1) {
-			// disable
-			File f = localData.getFile("user", "" + id);
-			if (f.exists()) {
-				f.delete();
+		if(stored.getId() != target.getId()) {
+			if (target.getEnabled() == 1) {
+				// disable
+				File f = localData.getFile("user", "" + id);
+				if (f.exists()) {
+					f.delete();
+				}
+				// disable user
+				target.setEnabled((byte) 0);
+			} else {
+				// enable user
+				target.setEnabled((byte) 1);
 			}
-			// disable user
-			target.setEnabled((byte) 0);
-		} else {
-			// enable user
-			target.setEnabled((byte) 1);
 		}
 		return index(model);
 	}
@@ -83,17 +87,19 @@ public class AdminController {
 			BindingResult result, HttpSession session) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		//TODO comprobar que stored tiene admin
 		entityManager.persist(user);
 		entityManager.flush();
-		return "redirect:/admin";
+		return "redirect:/admin/";
 	}
 
 	@RequestMapping("/deleteUser")
 	@Transactional
-	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
+	public String deleteUser(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		//TODO comprobar que stored tiene admin
 		User delete = entityManager.find(User.class, id);
 		if(delete != null && delete != stored ) entityManager.remove(delete);
 		return "redirect:/admin/";
