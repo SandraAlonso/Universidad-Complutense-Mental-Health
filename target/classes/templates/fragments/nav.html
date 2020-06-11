@@ -25,7 +25,6 @@
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down"> 
       	  <div th:if="${session.u}">
-      	      <li><a th:if="${session.u.hasRole('ADMIN')}" th:href="@{/admin/usuarios/}">Usuarios</a></li>
       	  	  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
       	  	  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/horario/}">Mi horario</a></li>
 	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
@@ -50,7 +49,6 @@
    
     <ul class="sidenav" id="mobile-demo">
     	<div th:if="${session.u}">
-    		<li><a th:if="${session.u.hasRole('ADMIN')}" th:href="@{/admin/usuarios/}">Usuarios</a></li>
     		 <li th:if="${session.u.hasRole('USER')}"><a th:href="@{/user/{id}(id=${session.u.id})}">Modificar perfil</a></li>
     		 <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
       	  	 <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/horario/}">Mi horario</a></li>

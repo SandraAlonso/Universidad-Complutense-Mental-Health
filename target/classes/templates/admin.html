@@ -123,8 +123,8 @@
 	</div>
 	
 	<div id="modal1" class="modal">
-		<form th:action="@{/admin/saveUser}" method="post"
-			name="createGroupAppointmentForm">
+		<form th:action="@{/admin/createUser}" method="post"
+			name="saveUserForm">
 
 			<div class="modal-content">
 				<h4>Añadir un nuevo usuario</h4>
@@ -145,24 +145,28 @@
 				</div>
 				
 				<div class="input-field col s6">
-					<input id="email" name="mail" type="email"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">						
+					<input id="email" name="mail" type="email" class="validate">						
 					<label for="email">Dirección de correo electrónico</label>	
 				</div>
 				
 				<div class="input-field col s6">
-					<input id="nick" name="usename" type="text"
+					<input id="nick" name="username" type="text"
 						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
 					<label for="nick">Nick del usuario en la plataforma</label>
 				</div>
 				
 				<div class="input-field col s6">
-          			<input id="password" type="password" class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
+          			<input id="password" type="password" name="password" class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
          			 <label for="password">Contraseña del usuario</label>
         		</div>
 				
 				<!-- TODO hacer que se auto actualicen -->
-				<label>Selecciona los roles que va a tener el usuario</label>
+				
+				<div class="input-field col s6">
+					<input id="roles" name="roles" type="text">
+					<label for="roles">Roles del usuario en la plataforma</label>
+				</div>
+				<!-- 
 				
 				 <p>
 			      <label>
@@ -188,6 +192,8 @@
 			        <span>Paciente</span>
 			      </label>
 			    </p>
+			    
+			    -->
 			    
 			</div>
 			<div class="modal-footer">
