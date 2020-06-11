@@ -30,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import es.ucm.fdi.iw.model.Appointment;
+import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.User;
@@ -47,64 +50,58 @@ import es.ucm.fdi.iw.transfer.UserTransferData;
 public class PsicologoController {
 
 	private static final Logger log = LogManager.getLogger(PsicologoController.class);
-	
+
 	@Autowired
 	EntityManager entityManager;
-	
+
 	@Autowired // this makes httpSession always available in each method
 	private HttpSession session;
-	
+
 	private User userFromSession() {
-		return (User)session.getAttribute("u");
+		return (User) session.getAttribute("u");
 	}
-	
+
 	private User refreshUser(User u) {
 		return entityManager.find(User.class, u.getId());
 	}
-	
 
-	
-	
-	/*@GetMapping(value = {"", "/pacientes"})
-	public String getUser(Model model) {
-		User psy = refreshUser(userFromSession());
-		model.addAttribute("pacientes", entityManager.createNamedQuery(
-			"User.findPatientsOf", User.class).setParameter("psychologistId", psy.getId())
-			.getResultList());
-		
-		return "misPacientes";
-	}
-	
-	@GetMapping(value = "/patient/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
-	@Transactional
-	@ResponseBody
-	public UserTransferData getPatient(@PathVariable("id") long id)
-	{
-		User patient = entityManager.find(User.class, id);
-		return new UserTransferData(patient);
-	}
-	
-	@PostMapping (value = "/modify/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	@Transactional
-	@ResponseBody
-	public UserTransferData modifyUser(@ModelAttribute User user, @RequestParam(required=false) String disorder,
-			@RequestParam(required=false) String treatment,@PathVariable("id") long id)
-	{
-		User target = entityManager.find(User.class, id);
-		target.setDisorder(disorder);
-		target.setTreatment(treatment);
-		entityManager.merge(target);
-		return new UserTransferData(target); 
-	}*/
-
+	/*
+	 * @GetMapping(value = {"", "/pacientes"}) public String getUser(Model model) {
+	 * User psy = refreshUser(userFromSession()); model.addAttribute("pacientes",
+	 * entityManager.createNamedQuery( "User.findPatientsOf",
+	 * User.class).setParameter("psychologistId", psy.getId()) .getResultList());
+	 * 
+	 * return "misPacientes"; }
+	 * 
+	 * @GetMapping(value = "/patient/{id}", produces = {
+	 * MediaType.APPLICATION_JSON_VALUE})
+	 * 
+	 * @Transactional
+	 * 
+	 * @ResponseBody public UserTransferData getPatient(@PathVariable("id") long id)
+	 * { User patient = entityManager.find(User.class, id); return new
+	 * UserTransferData(patient); }
+	 * 
+	 * @PostMapping (value = "/modify/{id}", produces = {
+	 * MediaType.APPLICATION_JSON_VALUE })
+	 * 
+	 * @Transactional
+	 * 
+	 * @ResponseBody public UserTransferData modifyUser(@ModelAttribute User
+	 * user, @RequestParam(required=false) String disorder,
+	 * 
+	 * @RequestParam(required=false) String treatment,@PathVariable("id") long id) {
+	 * User target = entityManager.find(User.class, id);
+	 * target.setDisorder(disorder); target.setTreatment(treatment);
+	 * entityManager.merge(target); return new UserTransferData(target); }
+	 */
 
 	// Requester es el usuario que solicita la accion.
 	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
 	// queremos cambiar
 	// Target es el resultado final que obtenemos despues de completar la accion y
 	// lo que guardamos en la BBDD
-	
-	
+
 	@RequestMapping("/pacientes")
 	public String getPacientes(Model model, HttpServletResponse response, HttpSession session) {
 		User requester = (User) session.getAttribute("u");
@@ -149,7 +146,6 @@ public class PsicologoController {
 		return "redirect:/psicologo/horario";
 	}
 
-
 	@RequestMapping("/deleteAppointment")
 	@Transactional
 	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
@@ -157,7 +153,8 @@ public class PsicologoController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-		if(ga != null) entityManager.remove(ga);
+		if (ga != null)
+			entityManager.remove(ga);
 		return "redirect:/psicologo/horario";
 	}
 
@@ -170,67 +167,88 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, groupAppointment.getID());
 
-		if(ga != null) {
+		if (ga != null) {
 			ga.setName(groupAppointment.getName());
 			ga.setDate(groupAppointment.getDate());
 			ga.setStart_hour(groupAppointment.getStart_hour());
 			ga.setFinish_hour(groupAppointment.getFinish_hour());
 			ga.setDescription(groupAppointment.getDescription());
 		}
-		
+
 		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
-	
+
 	@RequestMapping("/addUsersOfGroupAppointments")
 	@Transactional
-	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam String[] values, @RequestParam long id,  HttpSession session) throws IOException 
-	{
+	public String addUsersOfGroupAppointments(HttpServletResponse response, @RequestParam String[] values,
+			@RequestParam long id, HttpSession session) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-		
-		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);		
+
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
 		List<User> lu = new ArrayList<User>();
-		for(int i = 0; i < values.length; ++i) {
+		for (int i = 0; i < values.length; ++i) {
 			User u = query.setParameter("username", values[i]).getSingleResult();
-			if(u != null) {
-				
-				
+			if (u != null) {
+
 				String[] roles = u.getRoles().split(",");
 				boolean is_psycho = false;
-				for(int j = 0; j < roles.length; ++j) {
+				for (int j = 0; j < roles.length; ++j) {
 					System.out.println(roles[j]);
-					if(roles[j].equals("PSICOLOGO")) {
+					if (roles[j].equals("PSICOLOGO")) {
 						is_psycho = true;
 						break;
 					}
 				}
-				if(is_psycho) break;
+				if (is_psycho)
+					break;
 				lu.add(u);
-			}
-			else break;
+			} else
+				break;
 		}
-		
-		if(lu != null) ga.setPatient(lu);
+
+		if (lu != null)
+			ga.setPatient(lu);
 		return "redirect:/psicologo/horario";
 	}
+
 	@PostMapping("/addTreatment")
 	@Transactional
-	public String addTreatment(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid User user, BindingResult result, HttpSession session)
-			throws IOException {
+	public String addTreatment(Model model, HttpServletResponse response, @ModelAttribute @Valid User user,
+			BindingResult result, HttpSession session) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		User u = entityManager.find(User.class, user.getId());
 
-		if(u != null) {
-			u.setTreatment(user.getTreatment());
-			u.setDisorder(user.getDisorder());
-			
+		if (u != null) {
+			if (user.getTreatment() != "")
+				u.setTreatment(user.getTreatment());
+			if (user.getDisorder() != "")
+				u.setDisorder(user.getDisorder());
+
 		}
-		
+
 		return "redirect:/psicologo/pacientes"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
+	}
+
+	@PostMapping("/addPsycologistEntry")
+	@Transactional
+	public String addPsycologistEntry(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid EntradasPsicologo description, BindingResult result, HttpSession session)
+			throws IOException {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		LocalDate date = LocalDate.now();
+		description.setPatient(stored);
+		description.setDate(date);
+		stored.addPsychologistEntry(description);
+
+		entityManager.persist(description);
+		entityManager.flush();
+
+		return "redirect:/psicologo/pacientes";
 	}
 }

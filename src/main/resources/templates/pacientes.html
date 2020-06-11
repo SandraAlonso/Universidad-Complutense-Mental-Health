@@ -18,14 +18,15 @@
 		<div class="col s6">
 			<ul class="collection">
 
-				<li class="collection-item avatar" th:each="pat : ${pacientes}">
-					<img id== "" alt="" class="circle"> <span class="title"
+				<li class="collection-item avatar" th:each="pat : ${u.pacientes}">
+					<img th:src="@{${'/user/' + pat.id + '/photo?=' + pat.id}}" alt=""
+					class="circle"> <span class="title"
 					th:text="${pat.firstName}">Nombre</span>
 					<p th:text="${pat.lastName}">Apellido</p>
-					<button th:data-name="${pat.firstName}"
+					<button th:data-name="${pat.firstName}" th:data-id="${pat.id}"
 						th:data-lastname="${pat.lastName}" th:data-mail="${pat.mail}"
 						th:data-disorder="${pat.disorder}"
-						th:data-treatment="${pat.treatment}"
+						th:data-treatment="${pat.treatment}" 
 						th:data-emotionalState="${pat.emotionalState}"
 						class="patient waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
 						sobre el paciente</button>
@@ -40,7 +41,7 @@
 			<div class="col s6">
 				<div class="card">
 					<div class="card-image">
-						<img src="">
+						<img width="256" height="256" id="photo">
 					</div>
 					<div class="card-content">
 						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
@@ -51,20 +52,36 @@
 							id="disorder"></span>
 					</div>
 					<div class="card-action">
-					
+
 						<form th:action="@{/psicologo/addTreatment}" method="post"
 							name="addTreatmentForm">
 							<p>
-								Tratamiento: <input type="text" id="treatment" />
+								Tratamiento: <input name="treatment" type="text" id="treatment" />
+								<!--  con id coge el script de abajo y con name lo pasa al controller -->
 							</p>
 							<p>
-								Diagnostico: <input type="text" id="disorder" />
+								Diagnostico: <input name="disorder" type="text" id="disorder" />
 
 							</p>
-							<button type="submit" class="modal-close waves-effect btn-flat">Guardar</button>
+
+							<input type="hidden" id="ID" name="id">
+							<button type="submit"
+								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
 
 						</form>
+						<br>
+						<form th:action="@{/psicologo/addPsycologistEntry}" method="post"
+							name="addPsycologistEntryForm">
+							<p>
+								Nueva entrada: <input name="description" type="text"
+									id="description" />
 
+							</p>
+							<input type="hidden" id="ID" name="id">
+							<button type="submit"
+								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
+
+						</form>
 
 					</div>
 					<div>
@@ -102,17 +119,15 @@
 			document.querySelectorAll('.patient').forEach(item => {//coge todos los <> que tengan la palabra patient 
 				  item.addEventListener('click', event => {//para cada uno, espera a ser clicado
 					  event.preventDefault();//evita la accion por defecto del boton
-					  console.log("Hola";)
-					  console.log(document.getElementById("treatment").innerHTML);
+					  document.getElementById("photo").src='/user/' + item.getAttribute("data-id") + '/photo?=' + item.getAttribute("data-id");
 
+					  document.getElementById("ID").value = item.getAttribute("data-id");
 					  document.getElementById("name").innerHTML = item.getAttribute("data-name");
 					  document.getElementById("lastname").innerHTML =  item.getAttribute("data-lastname");
 					  document.getElementById("mail").innerHTML = item.getAttribute("data-mail");
 					  document.getElementById("disorder").innerHTML = item.getAttribute("data-disorder");
 					  document.getElementById("treatment").innerHTML = item.getAttribute("data-treatment");
-					  document.getElementById("emotionalState").innerHTML = item.getAttribute("data-emotionalState");
-console.log(document.getElementById("treatment").innerHTML);
-					  
+					  mostrarPaciente(item.getAttribute("data-id"));
 				  })
 				})
 				
@@ -122,20 +137,18 @@ console.log(document.getElementById("treatment").innerHTML);
 		
 		window.onload = iniciar;//lo inicia al cargar la pagina
 
-		function capturar(){
-			 var porId=document.getElementById("treatment").value;
-			 var porId=document.getElementById("disorder").value;
-			 console.log(porId);
-			 iniciar();
-		}
 		
 	 	function mostrarPaciente(id) {
-	 		
 			/*<![CDATA[*/
-				
 				var pacientes = /*[[${pacientes}]]*/ 'default';
-				
-				//var photo = '/user/' + element.id + '/photo?=' + element.id;
+			console.log(pacientes);
+				for(var i = 0;i< pacientes.length;i++){
+					if(pacientes[i].id==id){
+						//document.getElementById("description").value= pacientes[i].getAttribute("data-description");
+						console.log(pacientes[i]);
+						//console.log(document.getElementById("description").value);
+					}
+				}
 
 			/*]]>*/
 
