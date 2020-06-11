@@ -54,6 +54,7 @@ public class AdminController {
 		model.addAttribute("activeProfiles", env.getActiveProfiles());
 		model.addAttribute("basePath", env.getProperty("es.ucm.fdi.base-path"));
 
+		
 		model.addAttribute("psicologos", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%PSICOLOGO%'").getResultList());
 		model.addAttribute("pacientes", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%PACIENTE%'").getResultList());
 		model.addAttribute("administradores", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%ADMIN%'").getResultList());
@@ -131,6 +132,26 @@ public class AdminController {
 		};
 
 		return "redirect:/admin/";
+	}
+	
+	@RequestMapping("/findUsers")
+	@Transactional
+	public String findUser(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam String filter, @RequestParam String search) throws IOException {
+
+		switch(filter) {
+		case "nickname":
+			model.addAttribute("busqueda", entityManager.createQuery("SELECT u FROM User u WHERE u.username LIKE '%" + search + "%'").getResultList());
+			break;
+		case "email":
+			model.addAttribute("busqueda", entityManager.createQuery("SELECT u FROM User u WHERE u.mail LIKE '%" + search + "%'").getResultList());
+			break;
+		case "nombre":
+			model.addAttribute("busqueda", entityManager.createQuery("SELECT u FROM User u WHERE u.firstName LIKE '%" + search + "%'").getResultList());
+			break;
+		}
+		return index(model);
+
 	}
 	
 }
