@@ -22,12 +22,12 @@
             width: 100%;
             padding: 40px 30px;
             text-align: center;
-            background-color: #2ecc71;
+            background-color: #ff8080;
             color: #fff;
         }
 
         .weekdays {
-            background-color: #27ae60;
+            background-color: #ff5b5b;
             color: #fff;
             padding: 7px 0;
             display: flex;
@@ -57,7 +57,7 @@
         }
 
         .today {
-            background-color: #27ae60;
+            background-color: #ff5b5b;
             color: #fff;
         }
 

@@ -44,8 +44,9 @@ import es.ucm.fdi.iw.model.User;
 @RequestMapping("paciente")
 public class PacienteController {
 
-	//TODO usar?
-	//private static final Logger log = LogManager.getLogger(PacienteController.class);
+	// TODO usar?
+	// private static final Logger log =
+	// LogManager.getLogger(PacienteController.class);
 
 	@Autowired
 	private EntityManager entityManager;
@@ -55,37 +56,40 @@ public class PacienteController {
 		return "estadisticas";
 	}
 
-	@PostMapping("/saveAnimosity")
+	@PostMapping("/saveEmotionalState")
 	@Transactional
-	public String saveAnimosity(Model model, HttpServletResponse response, @ModelAttribute @Valid EmotionalState emotionalEstate,
-			BindingResult result, HttpSession session) {
+	public String saveAnimosity(Model model, HttpServletResponse response,
+			@ModelAttribute @Valid EmotionalState emotionalEstate, BindingResult result, HttpSession session) {
 
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
-		emotionalEstate.setPatient(stored);
-		stored.addEmotionalState(emotionalEstate);
+		int fecha = emotionalEstate.getDate().compareTo(LocalDate.now());//solo se pueden añadir las anteriores o iguales a hoy
+		if (fecha <= 0) {
+			emotionalEstate.setPatient(stored);
+			stored.addEmotionalState(emotionalEstate);
 
-		entityManager.persist(emotionalEstate);
-		entityManager.flush();
-
+			entityManager.persist(emotionalEstate);
+			entityManager.flush();
+		}
 		return "redirect:/paciente/estadisticas";
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getMonthAnimosity", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<EmotionalState> obtenerOferta(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date, BindingResult result, HttpSession session) {
-		
+	public List<EmotionalState> obtenerOferta(
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date, BindingResult result,
+			HttpSession session) {
+
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
-		//TODO cambiar para que sean las de solo un mes, esto solo es una prueba
-		
-		
+		// TODO cambiar para que sean las de solo un mes, esto solo es una prueba
+
 		return stored.getEmotionalState();
 	}
-	
+
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
 		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
@@ -98,8 +102,7 @@ public class PacienteController {
 		model.addAttribute("week", weeks);
 		return "horarioPaciente";
 	}
-	
-	
+
 	@PostMapping("/saveAppointment")
 	@Transactional
 	public String saveAppointment(Model model, HttpServletResponse response,
@@ -108,12 +111,12 @@ public class PacienteController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		User psychologist = stored.getPsychologist();
-		if(psychologist != null) {
+		if (psychologist != null) {
 			int fecha = appointment.getDate().compareTo(LocalDate.now());
 			int hora = appointment.getFinish_hour().compareTo(appointment.getStart_hour());
 			LocalTime ahora = LocalTime.now();
 			int horaActual = appointment.getStart_hour().compareTo(ahora);
-	
+
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
 				appointment.setCreator(stored);
 				appointment.setPsychologist(psychologist);
@@ -121,10 +124,9 @@ public class PacienteController {
 				entityManager.flush();
 			}
 		}
-		//TODO sino error, debe tener un psicologo
+		// TODO sino error, debe tener un psicologo
 		return "redirect:/paciente/horario";
 	}
-	
 
 	@RequestMapping("/deleteAppointment")
 	@Transactional
@@ -133,10 +135,11 @@ public class PacienteController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		IndividualAppointment ga = entityManager.find(IndividualAppointment.class, id);
-		if(ga != null) entityManager.remove(ga);
+		if (ga != null)
+			entityManager.remove(ga);
 		return "redirect:/paciente/horario";
 	}
-	
+
 	@RequestMapping("/modifyAppointment")
 	@Transactional
 	public String modifyGroupAppointment(Model model, HttpServletResponse response,
@@ -146,12 +149,12 @@ public class PacienteController {
 		User stored = entityManager.find(User.class, requester.getId());
 		IndividualAppointment a = entityManager.find(IndividualAppointment.class, appointment.getID());
 
-		if(a != null) {
+		if (a != null) {
 			a.setDate(appointment.getDate());
 			a.setStart_hour(appointment.getStart_hour());
 			a.setFinish_hour(appointment.getFinish_hour());
 		}
-		
+
 		return "redirect:/paciente/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
