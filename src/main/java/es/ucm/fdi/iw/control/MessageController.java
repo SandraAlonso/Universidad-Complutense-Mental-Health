@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -48,6 +49,18 @@ public class MessageController {
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(), u.getReceived().size());
 		return Message.asTransferObjects(u.getReceived());
+	}	
+	
+	@GetMapping(path = "/get/{id}", produces = "application/json")
+	@Transactional // para no recibir resultados inconsistentes
+	@ResponseBody // para indicar que no devuelve vista, sino un objeto (jsonizado)
+	public List<Message.Transfer> getById(HttpSession session, @PathVariable long id) {
+		long userId = ((User)session.getAttribute("u")).getId();
+		User u = entityManager.find(User.class, userId);
+		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE (RECIPIENT_ID=" + id + " AND SENDER_ID=" + userId  + ") OR (RECIPIENT_ID=" + userId + " AND SENDER_ID=" + id  + ")").getResultList();
+		log.info("Generating message list for user {} ({} messages)", 
+				u.getUsername(),lm.size());
+		return Message.asTransferObjects(lm);
 	}	
 	
 	@GetMapping(path = "/unread", produces = "application/json")
