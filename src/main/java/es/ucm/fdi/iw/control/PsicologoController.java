@@ -103,13 +103,19 @@ public class PsicologoController {
 	// lo que guardamos en la BBDD
 
 	@RequestMapping("/pacientes")
-	public String getPacientes(Model model, HttpServletResponse response, HttpSession session) {
+	public String getPacientes(Model model, HttpServletResponse response, HttpSession session, @RequestParam(required = false) Long id) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		User patie = entityManager.find(User.class, id);
+
 		model.addAttribute("u", stored);
-		model.addAttribute("pacientes", stored.getPacientes());
+		model.addAttribute("patie", patie);
+		
 		return "pacientes";
 	}
+	
+	
+	
 
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {

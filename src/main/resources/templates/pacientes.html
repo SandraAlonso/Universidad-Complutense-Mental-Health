@@ -22,14 +22,10 @@
 					<img th:src="@{${'/user/' + pat.id + '/photo?=' + pat.id}}" alt=""
 					class="circle"> <span class="title"
 					th:text="${pat.firstName}">Nombre</span>
-					<p th:text="${pat.lastName}">Apellido</p>
-					<button th:data-name="${pat.firstName}" th:data-id="${pat.id}"
-						th:data-lastname="${pat.lastName}" th:data-mail="${pat.mail}"
-						th:data-disorder="${pat.disorder}"
-						th:data-treatment="${pat.treatment}" 
-						th:data-emotionalState="${pat.emotionalState}"
-						class="patient waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
-						sobre el paciente</button>
+					<p th:text="${pat.lastName}">Apellido</p> <a
+					th:href="@{/psicologo/pacientes(id=${pat.id})}"
+					class=" waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
+						sobre el paciente</a>
 
 				</li>
 
@@ -45,11 +41,11 @@
 					</div>
 					<div class="card-content">
 						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
-						</span><span id="name"></span><br> <span>Apellidos: </span> <span
-							id="lastname"></span><br> <span>Mail: </span> <span
-							id="mail"></span><br> <span>Tratamiento: </span> <span
-							id="treatment"></span><br> <span>Diagnostico: </span> <span
-							id="disorder"></span>
+						</span><span th:if= ${patie} th:text="${patie.lastName}"></span><br> <span>Apellidos:
+						</span> <span th:if= ${patie}  th:text="${patie.lastName}"></span><br> <span>Mail:
+						</span> <span th:if= ${patie}  th:text="${patie.mail}"></span><br> <span>Tratamiento:
+						</span> <span th:if= ${patie}  th:text="${patie.treatment}"></span><br> <span>Diagnostico:
+						</span> <span th:if= ${patie}  th:text="${patie.disorder}"></span>
 					</div>
 					<div class="card-action">
 
@@ -84,6 +80,7 @@
 						</form>
 
 					</div>
+
 					<div>
 						<ul class="collapsible">
 							<li>
@@ -91,17 +88,30 @@
 									<i class="material-icons">border_color</i> Mis entradas
 								</div>
 								<div class="collapsible-body">
-									<p>Lorem ipsum dolor sit amet.</p>
+									<ul th:if= ${patie} class="card collection">
+										<li class="collection-item avatar"
+											  th:each="des : ${patie.description}">
+											<p th:text="${des.date}"></p>
+											<p th:text="${des.description}"></p>
+										</li>
+										</ul>
 								</div>
-							</li>
-							<li>
-								<div class="collapsible-header">
-									<i class="material-icons">face</i> Entradas del paciente
-								</div>
-								<div class="collapsible-body">
-									<p>Lorem ipsum dolor sit amet.</p>
-								</div>
-							</li>
+						
+						</li>
+						<li>
+							<div class="collapsible-header">
+								<i class="material-icons">face</i> Entradas del paciente
+							</div>
+							<div class="collapsible-body">
+								<ul th:if= ${patie} class="card collection">
+										<li  th:if= ${patie}  class="collection-item avatar"
+											th:each="emo : ${patie.emotionalState}">
+											<p th:text="${emo.date}"></p>
+											<p th:text="${emo.description}"></p>
+										</li>
+										</ul>
+							</div>
+						</li>
 						</ul>
 					</div>
 				</div>
@@ -140,13 +150,15 @@
 		
 	 	function mostrarPaciente(id) {
 			/*<![CDATA[*/
-				var pacientes = /*[[${pacientes}]]*/ 'default';
+				
+			var pacientes = /*[[${u.pacientes}]]*/ 'default';
 			console.log(pacientes);
+			var p = /*[[${u.description}]]*/ 'default';
+			console.log(p);
+
 				for(var i = 0;i< pacientes.length;i++){
 					if(pacientes[i].id==id){
-						//document.getElementById("description").value= pacientes[i].getAttribute("data-description");
-						console.log(pacientes[i]);
-						//console.log(document.getElementById("description").value);
+						//var p = /*[[${u.description}]]*/ 'default';
 					}
 				}
 
