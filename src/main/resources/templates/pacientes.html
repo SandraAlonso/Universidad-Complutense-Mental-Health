@@ -41,11 +41,13 @@
 					</div>
 					<div class="card-content">
 						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
-						</span><span th:if= ${patie} th:text="${patie.lastName}"></span><br> <span>Apellidos:
-						</span> <span th:if= ${patie}  th:text="${patie.lastName}"></span><br> <span>Mail:
-						</span> <span th:if= ${patie}  th:text="${patie.mail}"></span><br> <span>Tratamiento:
-						</span> <span th:if= ${patie}  th:text="${patie.treatment}"></span><br> <span>Diagnostico:
-						</span> <span th:if= ${patie}  th:text="${patie.disorder}"></span>
+						</span><span th:if=${patie} th:text="${patie.lastName}"></span><br>
+						<span>Apellidos: </span> <span th:if=${patie}
+							th:text="${patie.lastName}"></span><br> <span>Mail: </span>
+						<span th:if=${patie} th:text="${patie.mail}"></span><br> <span>Tratamiento:
+						</span> <span th:if=${patie} th:text="${patie.treatment}"></span><br>
+						<span>Diagnostico: </span> <span th:if=${patie}
+							th:text="${patie.disorder}"></span>
 					</div>
 					<div class="card-action">
 
@@ -60,7 +62,8 @@
 
 							</p>
 
-							<input type="hidden" id="ID" name="id">
+							<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
+								name="id" />
 							<button type="submit"
 								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
 
@@ -73,7 +76,9 @@
 									id="description" />
 
 							</p>
-							<input type="hidden" id="ID" name="id">
+							<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
+								name="id" />
+
 							<button type="submit"
 								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
 
@@ -88,30 +93,30 @@
 									<i class="material-icons">border_color</i> Mis entradas
 								</div>
 								<div class="collapsible-body">
-									<ul th:if= ${patie} class="card collection">
+									<ul th:if=${patie} class="card collection">
 										<li class="collection-item avatar"
-											  th:each="des : ${patie.description}">
+											th:each="des : ${patie.description}">
 											<p th:text="${des.date}"></p>
 											<p th:text="${des.description}"></p>
 										</li>
-										</ul>
+									</ul>
 								</div>
-						
-						</li>
-						<li>
-							<div class="collapsible-header">
-								<i class="material-icons">face</i> Entradas del paciente
-							</div>
-							<div class="collapsible-body">
-								<ul th:if= ${patie} class="card collection">
-										<li  th:if= ${patie}  class="collection-item avatar"
+
+							</li>
+							<li>
+								<div class="collapsible-header">
+									<i class="material-icons">face</i> Entradas del paciente
+								</div>
+								<div class="collapsible-body">
+									<ul th:if=${patie} class="card collection">
+										<li th:if=${patie} class="collection-item avatar"
 											th:each="emo : ${patie.emotionalState}">
 											<p th:text="${emo.date}"></p>
 											<p th:text="${emo.description}"></p>
 										</li>
-										</ul>
-							</div>
-						</li>
+									</ul>
+								</div>
+							</li>
 						</ul>
 					</div>
 				</div>

@@ -106,11 +106,13 @@ public class PsicologoController {
 	public String getPacientes(Model model, HttpServletResponse response, HttpSession session, @RequestParam(required = false) Long id) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		User patie = entityManager.find(User.class, id);
 
 		model.addAttribute("u", stored);
-		model.addAttribute("patie", patie);
 		
+		if(id!=null) {
+		User patie = entityManager.find(User.class, id);
+		model.addAttribute("patie", patie);
+		}
 		return "pacientes";
 	}
 	
