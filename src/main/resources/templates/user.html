@@ -44,10 +44,12 @@
 	    </div>
 	    <button class="btn-large waves-effect waves-light col s4" type="submit">Actualizar</button>
 	    </div>
+	    
+	    </form>
 		
 		<h5 class="center-align">Cambiar datos del usuario</h5><br>
 		<!-- puedes cambiar todo -->
-		<form id="usermod" class="smallform" th:action="@{/user/{id}(id=${user.id})}" method="POST">
+		<form id="usermod" th:action="@{/user/{id}(id=${user.id})}" method="POST">
 			
 			<label for="firstname">Nombre</label>
 			<input name="firstName" id="firstName" required placeholder="Nombre" th:value="${user.firstName}"/>
@@ -64,15 +66,21 @@
 			<input type="password" id="pass2" required name="pass2" placeholder="Confirmación"/>
 			
 			<label th:if="${session.u.hasRole('ADMIN')}" for="roles">Roles</label>
-			<input th:if="${session.u.hasRole('ADMIN')}" id="roles" name="roles" required placeholder="Roles" th:value="${user.roles}"/>
-			<button class="btn waves-effect waves-light col s4" type="submit">Modificar</button>
-		</form>
-		
-		
+			<input th:if="${session.u.hasRole('ADMIN')}" id="roles" name="roles" placeholder="Roles" th:value="${user.roles}"/>
+			<p>Los datos serán cambiados: 
+				<button class="btn center-align waves-effect waves-light" type="submit">Modificar</button>
+			</p>
 	    
 	  </form>
+	  
+	  <div>
+	  	  <h5 class="center-align">Cambiar de psicólogo</h5><br>
+		  <form class="center-align" th:if="${session.u.hasRole('PACIENTE')}">
+			<button class="btn waves-effect waves-light col s4" type="submit">Solicitar cambio de psicólogo</button>
+		  </form>
+		  <br>
 	  </div>
-
+</div>
 	<!-- <div class="sidebar">
 	<form th:action="@{/user/{id}/msg(id=${user.id})}" method="POST">
 	<textarea id="message" placeholder="escribe a este usuario" rows="4" cols="20"></textarea>

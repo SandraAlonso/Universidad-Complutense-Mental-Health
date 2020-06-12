@@ -29,9 +29,10 @@
 		<div class="col s12">
 			<ul class="tabs">
 				<li class="tab col s3"><a class="active" href="#buscador">Buscador</a></li>
-				<li class="tab col s3"><a href="#psicologos">Psicólogos</a></li>
-				<li class="tab col s3"><a href="#pacientes">Pacientes</a></li>
-				<li class="tab col s3"><a href="#administradores">Administradores</a></li>
+				<li class="tab col s2"><a href="#psicologos">Psicólogos</a></li>
+				<li class="tab col s2"><a href="#pacientes">Pacientes</a></li>
+				<li class="tab col s2"><a href="#administradores">Administradores</a></li>
+				<li class="tab col s3"><a href="#usuarios">Usuarios</a></li>			
 			</ul>
 		</div>
 		<div id="psicologos" class="col s12">
@@ -87,6 +88,27 @@
 						<a th:data-id="${p.id}" href="#modal3"
 							class="deshabilitar modal-trigger"><i class="material-icons"
 							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+					</div></li>
+			</ul>
+		</div>
+		
+		<div id="usuarios" class="col s12">
+			<ul class="collection">
+				<li th:each="p : ${usuarios}" class="collection-item avatar"><img
+					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+					class="circle"> <span class="title"><b
+						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+					<p th:text="${p.firstName}">Nombre</p>
+					<p th:text="${p.lastName}">Apellidos</p>
+					<div class="secondary-content">
+						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+						<a th:data-id="${p.id}" href="#modal2"
+							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+						<a th:data-id="${p.id}" href="#modal3"
+							class="deshabilitar modal-trigger"><i class="material-icons"
+							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+						<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}" href="#modal4"
+							class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
 					</div></li>
 			</ul>
 		</div>
@@ -148,6 +170,8 @@
 						<a th:data-id="${p.id}" href="#modal3"
 							class="deshabilitar modal-trigger"><i class="material-icons"
 							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+						<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}" href="#modal4"
+							class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
 					</div></li>
 			</ul>
 		</div>

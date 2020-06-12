@@ -138,6 +138,7 @@ public class UserController {
 				FileCopyUtils.copy(in, os);
 			}
 		};
+		//TODO solo imagenes de 320x320 https://stackoverflow.com/questions/11213676/getting-the-size-of-an-image-inputstream
 	}
 	
 	@PostMapping("/{id}/msg")
@@ -175,7 +176,9 @@ public class UserController {
 
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
 		return "{\"result\": \"message sent.\"}";
-	}	
+	}
+	
+	
 	
 	@PostMapping("/{id}/photo")
 	public String postPhoto(

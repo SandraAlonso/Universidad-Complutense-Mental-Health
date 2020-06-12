@@ -13,8 +13,8 @@
   
   <ul id="dropdown1" class="dropdown-content" th:if="${session.u}">
 	  <li th:if="${session.u.hasRole('USER')}"><a th:href="@{/user/{id}(id=${session.u.id})}">Modificar perfil</a></li>
-	  	<form th:action="@{/logout}" method="post">
-				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
+	  	<form class="center-align" th:action="@{/logout}" method="post">
+				<button class="waves-effect waves-light btn-large center-align" type="submit">Salir</button>
 		</form>
   </ul>
 
@@ -24,10 +24,10 @@
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down"> 
       	  <div th:if="${session.u}">
-      	  	  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/horario/}">Mi horario</a></li>
-      	  	  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/horario/}">Mi horario</a></li>
-	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
-	  		  <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>
+      	  	  <li th:if="${session.u.hasRole('PSICOLOGO')}"><a th:href="@{/psicologo/horario/}">Mi horario</a></li>
+      	  	  <li th:if="${session.u.hasRole('PACIENTE')}" ><a th:href="@{/paciente/horario/}">Mi horario</a></li>
+	  		  <li th:if="${session.u.hasRole('PSICOLOGO')}"><a th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
+	  		  <li th:if="${session.u.hasRole('PACIENTE')}"><a th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>
 	  		  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>        
 	      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
 			  <li>
@@ -55,9 +55,10 @@
 	  		  <li><a th:if="${session.u.hasRole('PSICOLOGO')}" th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
 	  		 <li><a th:if="${session.u.hasRole('PACIENTE')}" th:href="@{/paciente/estadisticas/}">Estadístcias</a></li>  
 	 		 <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>
-	  		 <form th:action="@{/logout}" method="post">
-				<button class="waves-effect waves-light btn-small" type="submit">Salir</button>
-			</form>
+	 	<br>
+	  	<form class="center-align" th:action="@{/logout}" method="post">
+				<button class="waves-effect waves-light btn-large center-align" type="submit">Salir</button>
+		</form>
     	 </div>
   	     <div th:unless="${session.u}">
 	   		 <li><a th:href="@{/login/}">Iniciar sesión</a></li>
