@@ -60,9 +60,9 @@
 
 	<div class="row" id="mensajes"></div>
 
-	<form class="float row" th:action="@{/user/{id}/msg(id=${user.id})}" method="POST">
+	<form class="float row" method="POST">
 		<input type="text" id="message" class="col s9 offset-s1">
-		<button class="boton-enviar btn-floating waves-effect waves-light"
+		<button id="send" th:data-id-sender="${session.u.id}" data-id-receiver="" class="boton-enviar btn-floating waves-effect waves-light"
 			type="submit" name="action">
 			<i class="material-icons right" id="sendmsg">send</i>
 		</button>
@@ -87,6 +87,7 @@
   </ul>
 
 	<script>
+	
 		
 		function formatDate(d) {
 			// 2020-03-23T10:48:11.074 => 23/3/2020@10:48:18
@@ -122,6 +123,8 @@
 		function getMessages(id) {
 			
 			$('#mensajes').empty();
+			
+			$('#send').attr("data-id-receiver", id);
 			
 			$.ajax({
 				url : config.rootUrl + "message/get/" + id,
@@ -159,18 +162,18 @@
 		document.addEventListener("DOMContentLoaded", () => {
 			let b = document.getElementById("sendmsg");
 			b.onclick = (e) => {
+				var action = "/user/" + $("#send").attr("data-id-receiver") + "/msg?=" + $("#send").attr("data-id-sender");
 				e.preventDefault();
-				console.log(b, b.parentNode)
-				go(b.parentNode.action, 'POST', {message: 
+				go(action, 'POST', {message: 
 						document.getElementById("message").value})
 					.then(d => console.log("happy", d))
 					.catch(e => console.log("sad", e))
 				$('#mensajes')
 				.append(
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-								+ json[i].from
+								+ ""
 								+ '</b></p><p>'
-								+ formatDate(json[i].sent)
+								+ Date.now()
 								+ '</p><br><p>'
 								+ document.getElementById("message").value
 								+ '</p></div></div></div>');
