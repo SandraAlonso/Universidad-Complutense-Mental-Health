@@ -41,3 +41,29 @@ main {
   footer {
     flex: 1 0 auto;
   }
+  
+
+.float{
+	position:fixed;
+	width:90%;
+	height:60px;
+	bottom:40px;
+	right:80px;
+	background-color:#ffebee;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.boton-enviar{
+	margin-top:10px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .float{
+	width:80%;
+    right:50px;
+	
+}
+}
