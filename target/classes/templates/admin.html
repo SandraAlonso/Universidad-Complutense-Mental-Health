@@ -95,7 +95,7 @@
 		<div id="usuarios" class="col s12">
 			<ul class="collection">
 				<li th:each="p : ${usuarios}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}"
 					class="circle"> <span class="title"><b
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>

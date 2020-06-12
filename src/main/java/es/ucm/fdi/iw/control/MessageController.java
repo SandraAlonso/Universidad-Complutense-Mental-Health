@@ -34,6 +34,8 @@ public class MessageController {
 		
 	@GetMapping("/")
 	public String getMessages(Model model, HttpSession session) {
+		model.addAttribute("usuarios", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%USER%'").getResultList());
+		model.addAttribute("group_appointments", entityManager.createQuery("SELECT u FROM GroupAppointment u").getResultList());
 		return "messages";
 	}
 
