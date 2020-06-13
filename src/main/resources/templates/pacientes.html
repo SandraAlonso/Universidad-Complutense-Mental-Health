@@ -37,11 +37,11 @@
 			<div class="col s6">
 				<div class="card">
 					<div class="card-image">
-						<img width="256" height="256" id="photo">
+						<img th:if=${patie} width="256" height="256" th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}">
 					</div>
 					<div class="card-content">
 						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
-						</span><span th:if=${patie} th:text="${patie.lastName}"></span><br>
+						</span><span th:if=${patie} th:text="${patie.firstName}"></span><br>
 						<span>Apellidos: </span> <span th:if=${patie}
 							th:text="${patie.lastName}"></span><br> <span>Mail: </span>
 						<span th:if=${patie} th:text="${patie.mail}"></span><br> <span>Tratamiento:
