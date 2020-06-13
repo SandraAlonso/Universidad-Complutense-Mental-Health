@@ -95,10 +95,10 @@
 								<div class="collapsible-body">
 									<ul th:if=${patie} class="card collection">
 										<li class="collection-item avatar"
-											th:each="des : ${patie.description}">
-											<p th:text="${des.date}"></p>
-											<p th:text="${des.description}"></p>
-										</li>
+											th:each="des : ${patie.description}"><b><span>Fecha:</span></b>
+											<span th:text="${des.date}"></span> <br>
+										<b><span>Entrada:</span></b> <span
+											th:text="${des.description}"></span></li>
 									</ul>
 								</div>
 
@@ -110,10 +110,19 @@
 								<div class="collapsible-body">
 									<ul th:if=${patie} class="card collection">
 										<li th:if=${patie} class="collection-item avatar"
-											th:each="emo : ${patie.emotionalState}">
-											<p th:text="${emo.date}"></p>
-											<p th:text="${emo.description}"></p>
-										</li>
+											th:each="emo : ${patie.emotionalState}"><b><span>Fecha:</span></b>
+											<span th:text="${emo.date}"></span><br>
+										<b><span>Estado
+													de animo:</span></b>
+													<span th:if="${emo.emotionalState == 1}" >Muy triste</span>
+													<span th:if="${emo.emotionalState == 2}" >Triste</span>
+													<span th:if="${emo.emotionalState == 3}" >Bien</span>
+													<span th:if="${emo.emotionalState == 4}" >Muy bien</span>
+													<span th:if="${emo.emotionalState == 5}" >Genial</span>
+													<br>
+													<b><span>Entrada:</span></b> <span
+											th:text="${emo.description}"></span>
+													</li>
 									</ul>
 								</div>
 							</li>
