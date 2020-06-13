@@ -245,14 +245,15 @@ public class PsicologoController {
 	@PostMapping("/addPsycologistEntry")
 	@Transactional
 	public String addPsycologistEntry(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid EntradasPsicologo description, BindingResult result, HttpSession session)
+			@ModelAttribute @Valid EntradasPsicologo description, BindingResult result, HttpSession session, @RequestParam long id)
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		User pat = entityManager.find(User.class, id);
 		LocalDate date = LocalDate.now();
-		description.setPatient(stored);
+		description.setPatient(pat);
 		description.setDate(date);
-		stored.addPsychologistEntry(description);
+		pat.addPsychologistEntry(description);
 
 		entityManager.persist(description);
 		entityManager.flush();
