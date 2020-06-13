@@ -69,7 +69,7 @@ public class MessageController {
 		return Message.asTransferObjects(lm);
 	}	
 	
-	@GetMapping(path = "/get/{id}", produces = "application/json")
+	/*@GetMapping(path = "/get/{id}", produces = "application/json")
 	@Transactional // para no recibir resultados inconsistentes
 	@ResponseBody // para indicar que no devuelve vista, sino un objeto (jsonizado)
 	public List<Message.Transfer> getByTopic(HttpSession session, @PathVariable String id) {
@@ -79,7 +79,7 @@ public class MessageController {
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);
-	}	
+	}	*/
 	
 	@GetMapping(path = "/unread", produces = "application/json")
 	@ResponseBody
