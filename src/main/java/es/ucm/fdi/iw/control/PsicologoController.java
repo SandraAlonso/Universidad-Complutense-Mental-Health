@@ -249,6 +249,7 @@ public class PsicologoController {
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		if(id!=null) {
 		User pat = entityManager.find(User.class, id);
 		LocalDate date = LocalDate.now();
 		description.setPatient(pat);
@@ -257,7 +258,7 @@ public class PsicologoController {
 
 		entityManager.persist(description);
 		entityManager.flush();
-
+		}
 		return "redirect:/psicologo/pacientes";
 	}
 }

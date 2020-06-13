@@ -96,7 +96,7 @@
 									<ul th:if=${patie} class="card collection">
 										<li class="collection-item avatar"
 											th:each="des : ${patie.description}"><b><span>Fecha:</span></b>
-											<span th:text="${des.date}"></span> <br>
+											<span th:text="${#temporals.format(des.date, 'dd-MMM-yyyy')}"></span> <br>
 										<b><span>Entrada:</span></b> <span
 											th:text="${des.description}"></span></li>
 									</ul>
@@ -111,7 +111,7 @@
 									<ul th:if=${patie} class="card collection">
 										<li th:if=${patie} class="collection-item avatar"
 											th:each="emo : ${patie.emotionalState}"><b><span>Fecha:</span></b>
-											<span th:text="${emo.date}"></span><br>
+											<span th:text="${#temporals.format(emo.date, 'dd-MMM-yyyy')}"></span><br>
 										<b><span>Estado
 													de animo:</span></b>
 													<span th:if="${emo.emotionalState == 1}" >Muy triste</span>
