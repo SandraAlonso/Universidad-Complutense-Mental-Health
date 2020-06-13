@@ -161,8 +161,10 @@ public class PsicologoController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
-		if (ga != null)
+		if (ga != null) {
 			entityManager.remove(ga);
+		}
+		
 		return "redirect:/psicologo/horario";
 	}
 
@@ -181,6 +183,7 @@ public class PsicologoController {
 			ga.setStart_hour(groupAppointment.getStart_hour());
 			ga.setFinish_hour(groupAppointment.getFinish_hour());
 			ga.setDescription(groupAppointment.getDescription());
+
 		}
 
 		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber

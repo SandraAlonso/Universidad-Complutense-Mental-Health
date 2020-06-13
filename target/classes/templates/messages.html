@@ -81,7 +81,7 @@
       <a href="#email"><span class="white-text email" th:text="${session.u.username}">jdandturk@gmail.com</span></a>
     </div></li>
     <li><a class="subheader">Citas grupales</a></li>
-    <li th:each="g : ${group_appointments}"><a class="waves-effect" th:data-id="${g.name}" href="#!" th:text="${g.name}">Usuario 1</a></li>
+    <li th:if="${session.topics}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" href="#!" th:text="${g}" th:onclick="getMessages([[${g}]]);">Usuario 1</a></li>
     <li><a class="subheader">Usuarios</a></li>
     <li th:each="u : ${usuarios}"><a class="waves-effect" th:data-id="${u.id}" href="#!" th:text="${u.username}" th:onclick="'getMessages(\'' + ${u.id} + '\');'">Usuario 1</a></li>
   </ul>

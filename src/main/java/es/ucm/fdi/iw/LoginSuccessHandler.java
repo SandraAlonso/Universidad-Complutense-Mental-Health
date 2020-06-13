@@ -1,6 +1,7 @@
 package es.ucm.fdi.iw;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -62,6 +63,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		session.setAttribute("ws", request.getRequestURL().toString()
 				.replaceFirst("[^:]*", "ws")		// http[s]://... => ws://...
 				.replaceFirst("/[^/]*$", "/ws"));	// .../foo		 => .../ws
+		
+		// add groups to an user
+		List<String> topics_list = null;
+		if(u.hasRole(User.Role.PSICOLOGO)) topics_list = u.getCeratorAppointmentsTopic();
+		if(u.hasRole(User.Role.PACIENTE)) topics_list = u.getGroupAppointmentsPatientTopic();
+		session.setAttribute("topics", topics_list);
 		
 		// redirects to 'admin' or 'user/{id}', depending on the user
 		response.sendRedirect(u.hasRole(User.Role.ADMIN) ? 

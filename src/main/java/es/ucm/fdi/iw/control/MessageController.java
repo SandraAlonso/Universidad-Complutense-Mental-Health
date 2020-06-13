@@ -35,6 +35,12 @@ public class MessageController {
 		
 	@GetMapping("/")
 	public String getMessages(Model model, HttpSession session) {
+		User user = (User)session.getAttribute("u");
+		User u = entityManager.find(User.class, user.getId());
+		List<String> topics_list = null;
+		if(u.hasRole(User.Role.PSICOLOGO)) topics_list = u.getCeratorAppointmentsTopic();
+		if(u.hasRole(User.Role.PACIENTE)) topics_list = u.getGroupAppointmentsPatientTopic();
+		session.setAttribute("topics", topics_list);
 		model.addAttribute("usuarios", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%USER%'").getResultList());
 		model.addAttribute("group_appointments", entityManager.createQuery("SELECT u FROM GroupAppointment u").getResultList());
 		return "messages";
@@ -58,6 +64,18 @@ public class MessageController {
 		long userId = ((User)session.getAttribute("u")).getId();
 		User u = entityManager.find(User.class, userId);
 		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE (RECIPIENT_ID=" + id + " AND SENDER_ID=" + userId  + ") OR (RECIPIENT_ID=" + userId + " AND SENDER_ID=" + id  + ")").getResultList();
+		log.info("Generating message list for user {} ({} messages)", 
+				u.getUsername(),lm.size());
+		return Message.asTransferObjects(lm);
+	}	
+	
+	@GetMapping(path = "/get/{id}", produces = "application/json")
+	@Transactional // para no recibir resultados inconsistentes
+	@ResponseBody // para indicar que no devuelve vista, sino un objeto (jsonizado)
+	public List<Message.Transfer> getByTopic(HttpSession session, @PathVariable String id) {
+		long userId = ((User)session.getAttribute("u")).getId();
+		User u = entityManager.find(User.class, userId);
+		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE TOPIC_ID=" + id + ")").getResultList();
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);

@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -108,14 +109,14 @@ public class User {
 
 	
 	//Las que crea el usuario
-	@OneToMany(targetEntity = Appointment.class)
+	@OneToMany(targetEntity = Appointment.class, fetch = FetchType.EAGER)
 	@JsonIgnore
 	@JoinColumn(name = "creator_id")
 	@OrderBy("date ASC, start_hour ASC")
 	private List<Appointment> creatorAppointments = new ArrayList<Appointment>();
 	
 	//Las que tienen los pacientes asignados a un group appointment
-	@ManyToMany(mappedBy = "patient")
+	@ManyToMany(mappedBy = "patient", fetch = FetchType.EAGER)
 	@JsonIgnore
 	@OrderBy("date ASC, start_hour ASC")
 	private List<GroupAppointment> groupAppointmentsPatient = new ArrayList<GroupAppointment>();
@@ -297,6 +298,25 @@ public class User {
 	public void setGroupAppointmentsPatient(List<GroupAppointment> groupAppointmentsPatient) {
 		this.groupAppointmentsPatient = groupAppointmentsPatient;
 	}
+	
+	public List<String> getGroupAppointmentsPatientTopic() {
+		List<String> topics = new ArrayList<String>();
+		if(!groupAppointmentsPatient.isEmpty()) {
+			for(GroupAppointment g: groupAppointmentsPatient) {
+				topics.add(g.getName());
+			}
+			return topics;
+		}
+		else return null;
+	}
+	
+	public List<String> getCeratorAppointmentsTopic() {
+		List<String> topics = new ArrayList<String>();
+		for(Appointment g: creatorAppointments) {
+			if(g instanceof GroupAppointment) topics.add(((GroupAppointment) g).getName());
+		}
+		return topics;
+	}
 
 	public List<IndividualAppointment> getAppointments() {
 		return appointments;
@@ -335,7 +355,7 @@ public class User {
 		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
 		System.out.println(firstDayOfTheWeek);
 
-		LocalDate lastDayOfTheWeek = now.plusDays(4);
+		LocalDate lastDayOfTheWeek = firstDayOfTheWeek.plusDays(4);
 
 		System.out.println(lastDayOfTheWeek);
 
@@ -343,9 +363,9 @@ public class User {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
-			if (comp > 0 && comp2 < 0)
+			if (comp >= 0 && comp2 <= 0)
 				ga.add(g);
-			if (comp == 0 && comp2 > 0)
+			if (comp2 > 0)
 				break;
 		}
 
@@ -353,9 +373,9 @@ public class User {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
-			if (comp > 0 && comp2 < 0)
+			if (comp >= 0 && comp2 <= 0)
 				ga.add(g);
-			if (comp == 0 && comp2 > 0)
+			if (comp2 > 0)
 				break;
 		}
 
@@ -372,7 +392,7 @@ public class User {
 		LocalDate firstDayOfTheWeek = now.with(TemporalAdjusters.previousOrSame(startOfCurrentWeek));
 		System.out.println(firstDayOfTheWeek);
 
-		LocalDate lastDayOfTheWeek = now.plusDays(4);
+		LocalDate lastDayOfTheWeek = firstDayOfTheWeek.plusDays(4);
 
 		System.out.println(lastDayOfTheWeek);
 
@@ -380,9 +400,9 @@ public class User {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
-			if (comp > 0 && comp2 < 0)
+			if (comp >= 0 && comp2 <= 0)
 				ga.add(g);
-			if (comp == 0 && comp2 > 0)
+			if (comp2 > 0)
 				break;
 		}
 
@@ -390,9 +410,9 @@ public class User {
 			System.out.println(firstDayOfTheWeek + " " + lastDayOfTheWeek + " " + g.getDate());
 			int comp = g.getDate().compareTo(firstDayOfTheWeek);
 			int comp2 = g.getDate().compareTo(lastDayOfTheWeek);
-			if (comp > 0 && comp2 < 0)
+			if (comp >= 0 && comp2 <= 0)
 				ga.add(g);
-			if (comp == 0 && comp2 > 0)
+			if (comp2 > 0)
 				break;
 		}
 
