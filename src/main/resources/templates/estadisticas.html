@@ -107,32 +107,7 @@
 		goes here </footer>
 
 	<script type="text/javascript" th:inline="javascript">
-		var dt = new Date();
-
-		function renderDays() {
-			//TODO: CONNECT THIS PART WITH OUR MODEL
-			dt.setDate(1);
-			var dayOne = dt.getDay();
-			var today = new Date();
-			//Takes a new Date object with the last day of the current month
-			//Outside Spain, the week starts on Sunday
-			var endDate = new Date(dt.getFullYear(), dt.getMonth() + 1, 0)
-					.getDate();
-
-			//Takes the last day of the previous month
-			var prevDate = new Date(dt.getFullYear(), dt.getMonth(), 0)
-					.getDate();
-
-			for (i = 1; i <= endDate; i++) {
-				cells += "<div>"
-						+ "<a style='color: #000000; display:block' class='modal-trigger' href=#modal>"
-						+ i + "</a>" + "</div>";
-
-			}
-
-			//TODO aquí thymeleaf
-
-		}
+		
 
 		function very_dissatisfied() {
 			document.getElementById("emotionalState").value = 1;

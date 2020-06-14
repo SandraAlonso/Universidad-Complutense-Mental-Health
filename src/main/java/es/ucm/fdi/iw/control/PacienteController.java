@@ -76,11 +76,9 @@ public class PacienteController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getMonthAnimosity", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/getEmotionalState", produces = "application/json")
 	@ResponseBody
-	public List<EmotionalState> obtenerOferta(
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime date, BindingResult result,
-			HttpSession session) {
+	public List<EmotionalState> getEmotionalState(HttpSession session) {
 
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());

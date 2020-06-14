@@ -20,6 +20,7 @@
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
 		<h4 class="center-align">Mi horario</h4>
+		<h6  th:text ="|Semana del ${#temporals.day(days[0])} - ${#temporals.month(days[0])} - ${#temporals.year(days[0])} al ${#temporals.day(days[4])} - ${#temporals.month(days[4])} - ${#temporals.year(days[4])}|" ></h6>
 	</header>
 
 	<div
@@ -53,7 +54,7 @@
 			<ul>
 				<li class="cd-schedule__group">
 					<div class="cd-schedule__top-info">
-						<span>Lunes</span>
+						<span >Lunes</span>
 					</div>
 					<ul>
 						<li class="cd-schedule__event" th:each="gp : ${groupAppointments}"

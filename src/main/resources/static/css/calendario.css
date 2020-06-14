@@ -56,8 +56,28 @@
             color: #999;
         }
 
-        .today {
-            background-color: #ff5b5b;
+        .genial {
+            background-color: #1b5e20;
+            color: #fff;
+        }
+        
+        .muy_bien {
+            background-color: #388e3c;
+            color: #fff;
+        }
+        
+        .bien {
+            background-color: #f9a825;
+            color: #fff;
+        }
+        
+        .mal {
+            background-color: #e53935;
+            color: #fff;
+        }
+        
+        .muy_mal {
+            background-color: #b71c1c;
             color: #fff;
         }
 

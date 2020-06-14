@@ -1,5 +1,16 @@
 //Today's date
 var dt = new Date();
+var emotional_states;
+
+$.ajax({
+	url : config.rootUrl + "paciente/getEmotionalState",
+	type : 'GET',
+	dataType : 'json',
+	success : function(json) {
+    	emotional_states = json;
+    	console.log(emotional_states);
+    }
+ })
 
 function renderDate() {
 	//Set the date relative to the current month
@@ -49,31 +60,11 @@ function renderDate() {
     
     console.log(dayOne);
     
-    var day_to_send = ("0" + dt.getDate()).slice(-2);
-	var month_to_send = ("0" + (dt.getMonth() + 1)).slice(-2);
-	var date_to_send = dt.toISOString().split("T")[0];
-    
-	
-    $.ajax({
-        url: "/paciente/getMonthAnimosity",
-        data: {
-        	"date" : date_to_send
-        },
-        type: "GET",
-        success: function(result) {
-        	console.log(result);
-            // Do something with the response.
-            // Might want to check for errors here.
-        }, error: function(error) {
-            // Here you can handle exceptions thrown by the server or your controller.
-        }
-     })
-    
     
     //TODO: CONNECT THIS PART WITH OUR MODEL
     for (i = 1; i <= endDate; i++) {
         if (i == today.getDate() && dt.getMonth() == today.getMonth()){ 
-        	cells += "<div class='today'>" +
+        	cells += "<div class='bien'>" +
         				"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
         					i +
         				"</a>" +
