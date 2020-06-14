@@ -22,6 +22,9 @@
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
 		<h4 class="center-align">Mi horario</h4>
+		<h6
+			th:text="|Semana del ${#temporals.day(days[0])} - ${#temporals.month(days[0])} - ${#temporals.year(days[0])} al ${#temporals.day(days[4])} - ${#temporals.month(days[4])} - ${#temporals.year(days[4])}|"></h6>
+
 	</header>
 
 	<div
@@ -294,21 +297,18 @@
 		goes here </footer>
 
 	<script th:inline="javascript">
+		function change(arg) {
 
+			var a = arg.getAttribute("data-id");
 
-	function change(arg) {
+			/*<![CDATA[*/
 
-		var a = arg.getAttribute("data-id");
-
-		/*<![CDATA[*/
-
-		    var appointments = /*[[${groupAppointments}]]*/ 'default';
-			for(var i = 0; i < appointments.length; ++i) {
-				if(appointments[i].id == a) {
-					if("name" in appointments[i]) {
+			var appointments = /*[[${groupAppointments}]]*/'default';
+			for (var i = 0; i < appointments.length; ++i) {
+				if (appointments[i].id == a) {
+					if ("name" in appointments[i]) {
 						//Es grupal
-					}
-					else {
+					} else {
 						//Es individual	
 						document.getElementById("ID").value = a;
 						document.getElementById("date").value = arg
@@ -317,9 +317,11 @@
 								.getAttribute("data-start");
 						document.getElementById("end-hour").value = arg
 								.getAttribute("data-end");
-						
-						document.getElementById("add-button").classList.add('hide');
-						document.getElementById("options-button").classList.remove('hide');
+
+						document.getElementById("add-button").classList
+								.add('hide');
+						document.getElementById("options-button").classList
+								.remove('hide');
 
 						var eliminate = document.getElementById("delete");
 						eliminate.href = "/paciente/deleteAppointment?id=" + a;
@@ -328,14 +330,13 @@
 				}
 			}
 
-		/*]]>*/
-	}
+			/*]]>*/
+		}
 
-	function changeBack() {
-		document.getElementById("options-button").classList.add('hide');
-		document.getElementById("add-button").classList.remove('hide')
-	}
-	
+		function changeBack() {
+			document.getElementById("options-button").classList.add('hide');
+			document.getElementById("add-button").classList.remove('hide')
+		}
 	</script>
 
 	<!-- 
