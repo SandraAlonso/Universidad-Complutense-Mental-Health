@@ -73,17 +73,17 @@ public class MessageController {
 		return Message.asTransferObjects(lm);
 	}	
 	
-	/*@GetMapping(path = "/get-topic/{id}", produces = "application/json")
+	@GetMapping(path = "/get-topic/{id}", produces = "application/json")
 	@Transactional // para no recibir resultados inconsistentes
 	@ResponseBody // para indicar que no devuelve vista, sino un objeto (jsonizado)
 	public List<Message.Transfer> getByTopic(HttpSession session, @PathVariable String id) {
 		long userId = ((User)session.getAttribute("u")).getId();
 		User u = entityManager.find(User.class, userId);
-		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE TOPIC_ID=" + id + ")").getResultList();
+		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE TOPIC='" + id + "'").getResultList();
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);
-	}	*/
+	}
 	
 	@GetMapping(path = "/unread", produces = "application/json")
 	@ResponseBody

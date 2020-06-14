@@ -15,7 +15,7 @@ const ws = {
 		//TODO falta añadir el topic al if
 		console.log(sender);
 		console.log(text.from);
-	if(sender === text.from || typeof sender === 'undefined') {
+	if(sender === text.from || typeof sender === 'undefined' || sender === text.topic) {
 	var today = new Date();
 		$('#mensajes')
 		.append(

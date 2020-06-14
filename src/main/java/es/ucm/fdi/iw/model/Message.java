@@ -42,6 +42,8 @@ public class Message {
 	private User recipient;
 	private String text;
 	
+	private String topic;
+
 	private LocalDateTime dateSent;
 	private LocalDateTime dateRead;
 	
@@ -71,6 +73,7 @@ public class Message {
 		private String received;
 		private String text;
 		long id;
+		private String topic;
 		public Transfer(Message m) {
 			this.from = m.getSender().getUsername();
 			this.to = m.getRecipient().getUsername();
@@ -79,6 +82,7 @@ public class Message {
 					null : DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateRead());
 			this.text = m.getText();
 			this.id = m.getId();
+			this.topic = m.getTopic();
 		}
 		public String getFrom() {
 			return from;
@@ -115,7 +119,13 @@ public class Message {
 		}
 		public void setId(long id) {
 			this.id = id;
-		}		
+		}
+		public String getTopic() {
+			return topic;
+		}
+		public void setTopic(String topic) {
+			this.topic = topic;
+		}
 	}
 	
 	public long getId() {
@@ -165,4 +175,12 @@ public class Message {
 	public void setDateRead(LocalDateTime dateRead) {
 		this.dateRead = dateRead;
 	}	
+	
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 }
