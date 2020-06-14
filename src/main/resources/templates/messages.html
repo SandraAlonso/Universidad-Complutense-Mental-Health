@@ -64,7 +64,7 @@
 
 	<form id="form-send" class="float row hide" method="POST">
 		<input type="text" id="message" class="col s9 offset-s1">
-		<button id="send" th:data-id-sender="${session.u.id}" th:data-username-sender="${session.u.username}" data-id-receiver="" class="boton-enviar btn-floating waves-effect waves-light"
+		<button id="send" th:data-id-sender="${session.u.id}" th:data-username-sender="${session.u.username}" data-id-receiver="" data-topic="" class="boton-enviar btn-floating waves-effect waves-light"
 			type="submit" name="action">
 			<i class="material-icons right" id="sendmsg">send</i>
 		</button>
@@ -162,9 +162,8 @@
 			sender = name;
 			$('#mensajes').empty();
 			$('#form-send').removeClass('hide');
-			
-			//TODO
-			//$('#send').attr("data-id-receiver", id);
+			$('#send').attr("data-topic", name);
+			//TODO borrar el receiver y viceversa
 			
 			$.ajax({
 				url : config.rootUrl + "message/get-topic/" + name,
@@ -197,7 +196,9 @@
 			let b = document.getElementById("sendmsg");
 			b.onclick = (e) => {
 				var today = new Date();
-				var action = "/user/" + $("#send").attr("data-id-receiver") + "/msg?=" + $("#send").attr("data-id-sender");
+				var action;
+				if($("#send").attr("data-id-receiver")) action = "/user/" + $("#send").attr("data-id-receiver") + "/msg?=" + $("#send").attr("data-id-sender");
+				else action = "/user/" + $("#send").attr("data-topic") + "/group-msg?=" + $("#send").attr("data-id-sender");
 				e.preventDefault();
 				go(action, 'POST', {message: 
 						document.getElementById("message").value})

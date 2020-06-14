@@ -12,21 +12,18 @@ const ws = {
 	 * Default action when message is received. 
 	 */
 	receive: (text) => {
-		//TODO falta añadir el topic al if
-		console.log(sender);
-		console.log(text.from);
-	if(sender === text.from || typeof sender === 'undefined' || sender === text.topic) {
-	var today = new Date();
-		$('#mensajes')
-		.append(
-				'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-						+ text.from
-						+ '</b></p><p>'
-						+ today.toLocaleString("es-ES").split(" ").join("@")
-						+ '</p><br><p>'
-						+ text.text
-						+ '</p></div></div></div>');
-	}
+		if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
+		var today = new Date();
+			$('#mensajes')
+			.append(
+					'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
+							+ text.from
+							+ '</b></p><p>'
+							+ today.toLocaleString("es-ES").split(" ").join("@")
+							+ '</p><br><p>'
+							+ text.text
+							+ '</p></div></div></div>');
+		}
 	},
 	
 	headers: {'X-CSRF-TOKEN' : config.csrf.value},
