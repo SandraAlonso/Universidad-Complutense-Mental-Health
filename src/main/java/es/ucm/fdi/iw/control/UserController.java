@@ -178,6 +178,40 @@ public class UserController {
 		return "{\"result\": \"message sent.\"}";
 	}
 	
+	@PostMapping("/{topic}/group-msg")
+	@ResponseBody
+	@Transactional
+	public String postMsg(@PathVariable String topic, 
+			@RequestBody JsonNode o, Model model, HttpSession session) 
+		throws JsonProcessingException {
+		
+		String text = o.get("message").asText();
+		User sender = entityManager.find(
+				User.class, ((User)session.getAttribute("u")).getId());
+		
+		// construye mensaje, lo guarda en BD
+		Message m = new Message();
+		m.setTopic(topic);
+		m.setSender(sender);
+		m.setDateSent(LocalDateTime.now());
+		m.setText(text);
+		entityManager.persist(m);
+		entityManager.flush(); // to get Id before commit
+		
+		// construye json
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode rootNode = mapper.createObjectNode();
+		rootNode.put("from", sender.getUsername());
+		rootNode.put("to", topic);
+		rootNode.put("text", text);
+		rootNode.put("id", m.getId());
+		String json = mapper.writeValueAsString(rootNode);
+		
+		log.info("Sending a message to {} with contents '{}'", topic, json);
+
+		messagingTemplate.convertAndSend("/topic/" + topic, json);
+		return "{\"result\": \"message sent.\"}";
+	}
 	
 	
 	@PostMapping("/{id}/photo")

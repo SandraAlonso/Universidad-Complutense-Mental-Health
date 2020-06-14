@@ -76,13 +76,13 @@ public class Message {
 		private String topic;
 		public Transfer(Message m) {
 			this.from = m.getSender().getUsername();
-			this.to = m.getRecipient().getUsername();
+			if(m.getRecipient().getUsername() != null) this.to = m.getRecipient().getUsername();
 			this.sent = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateSent());
 			this.received = m.getDateRead() == null ?
 					null : DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateRead());
 			this.text = m.getText();
 			this.id = m.getId();
-			this.topic = m.getTopic();
+			if(m.getTopic() != null) this.topic = m.getTopic();
 		}
 		public String getFrom() {
 			return from;
