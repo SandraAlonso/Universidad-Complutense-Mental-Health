@@ -1,6 +1,7 @@
 package es.ucm.fdi.iw;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -65,10 +66,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 				.replaceFirst("/[^/]*$", "/ws"));	// .../foo		 => .../ws
 		
 		// add groups to an user
-		List<String> topics_list = null;
-		if(u.hasRole(User.Role.PSICOLOGO)) topics_list = u.getCeratorAppointmentsTopic();
-		if(u.hasRole(User.Role.PACIENTE)) topics_list = u.getGroupAppointmentsPatientTopic();
-		session.setAttribute("topics", topics_list);
+		List<String> topics_list = new ArrayList<String>();
+		List<String> topics_list1 = null;
+		if(u.hasRole(User.Role.PSICOLOGO)) topics_list1 = u.getCeratorAppointmentsTopic();
+		if(u.hasRole(User.Role.PACIENTE)) topics_list1 = u.getGroupAppointmentsPatientTopic();
+		if(topics_list1 != null) topics_list = topics_list1;
+		String joined = String.join(",", topics_list);
+		session.setAttribute("topics", joined);
 		
 		// redirects to 'admin' or 'user/{id}', depending on the user
 		response.sendRedirect(u.hasRole(User.Role.ADMIN) ? 

@@ -1,5 +1,6 @@
 package es.ucm.fdi.iw.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -37,10 +38,13 @@ public class MessageController {
 	public String getMessages(Model model, HttpSession session) {
 		User user = (User)session.getAttribute("u");
 		User u = entityManager.find(User.class, user.getId());
-		List<String> topics_list = null;
-		if(u.hasRole(User.Role.PSICOLOGO)) topics_list = u.getCeratorAppointmentsTopic();
-		if(u.hasRole(User.Role.PACIENTE)) topics_list = u.getGroupAppointmentsPatientTopic();
-		session.setAttribute("topics", topics_list);
+		List<String> topics_list = new ArrayList<String>();
+		List<String> topics_list1 = null;
+		if(u.hasRole(User.Role.PSICOLOGO)) topics_list1 = u.getCeratorAppointmentsTopic();
+		if(u.hasRole(User.Role.PACIENTE)) topics_list1 = u.getGroupAppointmentsPatientTopic();
+		if(topics_list1 != null) topics_list = topics_list1;
+		String joined = String.join(",", topics_list);
+		session.setAttribute("topics", joined);
 		model.addAttribute("usuarios", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%USER%'").getResultList());
 		model.addAttribute("group_appointments", entityManager.createQuery("SELECT u FROM GroupAppointment u").getResultList());
 		return "messages";
@@ -69,7 +73,7 @@ public class MessageController {
 		return Message.asTransferObjects(lm);
 	}	
 	
-	/*@GetMapping(path = "/get/{id}", produces = "application/json")
+	/*@GetMapping(path = "/get-topic/{id}", produces = "application/json")
 	@Transactional // para no recibir resultados inconsistentes
 	@ResponseBody // para indicar que no devuelve vista, sino un objeto (jsonizado)
 	public List<Message.Transfer> getByTopic(HttpSession session, @PathVariable String id) {

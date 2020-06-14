@@ -62,7 +62,7 @@
 
 	<div class="row" id="mensajes"></div>
 
-	<form class="float row" method="POST">
+	<form id="form-send" class="float row hide" method="POST">
 		<input type="text" id="message" class="col s9 offset-s1">
 		<button id="send" th:data-id-sender="${session.u.id}" th:data-username-sender="${session.u.username}" data-id-receiver="" class="boton-enviar btn-floating waves-effect waves-light"
 			type="submit" name="action">
@@ -83,7 +83,7 @@
       <a href="#email"><span class="white-text email" th:text="${session.u.username}">jdandturk@gmail.com</span></a>
     </div></li>
     <li><a class="subheader">Citas grupales</a></li>
-    <li th:if="${session.topics}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" href="#!" th:text="${g}" th:onclick="getMessages([[${g}]]);">Usuario 1</a></li>
+    <li th:if="${session.topics != ''}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" href="#!" th:text="${g}" th:onclick="getMessagesTopic([[${g}]]);">Usuario 1</a></li>
     <li><a class="subheader">Usuarios</a></li>
     <li th:each="us : ${usuarios}"><a class="waves-effect sender" th:data-id="${us.id}" th:data-username="${us.username}" href="#!" th:text="${us.username}" th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario 1</a></li>
   </ul>
@@ -125,6 +125,7 @@
 			sender = username;
 			console.log(sender);
 			$('#mensajes').empty();
+			$('#form-send').removeClass('hide');
 			
 			$('#send').attr("data-id-receiver", id);
 			
@@ -156,6 +157,42 @@
 		
 		}
 		
+		function getMessagesTopic(name) {
+			
+			sender = name;
+			$('#mensajes').empty();
+			$('#form-send').removeClass('hide');
+			
+			//TODO
+			//$('#send').attr("data-id-receiver", id);
+			
+			$.ajax({
+				url : config.rootUrl + "message/get-topic/" + name,
+				type : 'GET',
+				dataType : 'json',
+				success : function(json) {
+					mensajes = json;
+					for (var i = 0; i < json.length; ++i) {
+						$('#mensajes')
+								.append(
+										'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
+												+ json[i].from
+												+ '</b></p><p>'
+												+ formatDate(json[i].sent)
+												+ '</p><br><p>'
+												+ json[i].text
+												+ '</p></div></div></div>');
+					}
+				},
+				error : function(xhr, status) {
+					alert('Disculpe, existió un problema');
+				}
+			});
+			
+			
+			
+		}
+		
 		document.addEventListener("DOMContentLoaded", () => {
 			let b = document.getElementById("sendmsg");
 			b.onclick = (e) => {
@@ -179,6 +216,8 @@
 				}
 			}
 		});
+		
+		
 	</script>
 
 	<footer th:replace="fragments/footer.html :: footer"> Footer

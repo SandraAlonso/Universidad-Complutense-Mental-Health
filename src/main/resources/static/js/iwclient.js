@@ -99,8 +99,22 @@ function go(url, method, data = {}) {
 document.addEventListener("DOMContentLoaded", () => {
 	console.log(config);
 	if (config.socketUrl) {
-		let subs = config.admin ? 
-				["/topic/admin", "/user/queue/updates"] : ["/user/queue/updates"]
+		let subs = [];
+		if(config.admin) {
+			subs.push("/topic/admin");
+		}
+		else {
+			var array_topics = config.topics.split(",");
+			console.log(array_topics);
+			if(array_topics[0] != "") {
+				for(var i = 0; i < array_topics.length; ++i) {
+					console.log("hola");
+					subs.push("/topic/" + array_topics[i]);
+				}
+			}	
+		}
+		subs.push("/user/queue/updates");
+		
 		ws.initialize(config.socketUrl, subs);
 	}
 	

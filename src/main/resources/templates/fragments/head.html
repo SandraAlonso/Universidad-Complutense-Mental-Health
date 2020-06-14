@@ -40,12 +40,13 @@
 			},
 			admin: [[${session.u != null && session.u.hasRole('ADMIN')}?true:false]],
 			userId: [[${session.u != null}?${session.u.id}:-1]],
-			topics: "[[${session.topics}]]"
+			topics: "[[${session.topics != null}?${session.topics}:'']]"
 		};
 	
 
 	
 	</script>
+
 	
 	<script th:src="@{/js/stomp.js}" src="js/stomp.js" type="text/javascript"></script>
 	<script th:src="@{/js/iwclient.js}" src="js/iwclient.js" type="text/javascript"></script>
