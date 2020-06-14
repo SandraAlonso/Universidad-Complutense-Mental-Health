@@ -1,6 +1,8 @@
 package es.ucm.fdi.iw.model;
 
 import java.time.LocalDate;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,7 @@ public class EmotionalState {
 	private long ID;
 	
 	@NotNull(message="Introduce la fecha de la cita")
+	@Column(name="date", unique=true)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 

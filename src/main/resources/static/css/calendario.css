@@ -55,6 +55,11 @@
         .prev_date {
             color: #999;
         }
+        .today{
+        background-color: #ff5b5b;
+            color: #fff;
+        #ff5b5b
+        }
 
         .genial {
             background-color: #1b5e20;

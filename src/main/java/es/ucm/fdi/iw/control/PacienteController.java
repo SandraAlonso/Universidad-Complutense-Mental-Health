@@ -84,7 +84,6 @@ public class PacienteController {
 		User stored = entityManager.find(User.class, requester.getId());
 
 		// TODO cambiar para que sean las de solo un mes, esto solo es una prueba
-
 		return stored.getEmotionalState();
 	}
 
