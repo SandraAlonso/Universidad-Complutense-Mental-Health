@@ -180,5 +180,7 @@ public class PacienteController {
 		return "redirect:/paciente/horario"; // devolvemos el model (los datos modificados) y la session para saber
 												// quien es el usuario en todo momento
 	}
+	
+	
 
 }
