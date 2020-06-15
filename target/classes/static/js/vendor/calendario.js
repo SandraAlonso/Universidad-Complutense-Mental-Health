@@ -13,11 +13,11 @@ $.ajax({
 	dataType : 'json',
 	success : function(json) {
     	emotional_states = json;
-    	
+    	console.log(emotional_states);
 
-    }
+    },
+	async: false
  })
-
 function renderDate() {
 	// Set the date relative to the current month
     dt.setDate(1);
@@ -58,28 +58,16 @@ function renderDate() {
     document.getElementById("date_str").innerHTML = dt.getFullYear();
     
     var cells = "";
-    // Help us to change color of dates before the current month
-    // TODO: CONNECT THIS PART WITH OUR MODEL
+  
     for (x = dayOne; x > 0; x--) {
         cells += "<div class='prev_date'>" + (prevDate - x + 1) + "</div>";
     }
     
-   // console.log(dayOne);
-    // console.log(dt);
-
-    		// var a = formatDate(emotional_states[0].date);
-    		// console.log(a[0]);
-    		// console.log(emotional_states[0].date.map((num) =>
-			// num+'').join('-'));
-    		// var b= formatDate(dt);
-    		
-    		// console.log(b);
+  
     		j=0;
-    // TODO: CONNECT THIS PART WITH OUR MODEL
-    		console.log(emotional_states);
-    		console.log(emotional_states.length);
     		for (i = 1; i <= endDate; i++) {
-    	    	
+        		console.log(emotional_states);
+
     	        if (i == today.getDate() && dt.getMonth() == today.getMonth()){ 
 	        		console.log("he entrado en  hoy");
 
@@ -90,12 +78,10 @@ function renderDate() {
     	        			 "</div>";
     	        }
     	        
-    	        
+
     	        else if (emotional_states.length>j){
 	        		console.log("he entrado en no hoy");
-	        		//console.log(formatDate(emotional_states[j].date)[0]);
     	         if(i==formatDate(emotional_states[j].date)[0] && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
-    	        	//console.log(emotional_states[j].emotionalState)
     	        	if(emotional_states[j].emotionalState ==1){
 		        		console.log("he entrado en genial5");
 

@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		else {
 			var array_topics = config.topics.split(",");
-			console.log(array_topics);
 			if(array_topics[0] != "") {
 				for(var i = 0; i < array_topics.length; ++i) {
 					console.log("hola");
