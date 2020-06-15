@@ -136,13 +136,7 @@ public class User {
 	@OrderBy("date ASC")
 	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();
 
-	public List<EntradasPsicologo> getDescription() {
-		return description;
-	}
-
-	public void setDescription(List<EntradasPsicologo> description) {
-		this.description = description;
-	}
+	
 
 	@OneToMany(targetEntity = User.class)
 	@JoinColumn(name="psychologist_id")
@@ -486,5 +480,11 @@ public class User {
 	public void addPsychologistEntry(EntradasPsicologo en) {
 		description.add(en);
 	}
-	
+	public List<EntradasPsicologo> getDescription() {
+		return description;
+	}
+
+	public void setDescription(List<EntradasPsicologo> description) {
+		this.description = description;
+	}
 }

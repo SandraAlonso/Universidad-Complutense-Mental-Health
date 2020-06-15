@@ -103,21 +103,20 @@ public class PsicologoController {
 	// lo que guardamos en la BBDD
 
 	@RequestMapping("/pacientes")
-	public String getPacientes(Model model, HttpServletResponse response, HttpSession session, @RequestParam(required = false) Long id) {
+	public String getPacientes(Model model, HttpServletResponse response, HttpSession session,
+			@RequestParam(required = false) Long id) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
 		model.addAttribute("u", stored);
-		
-		if(id!=null) {
-		User patie = entityManager.find(User.class, id);
-		model.addAttribute("patie", patie);
+
+		if (id != null) {
+			User patie = entityManager.find(User.class, id);
+			model.addAttribute("patie", patie);
+			log.info("Se están mostrando los datos del paciente {}", patie.getFirstName());
 		}
 		return "pacientes";
 	}
-	
-	
-	
 
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
@@ -150,6 +149,12 @@ public class PsicologoController {
 			groupAppointment.setCreator(stored);
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
+			log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
+					groupAppointment.getDate(), groupAppointment.getStart_hour());
+		} else {
+			log.info(
+					"El usuario {} no ha podido crear una cita grupal porque la hora seleccionada es posterior a la actual ({}).",
+					stored.getFirstName(), LocalDate.now());
 		}
 		return "redirect:/psicologo/horario";
 	}
@@ -162,9 +167,13 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
 		if (ga != null) {
+			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
+					ga.getDate(), ga.getStart_hour());
 			entityManager.remove(ga);
+		} else {
+			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getFirstName());
 		}
-		
+
 		return "redirect:/psicologo/horario";
 	}
 
@@ -183,7 +192,11 @@ public class PsicologoController {
 			ga.setStart_hour(groupAppointment.getStart_hour());
 			ga.setFinish_hour(groupAppointment.getFinish_hour());
 			ga.setDescription(groupAppointment.getDescription());
-
+			log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
+					stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
+					groupAppointment.getDate());
+		} else {
+			log.info("El usuario {} no pude modificar una cita inexistente.", stored.getFirstName());
 		}
 
 		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
@@ -216,12 +229,15 @@ public class PsicologoController {
 				if (is_psycho)
 					break;
 				lu.add(u);
-			} else
+			} else // ya se han añadido todos los pacientes
 				break;
 		}
 
-		if (lu != null)
+		if (lu != null) {
 			ga.setPatient(lu);
+			log.info("El usuario {} ha añadido a la cita grupal {} a {} usuarios.", stored.getFirstName(),
+					ga.getName(), lu.size());
+		}
 		return "redirect:/psicologo/horario";
 	}
 
@@ -234,10 +250,22 @@ public class PsicologoController {
 		User u = entityManager.find(User.class, user.getId());
 
 		if (u != null) {
-			if (user.getTreatment() != "")
+			if (user.getTreatment() != "") {
 				u.setTreatment(user.getTreatment());
-			if (user.getDisorder() != "")
+				log.info(
+						"El usuario {} ha recetado {} al paciente {}.",
+						stored.getFirstName(), user.getTreatment(), user.getFirstName());
+			}
+			if (user.getDisorder() != "") {
 				u.setDisorder(user.getDisorder());
+				log.info(
+						"El usuario {} ha diagnosticado {} al paciente {}.",
+						stored.getFirstName(), user.getDisorder(), user.getFirstName());
+			}
+		} else {
+			log.info(
+					"El usuario {} no puede añadir un tratamiento o hacer un diagnostico de un paciente inexistente, selecciona uno de la izquierda.",
+					stored.getFirstName());
 
 		}
 
@@ -248,19 +276,25 @@ public class PsicologoController {
 	@PostMapping("/addPsycologistEntry")
 	@Transactional
 	public String addPsycologistEntry(Model model, HttpServletResponse response,
-			@ModelAttribute @Valid EntradasPsicologo description, BindingResult result, HttpSession session, @RequestParam(required = false) Long id)
-			throws IOException {
+			@ModelAttribute @Valid EntradasPsicologo description, BindingResult result, HttpSession session,
+			@RequestParam(required = false) Long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		if(id!=null) {
-		User pat = entityManager.find(User.class, id);
-		LocalDate date = LocalDate.now();
-		description.setPatient(pat);
-		description.setDate(date);
-		pat.addPsychologistEntry(description);
+		if (id != null) {
+			User pat = entityManager.find(User.class, id);
+			LocalDate date = LocalDate.now();
+			description.setPatient(pat);
+			description.setDate(date);
+			pat.addPsychologistEntry(description);
 
-		entityManager.persist(description);
-		entityManager.flush();
+			entityManager.persist(description);
+			entityManager.flush();
+			log.info("El usuario {} ha añadido una nueva entrada al paciente {}, ya tiene {} entradas.",
+					stored.getFirstName(), pat.getFirstName(), pat.getDescription().size());
+		} else {
+			log.info(
+					"El usuario {} no puede escribir una entrada a un paciente inexistente, selecciona uno de la izquierda.",
+					stored.getFirstName());
 		}
 		return "redirect:/psicologo/pacientes";
 	}
