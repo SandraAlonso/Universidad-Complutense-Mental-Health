@@ -26,4 +26,4 @@ Scenario: html url encoded form submit - post
     * string response = response    
     * def h4s = util.selectHtml(response, "h4");
     * print h4s
-    And match h4s contains 'Usuarios'
+    And match h4s contains 'Panel de administración'
