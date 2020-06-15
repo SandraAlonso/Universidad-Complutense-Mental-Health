@@ -12,6 +12,7 @@ const ws = {
 	 * Default action when message is received. 
 	 */
 	receive: (text) => {
+		console.log(sender);
 		if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
 		var today = new Date();
 			$('#mensajes')
