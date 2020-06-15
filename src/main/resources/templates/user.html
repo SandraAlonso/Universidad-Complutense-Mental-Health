@@ -75,18 +75,18 @@
 	  
 	  <div>
 	  	  <h5 class="center-align">Cambiar de psicólogo</h5><br>
-		  <form class="center-align" th:if="${session.u.hasRole('PACIENTE')}">
-			<button class="btn waves-effect waves-light col s4" type="submit">Solicitar cambio de psicólogo</button>
+		  <form class="center-align" th:action="@{/user/peticiones/group-msg}" th:if="${session.u.hasRole('PACIENTE')}">
+			<button class="btn waves-effect waves-light col s4" th:data-sender="${session.u.username}" id="sendmsg" type="submit">Solicitar cambio de psicólogo</button>
 		  </form>
 		  <br>
 	  </div>
 </div>
-	<div class="sidebar">
+	<!-- <div class="sidebar">
 	<form th:action="@{/user/{id}/msg(id=${user.id})}" method="POST">
 	<textarea id="message" placeholder="escribe a este usuario" rows="4" cols="20"></textarea>
 	<button id="sendmsg" type="submit">Enviar</button>
 	</form>
-	</div>
+	</div> -->
 	</div>
 	</div>
 	
@@ -95,6 +95,8 @@
 	</footer>
 	
 	<script>
+	
+	var sender;
 // esto es algo feo, y se podría sacar a un JS externo
 document.addEventListener("DOMContentLoaded", () => {
 	// selecciona los campos de contraseña
@@ -112,8 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	b.onclick = (e) => {
 		e.preventDefault();
 		console.log(b, b.parentNode)
-		go(b.parentNode.action, 'POST', {message: 
-				document.getElementById("message").value})
+		sender = b.getAttribute("data-sender");
+		go(b.parentNode.action, 'POST', {message: "El usuario ha solicitado un cambio de psicólogo."})
 			.then(d => console.log("happy", d))
 			.catch(e => console.log("sad", e))
 	}

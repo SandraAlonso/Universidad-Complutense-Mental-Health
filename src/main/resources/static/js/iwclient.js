@@ -12,19 +12,18 @@ const ws = {
 	 * Default action when message is received. 
 	 */
 	receive: (text) => {
-		console.log(sender);
-		if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
-		var today = new Date();
-			$('#mensajes')
-			.append(
-					'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-							+ text.from
-							+ '</b></p><p>'
-							+ today.toLocaleString("es-ES").split(" ").join("@")
-							+ '</p><br><p>'
-							+ text.text
-							+ '</p></div></div></div>');
-		}
+			if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
+			var today = new Date();
+				$('#mensajes')
+				.append(
+						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
+								+ text.from
+								+ '</b></p><p>'
+								+ today.toLocaleString("es-ES").split(" ").join("@")
+								+ '</p><br><p>'
+								+ text.text
+								+ '</p></div></div></div>');
+			}
 	},
 	
 	headers: {'X-CSRF-TOKEN' : config.csrf.value},
@@ -100,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		let subs = [];
 		if(config.admin) {
 			subs.push("/topic/admin");
+			subs.push("/topic/peticiones");
 		}
 		else {
 			var array_topics = config.topics.split(",");
