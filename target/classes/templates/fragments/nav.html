@@ -22,7 +22,7 @@
   	<div class="nav-wrapper">
       <a href="#" th:href="@{/}" id="logo" class="brand-logo">UCMH</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <a th:if="${session.u}" th:href="@{/message/}" class="hide-on-large-only brand-logo right"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a>
+      <a th:if="${session.u}" th:href="@{/message/}" class="hide-on-large-only brand-logo right"><i class="material-icons">mail</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down"> 
       	  <div th:if="${session.u}">
       	  	  <li th:if="${session.u.hasRole('PSICOLOGO')}"><a th:href="@{/psicologo/horario/}">Mi horario</a></li>
@@ -30,7 +30,8 @@
 	  		  <li th:if="${session.u.hasRole('PSICOLOGO')}"><a th:href="@{/psicologo/pacientes/}">Pacientes</a></li>
 	  		  <li th:if="${session.u.hasRole('PACIENTE')}"><a th:href="@{/paciente/estadisticas/}">Estadísticas</a></li>
 	  		  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>        
-	      	  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li>
+	      	  <!--  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li> -->
+	      	  <li><a th:href="@{/message/}"><i class="material-icons">mail</i></a></li>
 			  <li>
 			  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
 			  		<img class="circle responsive-img profile-image" th:src="@{/user/{id}/photo(id=${session.u.id})}">

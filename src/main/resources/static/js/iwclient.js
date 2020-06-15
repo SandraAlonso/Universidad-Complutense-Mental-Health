@@ -15,7 +15,7 @@ const ws = {
 			if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
 			var today = new Date();
 				$('#mensajes')
-				.append(
+				.prepend(
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 								+ text.from
 								+ '</b></p><p>'

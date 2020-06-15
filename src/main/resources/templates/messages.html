@@ -6,7 +6,7 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
-<title>Horario</title>
+<title>Mensajería</title>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
-		<h4 class="center-align">Últimos mensajes</h4>
+		<h4 class="center-align" id="conver">Últimos mensajes</h4>
 	</header>
 
 	<div class="row">
@@ -33,33 +33,6 @@
 	</div>
 	<br>
 
-	<!-- 	<div class="nav-wrapper">
-		<form th:action="@{/admin/findUsers}" method="post"
-			name="findUserForm">
-			<div class="row">
-
-				<div class="input-field col s8 m8 offset-s1 offset-m1">
-					<input id="search" type="search" name="search" required> <label
-						class="label-icon" for="search"><i class="material-icons">search</i></label>
-					<i class="material-icons">close</i>
-				</div>
-
-				<button class="col s2 m2 btn waves-effect waves-light btn-large"
-					type="submit">
-					Filtrar <i class="material-icons right">send</i>
-				</button>
-			</div>
-			<div class="row">
-				<span class="col offset-s1">Filtro: </span> <label> <input
-					name="filter" type="radio" value="nickname" checked /> <span>Usuario</span>
-				</label> <label> <input name="filter" value="email" type="radio" />
-					<span>Topic</span>
-				</label>
-
-			</div>
-		</form>
-	</div> -->
-
 	<div class="row" id="mensajes"></div>
 
 	<form id="form-send" class="float row hide" method="POST">
@@ -69,9 +42,6 @@
 			<i class="material-icons right" id="sendmsg">send</i>
 		</button>
 	</form>
-
-
-
 
 	<ul id="slide-out" class="sidenav">
     <li><div class="user-view">
@@ -106,7 +76,7 @@
 					success : function(json) {
 						for (var i = 0; i < json.length; ++i) {
 							$('#mensajes')
-									.append(
+									.prepend(
 											'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 													+ json[i].from
 													+ '</b></p><p>'
@@ -128,6 +98,7 @@
 			console.log(sender);
 			$('#mensajes').empty();
 			$('#form-send').removeClass('hide');
+			$("#conver").html("Conversación con " + username);
 			
 			$('#send').attr("data-id-receiver", id);
 			$('#send').attr("data-topic", '');
@@ -140,7 +111,7 @@
 					mensajes = json;
 					for (var i = 0; i < json.length; ++i) {
 						$('#mensajes')
-								.append(
+								.prepend(
 										'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 												+ json[i].from
 												+ '</b></p><p>'
@@ -167,6 +138,8 @@
 			$('#form-send').removeClass('hide');
 			$('#send').attr("data-topic", name);
 			$('#send').attr("data-id-receiver", '');
+			$("#conver").html("Conversación del grupo " + name);
+
 			//TODO borrar el receiver y viceversa
 			
 			$.ajax({
@@ -177,7 +150,7 @@
 					mensajes = json;
 					for (var i = 0; i < json.length; ++i) {
 						$('#mensajes')
-								.append(
+								.prepend(
 										'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 												+ json[i].from
 												+ '</b></p><p>'
@@ -199,6 +172,7 @@
 		document.addEventListener("DOMContentLoaded", () => {
 			let b = document.getElementById("sendmsg");
 			b.onclick = (e) => {
+				console.log("hola");
 				var today = new Date();
 				var action;
 				if($("#send").attr("data-id-receiver")) action = "/user/" + $("#send").attr("data-id-receiver") + "/msg?=" + $("#send").attr("data-id-sender");
@@ -220,6 +194,15 @@
 								+ '</p></div></div></div>');
 				}
 			}
+			
+			$(document).ready(function() {
+				  $(window).keydown(function(event){
+				    if(event.keyCode == 13) {
+				      event.preventDefault();
+				      return false;
+				    }
+				  });
+			});
 		});
 		
 		

@@ -74,7 +74,7 @@
 	  </form>
 	  
 	  <div>
-	  	  <h5 class="center-align">Cambiar de psicólogo</h5><br>
+	  	  <h5 class="center-align" th:if="${session.u.hasRole('PACIENTE')}">Cambiar de psicólogo</h5><br>
 		  <form class="center-align" th:action="@{/user/peticiones/group-msg}" th:if="${session.u.hasRole('PACIENTE')}">
 			<button class="btn waves-effect waves-light col s4" th:data-sender="${session.u.username}" id="sendmsg" type="submit">Solicitar cambio de psicólogo</button>
 		  </form>
