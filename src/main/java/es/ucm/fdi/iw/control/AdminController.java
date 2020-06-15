@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +49,10 @@ public class AdminController {
 
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -97,7 +102,10 @@ public class AdminController {
 			BindingResult result, HttpSession session) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		
 		// TODO comprobar que stored tiene admin
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 		entityManager.persist(user);
 		entityManager.flush();
 		log.info("Usuario {} ha añadido al usuario {} con rol de {}.", stored.getFirstName(), user.getFirstName(),

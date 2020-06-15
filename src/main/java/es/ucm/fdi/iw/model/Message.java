@@ -11,11 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -24,15 +20,13 @@ import org.apache.logging.log4j.Logger;
  * @author mfreire
  */
 @Entity
-@NamedQueries({
+/*@NamedQueries({
 	@NamedQuery(name="Message.countUnread",
 	query="SELECT COUNT(m) FROM Message m "
 			+ "WHERE m.recipient.id = :userId AND m.dateRead = null")
-})
+})*/
 public class Message {
-	
-	private static Logger log = LogManager.getLogger(Message.class);	
-	
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -45,7 +39,7 @@ public class Message {
 	private String topic;
 
 	private LocalDateTime dateSent;
-	private LocalDateTime dateRead;
+	//private LocalDateTime dateRead;
 	
 	/**
 	 * Convierte colecciones de mensajes a formato JSONificable
@@ -78,8 +72,8 @@ public class Message {
 			this.from = m.getSender().getUsername();
 			if(m.getRecipient() != null) this.to = m.getRecipient().getUsername();
 			this.sent = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateSent());
-			this.received = m.getDateRead() == null ?
-					null : DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateRead());
+			//this.received = m.getDateRead() == null ?
+			//		null : DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateRead());
 			this.text = m.getText();
 			this.id = m.getId();
 			this.topic = m.getTopic();
@@ -167,14 +161,6 @@ public class Message {
 	public void setDateSent(LocalDateTime dateSent) {
 		this.dateSent = dateSent;
 	}
-
-	public LocalDateTime getDateRead() {
-		return dateRead;
-	}
-
-	public void setDateRead(LocalDateTime dateRead) {
-		this.dateRead = dateRead;
-	}	
 	
 	public String getTopic() {
 		return topic;

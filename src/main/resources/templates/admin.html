@@ -43,6 +43,7 @@
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>
 					<p th:text="${p.lastName}">Apellidos</p>
+					<p th:text="${p.mail}">Apellidos</p>
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
 						<a th:data-id="${p.id}" href="#modal2"
@@ -61,6 +62,7 @@
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>
 					<p th:text="${p.lastName}">Apellidos</p>
+					<p th:text="${p.mail}">Apellidos</p>
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
 						<a th:data-id="${p.id}" href="#modal2"
@@ -81,6 +83,7 @@
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>
 					<p th:text="${p.lastName}">Apellidos</p>
+					<p th:text="${p.mail}">Apellidos</p>
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
 						<a th:data-id="${p.id}" href="#modal2"
@@ -100,6 +103,7 @@
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>
 					<p th:text="${p.lastName}">Apellidos</p>
+					<p th:text="${p.mail}">Apellidos</p>
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
 						<a th:data-id="${p.id}" href="#modal2"
@@ -163,6 +167,7 @@
 						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
 					<p th:text="${p.firstName}">Nombre</p>
 					<p th:text="${p.lastName}">Apellidos</p>
+					<p th:text="${p.mail}">Apellidos</p>
 					<div class="secondary-content">
 						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
 						<a th:data-id="${p.id}" href="#modal2"
@@ -240,35 +245,6 @@
 
 				<input type="hidden" id="active" name="enabled" value="1">
 
-				<!-- 
-				
-				 <p>
-			      <label>
-			        <input type="checkbox" />
-			        <span>User</span>
-			      </label>
-			    </p>
-			    <p>
-			      <label>
-			        <input type="checkbox" />
-			        <span>Admin</span>
-			      </label>
-			    </p>
-			    <p>
-			      <label>
-			        <input type="checkbox" />
-			        <span>Psicologo</span>
-			      </label>
-			    </p>
-			    <p>
-			      <label>
-			        <input type="checkbox" />
-			        <span>Paciente</span>
-			      </label>
-			    </p>
-			    
-			    -->
-
 			</div>
 			<div class="modal-footer">
 				<a class="modal-close waves-effect btn-flat">Cancelar</a>
@@ -291,8 +267,8 @@
 
 	<div id="modal3" class="modal">
 		<div class="modal-content">
-			<h4>¿Estás seguro que deseas deshabilitar a este usuario?</h4>
-			<p>Esta usuario será deshabilitado del sistema y ya no podrá
+			<h4>¿Estás seguro que deseas deshabilitar o habilitar a este usuario?</h4>
+			<p>Esta usuario será deshabilitado o vuelto a habilitar en el sistema. En caso de deshabilitar ya no podrá
 				acceder hasta que un administrador le vuelva a habilitar</p>
 		</div>
 		<div class="modal-footer">
