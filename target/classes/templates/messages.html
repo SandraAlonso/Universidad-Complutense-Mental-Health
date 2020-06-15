@@ -83,9 +83,10 @@
       <a href="#email"><span class="white-text email" th:text="${session.u.username}">jdandturk@gmail.com</span></a>
     </div></li>
     <li><a class="subheader">Citas grupales</a></li>
-    <li th:if="${session.topics != ''}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" href="#!" th:text="${g}" th:onclick="getMessagesTopic([[${g}]]);">Usuario 1</a></li>
+    <li th:if="${session.u.hasRole('ADMIN')}"><a class="waves-effect" th:data-id="admin" th:text="admin" th:onclick="getMessagesTopic(admin);">Usuario 1</a></li>
+    <li th:if="${session.topics != ''}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" th:text="${g}" th:onclick="getMessagesTopic([[${g}]]);">Usuario 1</a></li>
     <li><a class="subheader">Usuarios</a></li>
-    <li th:each="us : ${usuarios}"><a class="waves-effect sender" th:data-id="${us.id}" th:data-username="${us.username}" href="#!" th:text="${us.username}" th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario 1</a></li>
+    <li th:each="us : ${usuarios}"><a class="waves-effect sender" th:data-id="${us.id}" th:data-username="${us.username}" th:text="${us.username}" th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario 1</a></li>
   </ul>
 
 	<script>
@@ -128,6 +129,7 @@
 			$('#form-send').removeClass('hide');
 			
 			$('#send').attr("data-id-receiver", id);
+			$('#send').attr("data-topic", '');
 			
 			$.ajax({
 				url : config.rootUrl + "message/get/" + id,
@@ -163,6 +165,7 @@
 			$('#mensajes').empty();
 			$('#form-send').removeClass('hide');
 			$('#send').attr("data-topic", name);
+			$('#send').attr("data-id-receiver", '');
 			//TODO borrar el receiver y viceversa
 			
 			$.ajax({
