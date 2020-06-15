@@ -110,7 +110,9 @@
 								<div class="collapsible-body">
 									<ul th:if=${patie} class="card collection">
 										<li th:if=${patie} class="collection-item avatar"
-											th:each="emo : ${patie.emotionalState}"><b><span>Fecha:</span></b>
+											th:each="emo : ${patie.emotionalState}"><b>
+											<img th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}" alt=""
+					class="circle"><span>Fecha:</span></b>
 											<span th:text="${#temporals.format(emo.date, 'dd-MMM-yyyy')}"></span><br>
 										<b><span>Estado
 													de animo:</span></b>
