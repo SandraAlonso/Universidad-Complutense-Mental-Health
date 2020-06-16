@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -55,6 +54,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 				+ "WHERE u.username = :username AND u.enabled = 1"),
 		@NamedQuery(name = "User.hasUsername", query = "SELECT COUNT(u) " + "FROM User u "
 				+ "WHERE u.username = :username"),
+		@NamedQuery(name = "User.hasEmail", query = "SELECT COUNT(u) " + "FROM User u "
+				+ "WHERE u.mail= :mail"),
+		
 		@NamedQuery(name = "User.findPatientsOf",
 		query = "SELECT u "
 				+ "FROM User u "

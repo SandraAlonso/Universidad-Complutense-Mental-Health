@@ -2,7 +2,7 @@ package es.ucm.fdi.iw.control;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.ucm.fdi.iw.LocalData;
-import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.User.Role;
 
 /**
  * Admin-only controller
@@ -103,13 +103,23 @@ public class AdminController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		
-		// TODO comprobar que stored tiene admin
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-		entityManager.persist(user);
-		entityManager.flush();
-		log.info("Usuario {} ha añadido al usuario {} con rol de {}.", stored.getFirstName(), user.getFirstName(),
-				user.getRoles());
+		TypedQuery<Long> query = entityManager.createNamedQuery("User.hasUsername", Long.class);
+		Long hasUsername = query.setParameter("username", user.getUsername()).getSingleResult();
+		
+		TypedQuery<Long> query2 = entityManager.createNamedQuery("User.hasEmail", Long.class);
+		Long hasEmail = query2.setParameter("mail", user.getMail()).getSingleResult();
+		
+		if (hasUsername == 0 && hasEmail == 0) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			entityManager.persist(user);
+			entityManager.flush();
+			log.info("Usuario {} ha añadido al usuario {} con rol de {}.", stored.getUsername(), user.getUsername(),
+					user.getRoles());
+		}
+		else {
+			log.info("El usuario {} no ha sido añadido. Ya existe en el sistema.", stored.getUsername());
+		}
+		
 
 		return "redirect:/admin/";
 	}
@@ -120,46 +130,30 @@ public class AdminController {
 			throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		// TODO comprobar que stored tiene admin
 		User delete = entityManager.find(User.class, id);
 		if (delete != null && delete != stored) {
 			entityManager.remove(delete);
 			log.info("Usuario {} ha eliminado al usuario {} con rol de {}.", stored.getFirstName(),
 					delete.getFirstName(), delete.getRoles());
-
 		}
 		else {
 			log.info("Usuario {} no ha podido eliminar al usuario porque es nulo o es el mismo.", stored.getFirstName());
 		}
 		return "redirect:/admin/";
 	}
-//TODO log info
+
 	@RequestMapping("/changePsychologist")
 	@Transactional
 	public String changePsychologist(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id, @RequestParam String psycho) throws IOException {
 		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
-		// Este user contiene el id del paciente y el nickname del usuario
 		User psychologist = query.setParameter("username", psycho).getSingleResult();
-
-		// Comprobar si el usuario es un psicólgo
-		String[] roles = psychologist.getRoles().split(",");
-		boolean is_psycho = false;
-		for (int j = 0; j < roles.length; ++j) {
-			if (roles[j].equals("PSICOLOGO")) {
-				is_psycho = true;
-				log.info("El usuario es un psicologo.");
-				break;
-			}
-		}
-		if (is_psycho) {
+		if (psychologist.hasRole(Role.PSICOLOGO)) {
 			User u = entityManager.find(User.class, id);
 			u.setPsychologist(psychologist);
 			log.info("Usuario {} ha cambiado de psicologo al usuario {}. Ahora su psicologo es {}.",
 					psychologist.getFirstName(), u.getFirstName(), psychologist.getFirstName());
-
 		}
-		;
 
 		return "redirect:/admin/";
 	}

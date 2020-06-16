@@ -8,35 +8,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +42,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.LocalData;
-import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
@@ -104,6 +97,8 @@ public class UserController {
 			@RequestParam(required=false) String pass2,
 			Model model, HttpSession session) throws IOException {
 		User target = entityManager.find(User.class, id);
+		User sender = entityManager.find(
+				User.class, ((User)session.getAttribute("u")).getId());
 		model.addAttribute("user", target);
 		
 		User requester = (User)session.getAttribute("u");
@@ -113,12 +108,22 @@ public class UserController {
 					"No eres administrador, y éste no es tu perfil");
 		}
 		
-		if (edited.getPassword() != null && edited.getPassword().equals(pass2)) {
-			// save encoded version of password
-			target.setPassword(passwordEncoder.encode(edited.getPassword()));
-		}		
-		target.setRoles(edited.getRoles());
-		target.setUsername(edited.getUsername());
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
+		List<User> u = query.setParameter("username", edited.getUsername()).getResultList();
+		
+		TypedQuery<User> query2 = entityManager.createNamedQuery("User.byMail", User.class);
+		List<User> u2 = query2.setParameter("email", edited.getMail()).getResultList();
+		
+		if((u == null && u2 == null) 
+				|| (u.isEmpty() && !u2.isEmpty() && target.getMail().equals(u2.get(0).getMail()))
+				|| (!u.isEmpty() && u2.isEmpty() && target.getUsername().equals(u.get(0).getUsername()))) {		
+			if (edited.getPassword() != null && edited.getPassword().equals(pass2)) {
+				// save encoded version of password
+				target.setPassword(passwordEncoder.encode(edited.getPassword()));
+			}		
+			if(sender.hasRole(Role.ADMIN)) target.setRoles(edited.getRoles());
+			target.setUsername(edited.getUsername());
+		}
 		return "user";
 	}	
 	
