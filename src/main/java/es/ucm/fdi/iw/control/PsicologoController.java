@@ -113,18 +113,26 @@ public class PsicologoController {
 			entityManager.flush();
 			log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					groupAppointment.getDate(), groupAppointment.getStart_hour());
+			return "redirect:/psicologo/horario";
 			}
 			else {
+				Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
+				model.addAttribute("problema", p);
 				log.info(
 						"El usuario {} no ha podido crear una cita grupal porque ya hay una cita a esa hora.",stored.getFirstName());
+				return horarioPsicologo(session, model, null);
+
 			}
 		} else {
+			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
+			model.addAttribute("problema", p);
 			log.info(
 					"El usuario {} no ha podido crear una cita grupal porque la hora seleccionada es posterior a la actual ({}).",
 					stored.getFirstName(), LocalDate.now());
+			return horarioPsicologo(session, model, null);
+
 		}
-		return "redirect:/psicologo/horario";
-	}
+}
 	
 	@RequestMapping("/deleteAppointment")
 	@Transactional
@@ -156,15 +164,42 @@ public class PsicologoController {
 		GroupAppointment ga = entityManager.find(GroupAppointment.class, groupAppointment.getID());
 
 		if (ga != null) {
-			ga.setName(groupAppointment.getName());
-			ga.setDate(groupAppointment.getDate());
-			ga.setStart_hour(groupAppointment.getStart_hour());
-			ga.setFinish_hour(groupAppointment.getFinish_hour());
-			ga.setDescription(groupAppointment.getDescription());
-			log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
-					stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
-					groupAppointment.getDate());
-			return "redirect:/psicologo/horario";
+			int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
+			int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+			LocalTime ahora = LocalTime.now();
+			int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+
+			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+				
+				
+				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate", Appointment.class); 
+				List<Appointment> lm = query.setParameter("username", stored.getId()).setParameter("date", groupAppointment.getDate()).setParameter("sth", groupAppointment.getStart_hour()).setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
+				
+				
+				if(lm.size()==0) {
+					ga.setName(groupAppointment.getName());
+					ga.setDate(groupAppointment.getDate());
+					ga.setStart_hour(groupAppointment.getStart_hour());
+					ga.setFinish_hour(groupAppointment.getFinish_hour());
+					ga.setDescription(groupAppointment.getDescription());
+					log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
+							stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
+							groupAppointment.getDate());
+					return "redirect:/psicologo/horario";
+				}
+				else {
+					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar esta cita.");
+					model.addAttribute("problema", p);
+					log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+					return horarioPsicologo(session, model, null);
+				}
+			}
+			else {
+				Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar esta cita.");
+				model.addAttribute("problema", p);
+				log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+				return horarioPsicologo(session, model, null);
+			}
 		} else {
 			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
 			model.addAttribute("problema", p);
@@ -184,12 +219,15 @@ public class PsicologoController {
 		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
 		List<User> lu = new ArrayList<User>();
 		for (int i = 0; i < values.length; ++i) {
-			User u = query.setParameter("username", values[i]).getSingleResult();
+			List<User> us = query.setParameter("username", values[i]).getResultList();
+			if(!us.isEmpty()) {
+			User u = us.get(0);
 			if (u != null) {
-				if(u.hasRole(Role.PSICOLOGO)) break;
+				if(u.hasRole(Role.PSICOLOGO) || u.hasRole(Role.ADMIN)) break;
 				lu.add(u);
 			} else // ya se han añadido todos los pacientes
 				break;
+			}
 		}
 
 		if (lu != null) {
