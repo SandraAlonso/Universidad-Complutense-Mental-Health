@@ -13,129 +13,129 @@
 <body>
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 	<h4 class="center-align">Mis pacientes</h4>
-	<div class="row">
-
-		<div class="col s6">
-			<ul class="collection">
-
-				<li class="collection-item avatar" th:each="pat : ${u.pacientes}">
-					<img th:src="@{${'/user/' + pat.id + '/photo?=' + pat.id}}" alt=""
-					class="circle"> <span class="title"
-					th:text="${pat.firstName}">Nombre</span>
-					<p th:text="${pat.lastName}">Apellido</p> <a
-					th:href="@{/psicologo/pacientes(id=${pat.id})}"
-					class=" waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
-						sobre el paciente</a>
-
-				</li>
-
-			</ul>
-
-		</div>
-
+	<main>
 		<div class="row">
+
 			<div class="col s6">
-				<div class="card">
-					<div class="card-image">
-						<img th:if=${patie} width="256" height="256" th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}">
-					</div>
-					<div class="card-content">
-						<b> <span class="title">Datos del paciente: </span></b><br> <span>Nombre:
-						</span><span th:if=${patie} th:text="${patie.firstName}"></span><br>
-						<span>Apellidos: </span> <span th:if=${patie}
-							th:text="${patie.lastName}"></span><br> <span>Mail: </span>
-						<span th:if=${patie} th:text="${patie.mail}"></span><br> <span>Tratamiento:
-						</span> <span th:if=${patie} th:text="${patie.treatment}"></span><br>
-						<span>Diagnostico: </span> <span th:if=${patie}
-							th:text="${patie.disorder}"></span>
-					</div>
-					<div class="card-action">
+				<ul class="collection">
 
-						<form th:action="@{/psicologo/addTreatment}" method="post"
-							name="addTreatmentForm">
-							<p>
-								Tratamiento: <input name="treatment" type="text" id="treatment" />
-								<!--  con id coge el script de abajo y con name lo pasa al controller -->
-							</p>
-							<p>
-								Diagnostico: <input name="disorder" type="text" id="disorder" />
+					<li class="collection-item avatar" th:each="pat : ${u.pacientes}">
+						<img th:src="@{${'/user/' + pat.id + '/photo?=' + pat.id}}" alt=""
+						class="circle"> <span class="title"
+						th:text="${pat.firstName}">Nombre</span>
+						<p th:text="${pat.lastName}">Apellido</p> <a
+						th:href="@{/psicologo/pacientes(id=${pat.id})}"
+						class=" waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
+							sobre el paciente</a>
 
-							</p>
+					</li>
 
-							<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
-								name="id" />
-							<button type="submit"
-								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
+				</ul>
 
-						</form>
-						<br>
-						<form th:action="@{/psicologo/addPsycologistEntry}" method="post"
-							name="addPsycologistEntryForm">
-							<p>
-								Nueva entrada: <input name="description" type="text"
-									id="description" />
+			</div>
 
-							</p>
-							<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
-								name="id" />
+			<div class="row">
+				<div class="col s6">
+					<div class="card">
+						<div class="card-image">
+							<img th:if=${patie} width="256" height="256"
+								th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}">
+						</div>
+						<div class="card-content">
+							<b> <span class="title">Datos del paciente: </span></b><br>
+							<span>Nombre: </span><span th:if=${patie}
+								th:text="${patie.firstName}"></span><br> <span>Apellidos:
+							</span> <span th:if=${patie} th:text="${patie.lastName}"></span><br>
+							<span>Mail: </span> <span th:if=${patie} th:text="${patie.mail}"></span><br>
+							<span>Tratamiento: </span> <span th:if=${patie}
+								th:text="${patie.treatment}"></span><br> <span>Diagnostico:
+							</span> <span th:if=${patie} th:text="${patie.disorder}"></span>
+						</div>
+						<div class="card-action">
 
-							<button type="submit"
-								class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
+							<form th:action="@{/psicologo/addTreatment}" method="post"
+								name="addTreatmentForm">
+								<p>
+									Tratamiento: <input name="treatment" type="text" id="treatment" />
+									<!--  con id coge el script de abajo y con name lo pasa al controller -->
+								</p>
+								<p>
+									Diagnostico: <input name="disorder" type="text" id="disorder" />
 
-						</form>
+								</p>
 
-					</div>
+								<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
+									name="id" />
+								<button type="submit"
+									class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
 
-					<div>
-						<ul class="collapsible">
-							<li>
-								<div class="collapsible-header">
-									<i class="material-icons">border_color</i> Mis entradas
-								</div>
-								<div class="collapsible-body">
-									<ul th:if=${patie} class="card collection">
-										<li class="collection-item avatar"
-											th:each="des : ${patie.description}"><b><span>Fecha:</span></b>
-											<span th:text="${#temporals.format(des.date, 'dd-MMM-yyyy')}"></span> <br>
-										<b><span>Entrada:</span></b> <span
-											th:text="${des.description}"></span></li>
-									</ul>
-								</div>
+							</form>
+							<br>
+							<form th:action="@{/psicologo/addPsycologistEntry}" method="post"
+								name="addPsycologistEntryForm">
+								<p>
+									Nueva entrada: <input name="description" type="text"
+										id="description" />
 
-							</li>
-							<li>
-								<div class="collapsible-header">
-									<i class="material-icons">face</i> Entradas del paciente
-								</div>
-								<div class="collapsible-body">
-									<ul th:if=${patie} class="card collection">
-										<li th:if=${patie} class="collection-item avatar"
-											th:each="emo : ${patie.emotionalState}"><b>
-											<img th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}" alt=""
-					class="circle"><span>Fecha:</span></b>
-											<span th:text="${#temporals.format(emo.date, 'dd-MMM-yyyy')}"></span><br>
-										<b><span>Estado
-													de animo:</span></b>
-													<span th:if="${emo.emotionalState == 1}" >Muy triste</span>
-													<span th:if="${emo.emotionalState == 2}" >Triste</span>
-													<span th:if="${emo.emotionalState == 3}" >Bien</span>
-													<span th:if="${emo.emotionalState == 4}" >Muy bien</span>
-													<span th:if="${emo.emotionalState == 5}" >Genial</span>
-													<br>
-													<b><span>Entrada:</span></b> <span
-											th:text="${emo.description}"></span>
-													</li>
-									</ul>
-								</div>
-							</li>
-						</ul>
+								</p>
+								<input th:if=${patie} type="hidden" th:value="${{patie.id}}"
+									name="id" />
+
+								<button type="submit"
+									class="modal-close waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Guardar</button>
+
+							</form>
+
+						</div>
+
+						<div>
+							<ul class="collapsible">
+								<li>
+									<div class="collapsible-header">
+										<i class="material-icons">border_color</i> Mis entradas
+									</div>
+									<div class="collapsible-body">
+										<ul th:if=${patie} class="card collection">
+											<li class="collection-item avatar"
+												th:each="des : ${patie.description}"><b><span>Fecha:</span></b>
+												<span
+												th:text="${#temporals.format(des.date, 'dd-MMM-yyyy')}"></span>
+												<br> <b><span>Entrada:</span></b> <span
+												th:text="${des.description}"></span></li>
+										</ul>
+									</div>
+
+								</li>
+								<li>
+									<div class="collapsible-header">
+										<i class="material-icons">face</i> Entradas del paciente
+									</div>
+									<div class="collapsible-body">
+										<ul th:if=${patie} class="card collection">
+											<li th:if=${patie} class="collection-item avatar"
+												th:each="emo : ${patie.emotionalState}"><b> <img
+													th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}"
+													alt="" class="circle"><span>Fecha:</span></b> <span
+												th:text="${#temporals.format(emo.date, 'dd-MMM-yyyy')}"></span><br>
+												<b><span>Estado de animo:</span></b> <span
+												th:if="${emo.emotionalState == 1}">Muy triste</span> <span
+												th:if="${emo.emotionalState == 2}">Triste</span> <span
+												th:if="${emo.emotionalState == 3}">Bien</span> <span
+												th:if="${emo.emotionalState == 4}">Muy bien</span> <span
+												th:if="${emo.emotionalState == 5}">Genial</span> <br>
+												<b><span>Entrada:</span></b> <span
+												th:text="${emo.description}"></span></li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
-
-
-
+</main>
 		<script th:inline="javascript">
 		
 		//Se debería de llamar al iniciar
@@ -189,6 +189,9 @@
 				$('.collapsible').collapsible();
 		});
 				</script>
+
+		<footer th:replace="fragments/footer.html :: footer"> Footer
+			goes here </footer>
 </body>
 </html>
 

@@ -20,7 +20,7 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
-		<h4 class="center-align">Panel de administración</h4>
+		<h4 class="center-align">Panel de administraciÃ³n</h4>
 		<br>
 	</header>
 	
@@ -29,7 +29,7 @@
 		<div class="col s12">
 			<ul class="tabs">
 				<li class="tab col s3"><a class="active" href="#buscador">Buscador</a></li>
-				<li class="tab col s2"><a href="#psicologos">Psicólogos</a></li>
+				<li class="tab col s2"><a href="#psicologos">PsicÃ³logos</a></li>
 				<li class="tab col s2"><a href="#pacientes">Pacientes</a></li>
 				<li class="tab col s2"><a href="#administradores">Administradores</a></li>
 				<li class="tab col s3"><a href="#usuarios">Usuarios</a></li>			
@@ -157,7 +157,7 @@
 
 
 
-			<!-- Búsqueda -->
+			<!-- BÃºsqueda -->
 
 			<div id="psicologos" class="col s12">
 			<ul class="collection">
@@ -202,38 +202,38 @@
 			name="saveUserForm">
 
 			<div class="modal-content">
-				<h4>Añadir un nuevo usuario</h4>
+				<h4>AÃ±adir un nuevo usuario</h4>
 
 
 				<!-- Con el validate te sale la linea roja -->
 
 				<div class="input-field col s6">
 					<input id="name" name="firstName" type="text" class="validate"
-						required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+"> <label
+						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
 						for="name">Nombre del usuario</label>
 				</div>
 
 				<div class="input-field col s6">
 					<input id="last-name" name="lastName" type="text" class="validate"
-						required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+"> <label
+						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
 						for="last-name">Apellidos del usuario</label>
 				</div>
 
 				<div class="input-field col s6">
 					<input id="email" name="mail" type="email" class="validate">
-					<label for="email">Dirección de correo electrónico</label>
+					<label for="email">DirecciÃ³n de correo electrÃ³nico</label>
 				</div>
 
 				<div class="input-field col s6">
 					<input id="nick" name="username" type="text" class="validate"
-						required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+"> <label
+						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
 						for="nick">Nick del usuario en la plataforma</label>
 				</div>
 
 				<div class="input-field col s6">
 					<input id="password" type="password" name="password"
-						class="validate" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+">
-					<label for="password">Contraseña del usuario</label>
+						class="validate" required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
+					<label for="password">ContraseÃ±a del usuario</label>
 				</div>
 
 				<!-- TODO hacer que se auto actualicen -->
@@ -255,8 +255,8 @@
 
 	<div id="modal2" class="modal">
 		<div class="modal-content">
-			<h4>¿Estás seguro que deseas eliminar este usuario?</h4>
-			<p>Esta usuario será eliminada del sistema y ya no podrá ser
+			<h4>Â¿EstÃ¡s seguro que deseas eliminar este usuario?</h4>
+			<p>Esta usuario serÃ¡ eliminada del sistema y ya no podrÃ¡ ser
 				recuperado</p>
 		</div>
 		<div class="modal-footer">
@@ -267,8 +267,8 @@
 
 	<div id="modal3" class="modal">
 		<div class="modal-content">
-			<h4>¿Estás seguro que deseas deshabilitar o habilitar a este usuario?</h4>
-			<p>Esta usuario será deshabilitado o vuelto a habilitar en el sistema. En caso de deshabilitar ya no podrá
+			<h4>Â¿EstÃ¡s seguro que deseas deshabilitar o habilitar a este usuario?</h4>
+			<p>Esta usuario serÃ¡ deshabilitado o vuelto a habilitar en el sistema. En caso de deshabilitar ya no podrÃ¡
 				acceder hasta que un administrador le vuelva a habilitar</p>
 		</div>
 		<div class="modal-footer">
@@ -284,11 +284,11 @@
 			<input type="hidden" name="id" id="ID">
 
 			<div class="modal-content">
-				<h4>Esta acción cambiará al usuario de psicólogo por el
+				<h4>Esta acciÃ³n cambiarÃ¡ al usuario de psicÃ³logo por el
 					introducido</h4>
 				<div class="input-field col s6">
 					<input id="name" name="psycho" type="text" class="validate"
-						required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+"> <label
+						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
 						for="name">Introduce el nombre del usuario</label>
 				</div>
 			</div>

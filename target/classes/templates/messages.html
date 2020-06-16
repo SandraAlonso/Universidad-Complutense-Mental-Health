@@ -21,7 +21,7 @@
 	<header class="cd-main-header text-center flex flex-column flex-center">
 		<h4 class="center-align" id="conver">Últimos mensajes</h4>
 	</header>
-
+<main>
 	<div class="row">
 	<div class="center-align col s10 offset-s1">
 		<br> <a
@@ -59,7 +59,7 @@
     <li><a class="subheader">Usuarios</a></li>
     <li th:each="us : ${usuarios}"><a class="waves-effect sender" th:data-id="${us.id}" th:data-username="${us.username}" th:text="${us.username}" th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario 1</a></li>
   </ul>
-
+</main>
 	<script>
 	
 		var sender;

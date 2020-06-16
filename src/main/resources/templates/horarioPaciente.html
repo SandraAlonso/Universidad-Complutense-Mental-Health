@@ -26,7 +26,7 @@
 			th:text="|Semana del ${#temporals.day(days[0])} - ${#temporals.month(days[0])} - ${#temporals.year(days[0])} al ${#temporals.day(days[4])} - ${#temporals.month(days[4])} - ${#temporals.year(days[4])}|"></h6>
 
 	</header>
-
+<main>
 	<div
 		class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
 		<div class="cd-schedule__timeline">
@@ -292,7 +292,7 @@
 			</div>
 		</form>
 	</div>
-
+</main>
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
 
