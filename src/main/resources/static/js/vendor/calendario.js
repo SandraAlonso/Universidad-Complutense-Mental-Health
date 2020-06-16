@@ -66,7 +66,6 @@ function renderDate() {
   
     		j=0;
     		for (i = 1; i <= endDate; i++) {
-        		console.log(emotional_states);
 
     	        if (i == today.getDate() && dt.getMonth() == today.getMonth()){ 
 	        		console.log("he entrado en  hoy");
@@ -80,10 +79,8 @@ function renderDate() {
     	        
 
     	        else if (emotional_states.length>j){
-	        		console.log("he entrado en no hoy");
     	         if(i==formatDate(emotional_states[j].date)[0] && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
     	        	if(emotional_states[j].emotionalState ==1){
-		        		console.log("he entrado en genial5");
 
     	        		cells += "<div class='muy_mal'>" +
     					"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
@@ -93,7 +90,6 @@ function renderDate() {
     	        		j++;
     	        	}
     	        	else if(emotional_states[j].emotionalState ==2 && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
-		        		console.log("he entrado en genial4");
 
     	        		cells += "<div class='mal'>" +
     					"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
@@ -103,7 +99,6 @@ function renderDate() {
     	        		j++;
     	        	}
     	        	else if(emotional_states[j].emotionalState ==3 && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
-		        		console.log("he entrado en genial3");
 
     	        		cells += "<div class='bien'>" +
     					"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
@@ -112,7 +107,6 @@ function renderDate() {
     				 "</div>";
     	        		j++;
     	        	}else if(emotional_states[j].emotionalState ==4 && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
-		        		console.log("he entrado en genial2");
 
     	        		cells += "<div class='muy_bien'>" +
     					"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
@@ -122,7 +116,6 @@ function renderDate() {
     	        		j++;
     	        	}
     	        	else if(emotional_states[j].emotionalState ==5 && dt.getMonth()==formatDate(emotional_states[j].date)[1]-1){
-		        		console.log("he entrado en genial");
 
     	        		cells += "<div class='genial'>" +
     					"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 
@@ -133,7 +126,6 @@ function renderDate() {
     	        	}  
     	         }
     	        	 else{
-    		        		console.log("he entrado en primer else");
     	    	        	cells += "<div>" + 
     	        			"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" +
     	        				i +
@@ -147,7 +139,6 @@ function renderDate() {
     	        
     	        
     	        else{
-	        		console.log("he entrado en segundo else");
 
     	        	cells += "<div>" + 
         			"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" +

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import es.ucm.fdi.iw.model.Appointment;
+import es.ucm.fdi.iw.model.EmotionalState;
 import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
@@ -165,7 +166,7 @@ public class PsicologoController {
 			@RequestParam long id) throws IOException {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		GroupAppointment ga = entityManager.find(GroupAppointment.class, id);
+		Appointment ga = entityManager.find(Appointment.class, id);
 		if (ga != null) {
 			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					ga.getDate(), ga.getStart_hour());
@@ -297,5 +298,35 @@ public class PsicologoController {
 					stored.getFirstName());
 		}
 		return "redirect:/psicologo/pacientes";
+	}
+	
+	
+	@GetMapping(path = "/getAppointments/{id}", produces = "application/json")
+	@ResponseBody
+	public Appointment getAppointments(HttpSession session, @PathVariable long id) {
+
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga= entityManager.find(Appointment.class, id);
+		boolean esSuya=false;
+		for(int i =0;i<stored.getCreatorAppointments().size();i++) {
+			if(stored.getCreatorAppointments().get(i).getID()==id) {
+				esSuya=true;
+				break;
+			}
+			
+		}
+		if(!esSuya) {
+			for(int i =0;i<stored.getGroupAppointmentsPatient().size();i++) {
+			if(stored.getGroupAppointmentsPatient().get(i).getID()==id) {
+				esSuya=true;
+				break;
+			}
+			}
+		}
+		if(esSuya)
+			return ga;
+		else//TODO 	que devuelvo si no es suya?
+			return null;
 	}
 }

@@ -23,6 +23,7 @@ import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -181,6 +182,32 @@ public class PacienteController {
 												// quien es el usuario en todo momento
 	}
 	
-	
+	@GetMapping(path = "/getAppointments/{id}", produces = "application/json")
+	@ResponseBody
+	public Appointment getAppointments(HttpSession session, @PathVariable long id) {
 
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		Appointment ga= entityManager.find(Appointment.class, id);
+		boolean esSuya=false;
+		for(int i =0;i<stored.getCreatorAppointments().size();i++) {
+			if(stored.getCreatorAppointments().get(i).getID()==id) {
+				esSuya=true;
+				break;
+			}
+			
+		}
+		if(!esSuya) {
+			for(int i =0;i<stored.getAppointments().size();i++) {
+			if(stored.getGroupAppointmentsPatient().get(i).getID()==id) {
+				esSuya=true;
+				break;
+			}
+			}
+		}
+		if(esSuya)
+			return ga;
+		else//TODO 	que devuelvo si no es suya?
+			return null;
+	}
 }

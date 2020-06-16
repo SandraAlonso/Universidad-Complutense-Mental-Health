@@ -1,16 +1,23 @@
 var clicked_id;
 
-		function change(arg) {
 
+
+	function change(arg) {
+			var groupAppointment;
 			var a = arg.getAttribute("data-id");
 			clicked_id = a;
+			$.ajax({
+				url : config.rootUrl + "psicologo/getAppointments/"+a,
+				type : 'GET',
+				dataType : 'json',
+				success : function(json) {
+					groupAppointment = json;
 
-			/* <![CDATA[ */
-
-			    var appointments = /* [[${groupAppointments}]] */ 'default';
-				for(var i = 0; i < appointments.length; ++i) {
-					if(appointments[i].id == a) {
-						if("name" in appointments[i]) {
+			    },
+				async: false
+			 })
+		    
+						if(typeof groupAppointment != 'undefined') {
 							// Es grupal
 							document.getElementById("modify-appointment").classList.remove('hide');
 							document.getElementById("add-people").classList.remove('hide');
@@ -31,12 +38,10 @@ var clicked_id;
 						else {
 							// Es individual
 							document.getElementById("modify-appointment").classList.add('hide');
-							document.getElementById("add-people").classList.add('hide');
-						}
-					}
+							document.getElementById("add-people").classList.add('hide');				
 				}
 
-			/* ]]> */
+			
 			
 			document.getElementById("add-button").classList.add('hide');
 			document.getElementById("options-button").classList.remove('hide');
@@ -70,14 +75,19 @@ var clicked_id;
 		}
 		
 		function getUsers() {
-			
-			/* <![CDATA[ */
-				
+			var groupAppointment;
+			$.ajax({
+				url : config.rootUrl + "psicologo/getAppointments/"+clicked_id,
+				type : 'GET',
+				dataType : 'json',
+				success : function(json) {
+					groupAppointment = json;
 
-		    var appointments = /* [[${groupAppointments}]] */ 'default';
-			for(var i = 0; i < appointments.length; ++i) {
-				if(appointments[i].id == clicked_id) {
-					var patients = appointments[i].patient;
+			    },
+				async: false
+			 })
+		    
+					var patients = groupAppointment.patient;
 					var instance = M.Chips.getInstance($('.chips'));
 					if(patients != null) {
 						patients.forEach(element => {
@@ -87,11 +97,11 @@ var clicked_id;
 							    image: photo, // optional
 							  });
 						})
-					}
 					
 					
-				}
+					
+				
 			}
 			
-			/* ]]> */
+			
 		}

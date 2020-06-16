@@ -6,6 +6,8 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
+<script th:src="@{/js/horarioPaciente.js}" src="../js/horarioPaciente.js"></script>
+
 <title>Horario</title>
 <meta name="theme-color" content="#fafafa">
 
@@ -296,60 +298,6 @@
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
 
-	<script th:inline="javascript">
-		function change(arg) {
-
-			var a = arg.getAttribute("data-id");
-
-			/*<![CDATA[*/
-
-			var appointments = /*[[${groupAppointments}]]*/'default';
-			for (var i = 0; i < appointments.length; ++i) {
-				if (appointments[i].id == a) {
-					if ("name" in appointments[i]) {
-						//Es grupal
-					} else {
-						//Es individual	
-						document.getElementById("ID").value = a;
-						document.getElementById("date").value = arg
-								.getAttribute("data-date");
-						document.getElementById("start-hour").value = arg
-								.getAttribute("data-start");
-						document.getElementById("end-hour").value = arg
-								.getAttribute("data-end");
-
-						document.getElementById("add-button").classList
-								.add('hide');
-						document.getElementById("options-button").classList
-								.remove('hide');
-
-						var eliminate = document.getElementById("delete");
-						eliminate.href = "/paciente/deleteAppointment?id=" + a;
-
-					}
-				}
-			}
-
-			/*]]>*/
-		}
-
-		function changeBack() {
-			document.getElementById("options-button").classList.add('hide');
-			document.getElementById("add-button").classList.remove('hide')
-		}
-	</script>
-
-	<!-- 
-	<script>
-	const date = document.getElementById("date");
-
-	date.addEventListener("input", function (event) { 
-	if	(date.validity.typeMismatch) { 
-		date.setCustomValidity("La fecha es anterior a la actual"); 
-		} 
-	else { date.setCustomValidity(""); } });
-	</script>
-	-->
 
 </body>
 
