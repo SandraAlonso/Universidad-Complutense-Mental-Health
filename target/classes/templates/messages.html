@@ -8,7 +8,7 @@
 <th:block th:replace="fragments/head :: header" />
 <script th:src="@{/js/messages.js}" src="../js/messages.js"></script>
 
-<title>Mensajería</title>
+<title>MensajerÃ­a</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
-		<h4 class="center-align" id="conver">Últimos mensajes</h4>
+		<h4 class="center-align" id="conver">Ãšltimos mensajes individuales</h4>
 	</header>
 	<main>
 		<div class="row">
@@ -76,6 +76,15 @@
 				th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario
 					1</a></li>
 		</ul>
+				  			<div th:if="${problema}" id="error" class="modal">
+	<div class="modal-content">
+				<h4>Error</h4>
+				<p th:text=${problema.mensaje}>Ejemplo</p>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+			</div>
 	</main>
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>

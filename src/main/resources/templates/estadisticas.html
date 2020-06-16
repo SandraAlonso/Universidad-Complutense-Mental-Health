@@ -52,6 +52,16 @@
 		<div class="days"></div>
 
 	</div>
+	
+	  			<div th:if="${problema}" id="error" class="modal">
+	<div class="modal-content">
+				<h4>Error</h4>
+				<p th:text=${problema.mensaje}>Ejemplo</p>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+			</div>
 
 	<div id="modal" class="modal">
 		<form th:action="@{/paciente/saveEmotionalState}" method="post"
