@@ -69,7 +69,7 @@ public class MessageController {
 		long userId = ((User)session.getAttribute("u")).getId();
 		User u = entityManager.find(User.class, userId);
 		TypedQuery<Message> query = entityManager.createNamedQuery("Message.getConversation", Message.class); 
-		List<Message> lm = query.setParameter("id", id).setParameter("userId", userId).getResultList(); //TODO INSERTAR parametros
+		List<Message> lm = query.setParameter("id", id).setParameter("userId", userId).getResultList(); 
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);
