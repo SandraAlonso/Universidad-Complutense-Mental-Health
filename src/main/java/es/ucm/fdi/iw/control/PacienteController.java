@@ -2,7 +2,6 @@ package es.ucm.fdi.iw.control;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -15,8 +14,6 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,13 +22,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.EmotionalState;
-import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.User;
 
@@ -56,7 +50,7 @@ public class PacienteController {
 
 	@PostMapping("/saveEmotionalState")
 	@Transactional
-	public String saveAnimosity(Model model, HttpServletResponse response,
+	public String saveEmotionalState(Model model, HttpServletResponse response,
 			@ModelAttribute @Valid EmotionalState emotionalEstate, BindingResult result, HttpSession session) {
 
 		User requester = (User) session.getAttribute("u");
@@ -66,8 +60,6 @@ public class PacienteController {
 																			// iguales a hoy
 		if (fecha <= 0) {
 			emotionalEstate.setPatient(stored);
-			stored.addEmotionalState(emotionalEstate);
-
 			entityManager.persist(emotionalEstate);
 			entityManager.flush();
 			log.info("Usuario {} ha añadido un nuevo estado emocional y es {}", stored.getFirstName(),
@@ -84,20 +76,16 @@ public class PacienteController {
 	@GetMapping(path = "/getEmotionalState", produces = "application/json")
 	@ResponseBody
 	public List<EmotionalState> getEmotionalState(HttpSession session) {
-
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-
-		// TODO cambiar para que sean las de solo un mes, esto solo es una prueba
 		return stored.getEmotionalState();
 	}
 
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
-		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		if (weeks == null)
-			weeks = 0;
+		if (weeks == null) weeks = 0;
 		model.addAttribute("u", stored);
 		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeekPatient(weeks.intValue()));
 		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
@@ -136,7 +124,6 @@ public class PacienteController {
 			log.info("El usuario {} no puede solicitar una cita por que no tiene un psicologo asociado.",
 					stored.getFirstName());
 		}
-		// TODO sino error, debe tener un psicologo
 		return "redirect:/paciente/horario";
 	}
 
@@ -151,7 +138,6 @@ public class PacienteController {
 			log.info("El usuario {} ha eliminado una cita individual con el psicologo {} el dia {} a las {}.",
 					stored.getFirstName(), stored.getPsychologist(), ga.getDate(), ga.getStart_hour());
 			entityManager.remove(ga);
-
 		} else {
 			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getFirstName());
 		}

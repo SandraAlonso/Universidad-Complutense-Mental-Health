@@ -124,6 +124,9 @@ public class UserController {
 			if(sender.hasRole(Role.ADMIN)) target.setRoles(edited.getRoles());
 			target.setUsername(edited.getUsername());
 		}
+		else {
+			log.info("Error al modificar el usuario '{}'. Ya hay un usuario existente en el sistema.", target.getUsername());
+		}
 		return "user";
 	}	
 	
