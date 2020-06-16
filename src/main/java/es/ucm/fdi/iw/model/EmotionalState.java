@@ -25,7 +25,6 @@ public class EmotionalState {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 
-	//TODO comprobar entre 0 y 5
 	private Integer emotionalState;
 	
 	private String description;

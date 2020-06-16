@@ -329,7 +329,7 @@ public class PsicologoController {
 		}
 		if(esSuya)
 			return ga;
-		else//TODO 	que devuelvo si no es suya?
+		else
 			return null;
 	}
 }
