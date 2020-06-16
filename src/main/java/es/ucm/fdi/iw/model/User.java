@@ -50,6 +50,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @NamedQueries({
+		@NamedQuery(name = "User.getAllActive", query = "SELECT u FROM User u WHERE u.enabled = 1"),
 		@NamedQuery(name = "User.byUsername", query = "SELECT u FROM User u "
 				+ "WHERE u.username = :username AND u.enabled = 1"),
 		@NamedQuery(name = "User.hasUsername", query = "SELECT COUNT(u) " + "FROM User u "

@@ -117,13 +117,17 @@ public class UserController {
 		
 		if((u == null && u2 == null) 
 				|| (u.isEmpty() && !u2.isEmpty() && target.getMail().equals(u2.get(0).getMail()))
-				|| (!u.isEmpty() && u2.isEmpty() && target.getUsername().equals(u.get(0).getUsername()))) {		
+				|| (!u.isEmpty() && u2.isEmpty() && target.getUsername().equals(u.get(0).getUsername()))
+				|| (target.getMail().equals(u2.get(0).getMail()) && target.getUsername().equals(u.get(0).getUsername()))) {		
 			if (edited.getPassword() != null && edited.getPassword().equals(pass2)) {
 				// save encoded version of password
 				target.setPassword(passwordEncoder.encode(edited.getPassword()));
 			}		
 			if(sender.hasRole(Role.ADMIN)) target.setRoles(edited.getRoles());
 			target.setUsername(edited.getUsername());
+			target.setFirstName(edited.getFirstName());
+			target.setLastName(edited.getLastName());
+			target.setMail(edited.getMail());
 		}
 		else {
 			Problema p = new Problema("Error al modificar el usuario " + target.getUsername() + ". Ya hay un usuario existente el sistema.");
@@ -149,7 +153,6 @@ public class UserController {
 				FileCopyUtils.copy(in, os);
 			}
 		};
-		//TODO solo imagenes de 320x320 https://stackoverflow.com/questions/11213676/getting-the-size-of-an-image-inputstream
 	}
 	
 	@PostMapping("/{id}/msg")

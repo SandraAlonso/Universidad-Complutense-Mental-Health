@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 
@@ -20,10 +22,18 @@ import javax.persistence.ManyToOne;
  * @author mfreire
  */
 @Entity
-/*@NamedQueries({
+@NamedQueries({
+	@NamedQuery(name = "Message.getConversation", query = "SELECT m FROM Message m WHERE (RECIPIENT_ID=:id AND SENDER_ID=:userId) OR (RECIPIENT_ID=:userId AND SENDER_ID=:id)"),
+	@NamedQuery(name = "Message.getByTopic", query = "SELECT m FROM Message m WHERE TOPIC=:id")
+
+	
+})
+/*
+@NamedQueries({
 	@NamedQuery(name="Message.countUnread",
 	query="SELECT COUNT(m) FROM Message m "
 			+ "WHERE m.recipient.id = :userId AND m.dateRead = null")
+			
 })*/
 public class Message {
 		

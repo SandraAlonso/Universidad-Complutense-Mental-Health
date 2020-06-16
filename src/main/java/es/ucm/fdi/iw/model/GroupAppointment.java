@@ -6,10 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "GroupAppointment.allAppointmentsOfUser", query = "SELECT g FROM GroupAppointment g WHERE g.patient = :username")
+	})
 public class GroupAppointment extends Appointment {
 
 	@NotEmpty(message = "La cita debe tener nombre")

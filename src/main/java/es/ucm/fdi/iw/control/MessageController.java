@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
@@ -45,8 +46,8 @@ public class MessageController {
 		if(topics_list1 != null) topics_list = topics_list1;
 		String joined = String.join(",", topics_list);
 		session.setAttribute("topics", joined);
-		model.addAttribute("usuarios", entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%USER%'").getResultList());
-		model.addAttribute("group_appointments", entityManager.createQuery("SELECT u FROM GroupAppointment u").getResultList());
+		TypedQuery<User> query = entityManager.createNamedQuery("User.getAllActive", User.class); 
+		model.addAttribute("usuarios", query.getResultList());
 		return "messages";
 	}
 
@@ -67,7 +68,8 @@ public class MessageController {
 	public List<Message.Transfer> getById(HttpSession session, @PathVariable long id) {
 		long userId = ((User)session.getAttribute("u")).getId();
 		User u = entityManager.find(User.class, userId);
-		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE (RECIPIENT_ID=" + id + " AND SENDER_ID=" + userId  + ") OR (RECIPIENT_ID=" + userId + " AND SENDER_ID=" + id  + ")").getResultList();
+		TypedQuery<Message> query = entityManager.createNamedQuery("Message.getConversation", Message.class); 
+		List<Message> lm = query.setParameter("id", id).setParameter("userId", userId).getResultList(); //TODO INSERTAR parametros
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);
@@ -79,7 +81,8 @@ public class MessageController {
 	public List<Message.Transfer> getByTopic(HttpSession session, @PathVariable String id) {
 		long userId = ((User)session.getAttribute("u")).getId();
 		User u = entityManager.find(User.class, userId);
-		List<Message> lm = entityManager.createQuery("SELECT m FROM Message m WHERE TOPIC='" + id + "'").getResultList();
+		TypedQuery<Message> query = entityManager.createNamedQuery("Message.getByTopic", Message.class); 
+		List<Message> lm = query.setParameter("id", id).getResultList();
 		log.info("Generating message list for user {} ({} messages)", 
 				u.getUsername(),lm.size());
 		return Message.asTransferObjects(lm);
