@@ -227,7 +227,6 @@ public class UserController {
 		return "{\"result\": \"message sent.\"}";
 	}
 	
-	
 	@PostMapping("/{id}/photo")
 	public String postPhoto(
 			HttpServletResponse response,
@@ -248,18 +247,14 @@ public class UserController {
 		log.info("Updating photo for user {}", id);
 		File f = localData.getFile("user", id);
 		if (photo.isEmpty()) {
-			Problema p = new Problema("Error al subir la foto. ¿Archivo vacío?");
-			model.addAttribute("problema", p);
-			log.info("Error al subir la foto. ¿Archivo vacío?");
+			log.info("failed to upload photo: emtpy file?");
 		} else {
 			try (BufferedOutputStream stream =
 					new BufferedOutputStream(new FileOutputStream(f))) {
 				byte[] bytes = photo.getBytes();
 				stream.write(bytes);
 			} catch (Exception e) {
-				Problema p = new Problema("Error al subir la foto." + id + " " + e);
-				model.addAttribute("problema", p);
-				log.warn("Error al subir la foto " + id + " ", e);
+				log.warn("Error uploading " + id + " ", e);
 			}
 			log.info("Successfully uploaded photo for {} into {}!", id, f.getAbsolutePath());
 		}
