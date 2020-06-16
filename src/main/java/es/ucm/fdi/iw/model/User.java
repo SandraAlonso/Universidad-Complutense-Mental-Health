@@ -24,9 +24,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -78,7 +75,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class User {
 
-	private static Logger log = LogManager.getLogger(User.class);
 	private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public enum Role {// los usuarios pueden tener varios roles.
