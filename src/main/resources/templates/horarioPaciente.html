@@ -294,6 +294,16 @@
 			</div>
 		</form>
 	</div>
+	
+		  			<div th:if="${problema}" id="error" class="modal">
+	<div class="modal-content">
+				<h4>Error</h4>
+				<p th:text=${problema.mensaje}>Ejemplo</p>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+			</div>
 </main>
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
