@@ -64,7 +64,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		@NamedQuery(name = "User.byMail",
 		query = "SELECT u "
 				+ "FROM User u "
-				+ "WHERE u.mail = :email ")
+				+ "WHERE u.mail = :email "),
+		
+		@NamedQuery(name = "User.findByUsername",
+		query = "SELECT u FROM User u WHERE u.username LIKE :username"),
+		@NamedQuery(name = "User.findByEmail",
+		query = "SELECT u FROM User u WHERE u.mail LIKE :email"),
+		@NamedQuery(name = "User.findByName",
+		query = "SELECT u FROM User u WHERE u.firstName LIKE :name"),
 		})
 
 
