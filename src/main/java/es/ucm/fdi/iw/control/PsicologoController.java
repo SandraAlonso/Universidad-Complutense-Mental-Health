@@ -16,7 +16,6 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,18 +25,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import es.ucm.fdi.iw.model.Appointment;
-import es.ucm.fdi.iw.model.EmotionalState;
 import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
-import es.ucm.fdi.iw.model.IndividualAppointment;
-import es.ucm.fdi.iw.model.Message;
+import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
 
@@ -54,9 +49,6 @@ public class PsicologoController {
 
 	@Autowired
 	EntityManager entityManager;
-
-	@Autowired // this makes httpSession always available in each method
-	private HttpSession session;
 
 	
 	// Requester es el usuario que solicita la accion.
@@ -76,14 +68,14 @@ public class PsicologoController {
 		if (id != null) {
 			User patie = entityManager.find(User.class, id);
 			model.addAttribute("patie", patie);
-			log.info("Se están mostrando los datos del paciente {}", patie.getFirstName());
+			log.info("Se están mostrando los datos del paciente {}", patie.getUsername());
 		}
 		return "pacientes";
 	}
 
 	@RequestMapping("/horario")
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
-		User requester = (User) session.getAttribute("u"); // TODO podría usar directamente el requester?
+		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		System.out.println(stored.getCreatorAppointments());
 		if (weeks == null)
@@ -100,7 +92,6 @@ public class PsicologoController {
 	public String saveAppointment(Model model, HttpServletResponse response,
 			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
 			throws IOException {
-		boolean solapada=false;
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
@@ -113,17 +104,10 @@ public class PsicologoController {
 			
 			
 			TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate", Appointment.class); 
-			List<Appointment> lm = query.setParameter("username", stored).setParameter("date", groupAppointment.getDate()).getResultList();
-			for(int i =0;i<lm.size();i++) {
-				int comp= groupAppointment.getStart_hour().compareTo(lm.get(i).getStart_hour());
-				int comp2=groupAppointment.getFinish_hour().compareTo(lm.get(i).getStart_hour());
-				if(comp<=0 && comp2>0 || comp>0 &&comp2>0) {
-					solapada=true;
-					break;
-				}
-			}
+			List<Appointment> lm = query.setParameter("username", stored.getId()).setParameter("date", groupAppointment.getDate()).setParameter("sth", groupAppointment.getStart_hour()).setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 			
-			if(!solapada) {
+			
+			if(lm.size()==0) {
 			groupAppointment.setCreator(stored);
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
@@ -141,7 +125,7 @@ public class PsicologoController {
 		}
 		return "redirect:/psicologo/horario";
 	}
-
+	
 	@RequestMapping("/deleteAppointment")
 	@Transactional
 	public String deleteAppointment(Model model, HttpServletResponse response, HttpSession session,
@@ -153,11 +137,13 @@ public class PsicologoController {
 			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					ga.getDate(), ga.getStart_hour());
 			entityManager.remove(ga);
+			return "redirect:/psicologo/horario";
 		} else {
-			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getFirstName());
+			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente.");
+			model.addAttribute("problema", p);
+			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getUsername());
+			return horarioPsicologo(session, model, null);
 		}
-
-		return "redirect:/psicologo/horario";
 	}
 
 	@RequestMapping("/modifyAppointment")
@@ -178,12 +164,13 @@ public class PsicologoController {
 			log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
 					stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
 					groupAppointment.getDate());
+			return "redirect:/psicologo/horario";
 		} else {
-			log.info("El usuario {} no pude modificar una cita inexistente.", stored.getFirstName());
+			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
+			model.addAttribute("problema", p);
+			log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+			return horarioPsicologo(session, model, null);
 		}
-
-		return "redirect:/psicologo/horario"; // devolvemos el model (los datos modificados) y la session para saber
-												// quien es el usuario en todo momento
 	}
 
 	@RequestMapping("/addUsersOfGroupAppointments")
@@ -199,18 +186,7 @@ public class PsicologoController {
 		for (int i = 0; i < values.length; ++i) {
 			User u = query.setParameter("username", values[i]).getSingleResult();
 			if (u != null) {
-
-				String[] roles = u.getRoles().split(",");
-				boolean is_psycho = false;
-				for (int j = 0; j < roles.length; ++j) {
-					System.out.println(roles[j]);
-					if (roles[j].equals("PSICOLOGO")) {
-						is_psycho = true;
-						break;
-					}
-				}
-				if (is_psycho)
-					break;
+				if(u.hasRole(Role.PSICOLOGO)) break;
 				lu.add(u);
 			} else // ya se han añadido todos los pacientes
 				break;

@@ -2,13 +2,11 @@ package es.ucm.fdi.iw.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -16,10 +14,9 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity
 @NamedQueries({
-	@NamedQuery(name = "Appointment.allAppointmentsOfSameDate", query = "SELECT a FROM Appointment a WHERE a.psychologist = :username AND a.date = :date"),
-	})
+	@NamedQuery(name = "Appointment.allAppointmentsOfSameDate", query = "SELECT a FROM Appointment a WHERE ( PSYCHOLOGIST_ID = :username OR  CREATOR_ID = :username ) AND a.date = :date AND ((a.start_hour BETWEEN :sth AND :fnh OR a.finish_hour BETWEEN :sth AND :fnh) OR ((a.start_hour BETWEEN :sth AND :fnh ) AND (a.finish_hour BETWEEN :sth AND :fnh)))") })
+@Entity
 public abstract class Appointment {
 	
 	@Id
