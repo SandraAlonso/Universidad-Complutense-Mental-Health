@@ -37,6 +37,7 @@ import es.ucm.fdi.iw.model.EmotionalState;
 import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.IndividualAppointment;
+import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
 import es.ucm.fdi.iw.transfer.UserTransferData;
@@ -58,45 +59,7 @@ public class PsicologoController {
 	@Autowired // this makes httpSession always available in each method
 	private HttpSession session;
 
-	private User userFromSession() {
-		return (User) session.getAttribute("u");
-	}
-
-	private User refreshUser(User u) {
-		return entityManager.find(User.class, u.getId());
-	}
-
-	/*
-	 * @GetMapping(value = {"", "/pacientes"}) public String getUser(Model model) {
-	 * User psy = refreshUser(userFromSession()); model.addAttribute("pacientes",
-	 * entityManager.createNamedQuery( "User.findPatientsOf",
-	 * User.class).setParameter("psychologistId", psy.getId()) .getResultList());
-	 * 
-	 * return "misPacientes"; }
-	 * 
-	 * @GetMapping(value = "/patient/{id}", produces = {
-	 * MediaType.APPLICATION_JSON_VALUE})
-	 * 
-	 * @Transactional
-	 * 
-	 * @ResponseBody public UserTransferData getPatient(@PathVariable("id") long id)
-	 * { User patient = entityManager.find(User.class, id); return new
-	 * UserTransferData(patient); }
-	 * 
-	 * @PostMapping (value = "/modify/{id}", produces = {
-	 * MediaType.APPLICATION_JSON_VALUE })
-	 * 
-	 * @Transactional
-	 * 
-	 * @ResponseBody public UserTransferData modifyUser(@ModelAttribute User
-	 * user, @RequestParam(required=false) String disorder,
-	 * 
-	 * @RequestParam(required=false) String treatment,@PathVariable("id") long id) {
-	 * User target = entityManager.find(User.class, id);
-	 * target.setDisorder(disorder); target.setTreatment(treatment);
-	 * entityManager.merge(target); return new UserTransferData(target); }
-	 */
-
+	
 	// Requester es el usuario que solicita la accion.
 	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
 	// queremos cambiar
@@ -138,6 +101,7 @@ public class PsicologoController {
 	public String saveAppointment(Model model, HttpServletResponse response,
 			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
 			throws IOException {
+		boolean solapada=false;
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 
@@ -147,11 +111,30 @@ public class PsicologoController {
 		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
 
 		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+			
+			
+			TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate", Appointment.class); 
+			List<Appointment> lm = query.setParameter("username", stored).setParameter("date", groupAppointment.getDate()).getResultList();
+			for(int i =0;i<lm.size();i++) {
+				int comp= groupAppointment.getStart_hour().compareTo(lm.get(i).getStart_hour());
+				int comp2=groupAppointment.getFinish_hour().compareTo(lm.get(i).getStart_hour());
+				if(comp<=0 && comp2>0 || comp>0 &&comp2>0) {
+					solapada=true;
+					break;
+				}
+			}
+			
+			if(!solapada) {
 			groupAppointment.setCreator(stored);
 			entityManager.persist(groupAppointment);
 			entityManager.flush();
 			log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					groupAppointment.getDate(), groupAppointment.getStart_hour());
+			}
+			else {
+				log.info(
+						"El usuario {} no ha podido crear una cita grupal porque ya hay una cita a esa hora.",stored.getFirstName());
+			}
 		} else {
 			log.info(
 					"El usuario {} no ha podido crear una cita grupal porque la hora seleccionada es posterior a la actual ({}).",

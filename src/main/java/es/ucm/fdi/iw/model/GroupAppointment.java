@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "GroupAppointment.allAppointmentsOfUser", query = "SELECT g FROM GroupAppointment g WHERE g.patient = :username")
+	@NamedQuery(name = "GroupAppointment.allAppointmentsOfUser", query = "SELECT g FROM GroupAppointment g WHERE g.patient = :username"),
 	})
 public class GroupAppointment extends Appointment {
 
