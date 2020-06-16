@@ -81,6 +81,16 @@
 		  </form>
 		  <br>
 	  </div>
+	  
+	  			<div th:if="${problema}" id="error" class="modal">
+	<div class="modal-content">
+				<h4>Error</h4>
+				<p th:text=${problema.mensaje}>Ejemplo</p>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+	</div>
 </div>
 	<!-- <div class="sidebar">
 	<form th:action="@{/user/{id}/msg(id=${user.id})}" method="POST">

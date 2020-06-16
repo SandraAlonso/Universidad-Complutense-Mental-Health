@@ -2,7 +2,6 @@ package es.ucm.fdi.iw.control;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
 
@@ -115,13 +115,16 @@ public class AdminController {
 			entityManager.flush();
 			log.info("Usuario {} ha añadido al usuario {} con rol de {}.", stored.getUsername(), user.getUsername(),
 					user.getRoles());
+			return "redirect:/admin/";
 		}
 		else {
+			Problema p = new Problema("El usuario " + stored.getUsername() + " no ha sido añadido. Ya existe en el sistema.");
+			model.addAttribute("problema", p);
 			log.info("El usuario {} no ha sido añadido. Ya existe en el sistema.", stored.getUsername());
+			return index(model);
 		}
 		
 
-		return "redirect:/admin/";
 	}
 
 	@RequestMapping("/deleteUser")
@@ -135,11 +138,14 @@ public class AdminController {
 			entityManager.remove(delete);
 			log.info("Usuario {} ha eliminado al usuario {} con rol de {}.", stored.getFirstName(),
 					delete.getFirstName(), delete.getRoles());
+			return "redirect:/admin/";
 		}
 		else {
-			log.info("Usuario {} no ha podido eliminar al usuario porque es nulo o es el mismo.", stored.getFirstName());
+			Problema p = new Problema("El usuario " + delete.getUsername() + " no ha podido eliminar al usuario porque es nulo o es el mismo.");
+			model.addAttribute("problema", p);
+			log.info("Usuario {} no ha podido eliminar al usuario porque es nulo o es el mismo.", delete.getUsername());
+			return index(model);
 		}
-		return "redirect:/admin/";
 	}
 
 	@RequestMapping("/changePsychologist")
@@ -147,15 +153,21 @@ public class AdminController {
 	public String changePsychologist(Model model, HttpServletResponse response, HttpSession session,
 			@RequestParam long id, @RequestParam String psycho) throws IOException {
 		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
-		User psychologist = query.setParameter("username", psycho).getSingleResult();
-		if (psychologist.hasRole(Role.PSICOLOGO)) {
+		List<User> psychologist = query.setParameter("username", psycho).getResultList();
+		if (!psychologist.isEmpty() && psychologist.get(0).hasRole(Role.PSICOLOGO)) {
 			User u = entityManager.find(User.class, id);
-			u.setPsychologist(psychologist);
+			u.setPsychologist(psychologist.get(0));
 			log.info("Usuario {} ha cambiado de psicologo al usuario {}. Ahora su psicologo es {}.",
-					psychologist.getFirstName(), u.getFirstName(), psychologist.getFirstName());
+					psychologist.get(0).getFirstName(), u.getFirstName(), psychologist.get(0).getFirstName());
+			return "redirect:/admin/";
+		}
+		else {
+			Problema p = new Problema("El usuario " + psycho + " no es un psicólogo o no existe en el sistema.");
+			model.addAttribute("problema", p);
+			log.info("El usuario {} no es un psicólogo o no existe en el sistema.", psycho);
+			return index(model);
 		}
 
-		return "redirect:/admin/";
 	}
 
 	@RequestMapping("/findUsers")
@@ -165,21 +177,20 @@ public class AdminController {
 
 		switch (filter) {
 		case "nickname":
-			model.addAttribute("busqueda", entityManager
-					.createQuery("SELECT u FROM User u WHERE u.username LIKE '%" + search + "%'").getResultList());
+			TypedQuery<User> query2 = entityManager.createNamedQuery("User.findByUsername", User.class); 
+			model.addAttribute("busqueda", query2.setParameter("username", "%" + search + "%").getResultList());
 			break;
 		case "email":
-			model.addAttribute("busqueda", entityManager
-					.createQuery("SELECT u FROM User u WHERE u.mail LIKE '%" + search + "%'").getResultList());
+			TypedQuery<User> query = entityManager.createNamedQuery("User.findByEmail", User.class); 
+			model.addAttribute("busqueda", query.setParameter("email", "%" + search + "%").getResultList());
 			break;
 		case "nombre":
-			model.addAttribute("busqueda", entityManager
-					.createQuery("SELECT u FROM User u WHERE u.firstName LIKE '%" + search + "%'").getResultList());
+			TypedQuery<User> query3 = entityManager.createNamedQuery("User.findByName", User.class); 
+			model.addAttribute("busqueda", query3.setParameter("name", "%" + search + "%").getResultList());
 			break;
 		}
 		log.info("Se ha devuelto el contenido de la busqueda.");
 		return index(model);
-
 	}
 
 }

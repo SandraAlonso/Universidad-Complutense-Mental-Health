@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.LocalData;
 import es.ucm.fdi.iw.model.Message;
+import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
 
@@ -75,11 +76,11 @@ public class UserController {
 		User u = entityManager.find(User.class, id);
 		model.addAttribute("user", u);
 
-		// construye y envía mensaje JSON
 		User requester = (User)session.getAttribute("u");
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode rootNode = mapper.createObjectNode();
-		rootNode.put("text", requester.getUsername() + " is looking up " + u.getUsername());
+		rootNode.put("text", requester.getUsername() + " está mirando el perfil de " + u.getUsername());
+		rootNode.put("to", "admin");
 		String json = mapper.writeValueAsString(rootNode);
 		
 		messagingTemplate.convertAndSend("/topic/admin", json);
@@ -123,6 +124,11 @@ public class UserController {
 			}		
 			if(sender.hasRole(Role.ADMIN)) target.setRoles(edited.getRoles());
 			target.setUsername(edited.getUsername());
+		}
+		else {
+			Problema p = new Problema("Error al modificar el usuario " + target.getUsername() + ". Ya hay un usuario existente el sistema.");
+			model.addAttribute("problema", p);
+			log.info("Error al modificar el usuario '{}'. Ya hay un usuario existente en el sistema.", target.getUsername());
 		}
 		return "user";
 	}	
@@ -239,14 +245,18 @@ public class UserController {
 		log.info("Updating photo for user {}", id);
 		File f = localData.getFile("user", id);
 		if (photo.isEmpty()) {
-			log.info("failed to upload photo: emtpy file?");
+			Problema p = new Problema("Error al subir la foto. ¿Archivo vacío?");
+			model.addAttribute("problema", p);
+			log.info("Error al subir la foto. ¿Archivo vacío?");
 		} else {
 			try (BufferedOutputStream stream =
 					new BufferedOutputStream(new FileOutputStream(f))) {
 				byte[] bytes = photo.getBytes();
 				stream.write(bytes);
 			} catch (Exception e) {
-				log.warn("Error uploading " + id + " ", e);
+				Problema p = new Problema("Error al subir la foto." + id + " " + e);
+				model.addAttribute("problema", p);
+				log.warn("Error al subir la foto " + id + " ", e);
 			}
 			log.info("Successfully uploaded photo for {} into {}!", id, f.getAbsolutePath());
 		}

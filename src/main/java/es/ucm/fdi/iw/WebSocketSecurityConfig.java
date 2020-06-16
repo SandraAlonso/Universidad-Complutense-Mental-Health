@@ -20,6 +20,8 @@ public class WebSocketSecurityConfig
         messages
             .simpSubscribeDestMatchers("/topic/admin")	// solo admines pueden suscribirse a este topic
             	.hasRole(User.Role.ADMIN.toString())
+            .simpSubscribeDestMatchers("/topic/peticiones")	// solo admines pueden suscribirse a este topic
+            	.hasRole(User.Role.ADMIN.toString())
             .anyMessage().authenticated(); 				// todo tiene que proceder de sesiones autenticadas
     }
 }
