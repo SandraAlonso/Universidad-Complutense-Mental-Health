@@ -50,13 +50,13 @@
 		<form id="usermod" th:action="@{/user/{id}(id=${user.id})}" method="POST">
 			
 			<label for="firstname">Nombre</label>
-			<input name="firstName" id="firstName" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+" placeholder="Nombre" th:value="${user.firstName}" class="validate"/>
+			<input name="firstName" id="firstName" required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãš_-]+" placeholder="Nombre" th:value="${user.firstName}" class="validate"/>
 			
 			<label for="lastname">Apellidos</label>
-			<input name="lastName" id="lastname" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+" placeholder="Apellidos" th:value="${user.lastName}" class="validate"/>			
+			<input name="lastName" id="lastname" required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãš_-]+" placeholder="Apellidos" th:value="${user.lastName}" class="validate"/>			
 			
 			<label for="username">Usuario</label>
-			<input name="username" id="username" required pattern="[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+" placeholder="username" th:value="${user.username}" class=validate/>
+			<input name="username" id="username" required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãš_-]+" placeholder="username" th:value="${user.username}" class=validate/>
 			
 			<label for="mail">Email</label>
 			<input name="mail" id="mail" required type ="email"th:value="${user.mail}" class="validate"/>
