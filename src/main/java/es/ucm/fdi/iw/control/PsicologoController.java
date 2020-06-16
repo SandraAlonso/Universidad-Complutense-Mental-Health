@@ -280,6 +280,7 @@ public class PsicologoController {
 		if (id != null) {
 			User pat = entityManager.find(User.class, id);
 			LocalDate date = LocalDate.now();
+			if(!description.getDescription().equals("")) {
 			description.setPatient(pat);
 			description.setDate(date);
 			pat.addPsychologistEntry(description);
@@ -288,6 +289,12 @@ public class PsicologoController {
 			entityManager.flush();
 			log.info("El usuario {} ha añadido una nueva entrada al paciente {}, ya tiene {} entradas.",
 					stored.getFirstName(), pat.getFirstName(), pat.getDescription().size());
+			}
+			else {
+				log.info(
+						"El usuario {} no puede escribir una entrada vacia.",
+						stored.getFirstName());
+			}
 		} else {
 			log.info(
 					"El usuario {} no puede escribir una entrada a un paciente inexistente, selecciona uno de la izquierda.",
