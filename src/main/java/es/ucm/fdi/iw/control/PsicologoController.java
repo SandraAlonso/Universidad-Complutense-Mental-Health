@@ -40,7 +40,6 @@ import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
-import es.ucm.fdi.iw.transfer.UserTransferData;
 
 /**
  * User-administration controller
