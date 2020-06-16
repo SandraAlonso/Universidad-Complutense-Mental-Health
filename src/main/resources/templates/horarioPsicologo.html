@@ -6,6 +6,8 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
+<!-- <script th:src="@{/js/horarioPsicologo.js}" src="../js/horarioPsicologo.js"></script>
+-->
 <title>Horario</title>
 </head>
 
@@ -455,27 +457,7 @@
 
 			window.location = "/psicologo/addUsersOfGroupAppointments?values="
 					+ value + "&id=" + id;
-			/* var users = new Object();
-			 //users.Id = ; // id of user to be deleted
-			 users.Values = value;
-
-			 $.ajax({
-			     type : 'POST',
-			     url : "/psicologo/getUsersOfGroupAppointments",
-			     dataType : 'json',
-			     data : JSON.stringify(users),
-			     contentType : 'application/json',
-			     success : function(data) {
-			        //here in data variable, you will get list of all users sent from 
-			        // spring controller in json format, currently its object
-			        // iterate it and show users on page
-
-			        //showUsers(data);
-			     },
-			     error : function() {
-			         alert('error');
-			     }
-			 });*/
+			
 		}
 		
 		function getUsers() {
@@ -506,17 +488,7 @@
 		}
 	</script>
 
-	<!-- 
-	<script>
-	const date = document.getElementById("date");
-
-	date.addEventListener("input", function (event) { 
-	if	(date.validity.typeMismatch) { 
-		date.setCustomValidity("La fecha es anterior a la actual"); 
-		} 
-	else { date.setCustomValidity(""); } });
-	</script>
-	-->
+	
 
 </body>
 

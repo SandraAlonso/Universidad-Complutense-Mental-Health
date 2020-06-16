@@ -6,7 +6,9 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
-<title>Mensajer铆a</title>
+<script th:src="@{/js/messages.js}" src="../js/messages.js"></script>
+
+<title>Mensajer韆</title>
 </head>
 
 <body>
@@ -19,195 +21,62 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 	<header class="cd-main-header text-center flex flex-column flex-center">
-		<h4 class="center-align" id="conver">脷ltimos mensajes</h4>
+		<h4 class="center-align" id="conver">趌timos mensajes</h4>
 	</header>
-<main>
-	<div class="row">
-	<div class="center-align col s10 offset-s1">
-		<br> <a
-			class="btn waves-effect waves-light btn-large center-align sidenav-trigger"
-			data-target="slide-out"> Usuarios / Topics <i
-			class="material-icons right">chat</i>
-		</a>
-	</div>
-	</div>
-	<br>
+	<main>
+		<div class="row">
+			<div class="center-align col s10 offset-s1">
+				<br> <a
+					class="btn waves-effect waves-light btn-large center-align sidenav-trigger"
+					data-target="slide-out"> Usuarios / Topics <i
+					class="material-icons right">chat</i>
+				</a>
+			</div>
+		</div>
+		<br>
 
-	<div class="row" id="mensajes"></div>
+		<div class="row" id="mensajes"></div>
 
-	<form id="form-send" class="float row hide" method="POST">
-		<input type="text" id="message" class="col s9 offset-s1">
-		<button id="send" th:data-id-sender="${session.u.id}" th:data-username-sender="${session.u.username}" data-id-receiver="" data-topic="" class="boton-enviar btn-floating waves-effect waves-light"
-			type="submit" name="action">
-			<i class="material-icons right" id="sendmsg">send</i>
-		</button>
-	</form>
+		<form id="form-send" class="float row hide" method="POST">
+			<input type="text" id="message" class="col s9 offset-s1">
+			<button id="send" th:data-id-sender="${session.u.id}"
+				th:data-username-sender="${session.u.username}" data-id-receiver=""
+				data-topic=""
+				class="boton-enviar btn-floating waves-effect waves-light"
+				type="submit" name="action">
+				<i class="material-icons right" id="sendmsg">send</i>
+			</button>
+		</form>
 
-	<ul id="slide-out" class="sidenav">
-    <li><div class="user-view">
-      <div class="background">
-        <img src="../img/background1.jpg">
-      </div>
-      <a href="#user"><img class="circle" th:src="@{${'/user/' + session.u.id + '/photo?=' + session.u.id}}"></a>
-      <a href="#name"><span class="white-text name" th:text="${session.u.firstName}">Ejempl</span></a>
-      <a href="#email"><span class="white-text email" th:text="${session.u.username}">jdandturk@gmail.com</span></a>
-    </div></li>
-    <li><a class="subheader">Citas grupales</a></li>
-    <li th:if="${session.u.hasRole('ADMIN')}"><a class="waves-effect" th:data-id="peticiones" th:text="peticiones" th:onclick="getMessagesTopic('peticiones');">Usuario 1</a></li>
-    <li th:if="${session.u.hasRole('ADMIN')}"><a class="waves-effect" th:data-id="admin" th:text="admin" th:onclick="getMessagesTopic('admin');">Usuario 1</a></li>
-    <li th:if="${session.topics != ''}" th:each="g : ${session.topics}"><a class="waves-effect" th:data-id="${g}" th:text="${g}" th:onclick="getMessagesTopic([[${g}]]);">Usuario 1</a></li>
-    <li><a class="subheader">Usuarios</a></li>
-    <li th:each="us : ${usuarios}"><a class="waves-effect sender" th:data-id="${us.id}" th:data-username="${us.username}" th:text="${us.username}" th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario 1</a></li>
-  </ul>
-</main>
-	<script>
-	
-		var sender;
-		
-		function formatDate(d) {
-			// 2020-03-23T10:48:11.074 => 23/3/2020@10:48:18
-			return new Date(d).toLocaleString("es-ES").split(" ").join("@")
-		}
-
-		$.ajax({
-					url : config.rootUrl + "message/received",
-					type : 'GET',
-					dataType : 'json',
-					success : function(json) {
-						for (var i = 0; i < json.length; ++i) {
-							$('#mensajes')
-									.prepend(
-											'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-													+ json[i].from
-													+ '</b></p><p>'
-													+ formatDate(json[i].sent)
-													+ '</p><br><p>'
-													+ json[i].text
-													+ '</p></div></div></div>');
-						}
-					},
-					error : function(xhr, status) {
-						alert('Disculpe, existi贸 un problema');
-					},
-				});
-		
-		function getMessages(id, username) {
-			
-			
-			sender = username;
-			console.log(sender);
-			$('#mensajes').empty();
-			$('#form-send').removeClass('hide');
-			$("#conver").html("Conversaci贸n con " + username);
-			
-			$('#send').attr("data-id-receiver", id);
-			$('#send').attr("data-topic", '');
-			
-			$.ajax({
-				url : config.rootUrl + "message/get/" + id,
-				type : 'GET',
-				dataType : 'json',
-				success : function(json) {
-					mensajes = json;
-					for (var i = 0; i < json.length; ++i) {
-						$('#mensajes')
-								.prepend(
-										'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-												+ json[i].from
-												+ '</b></p><p>'
-												+ formatDate(json[i].sent)
-												+ '</p><br><p>'
-												+ json[i].text
-												+ '</p></div></div></div>');
-					}
-				},
-				error : function(xhr, status) {
-					alert('Disculpe, existi贸 un problema');
-				}
-			});
-			
-			
-
-		
-		}
-		
-		function getMessagesTopic(name) {
-			
-			sender = name;
-			$('#mensajes').empty();
-			$('#form-send').removeClass('hide');
-			$('#send').attr("data-topic", name);
-			$('#send').attr("data-id-receiver", '');
-			$("#conver").html("Conversaci贸n del grupo " + name);
-
-			//TODO borrar el receiver y viceversa
-			
-			$.ajax({
-				url : config.rootUrl + "message/get-topic/" + name,
-				type : 'GET',
-				dataType : 'json',
-				success : function(json) {
-					mensajes = json;
-					for (var i = 0; i < json.length; ++i) {
-						$('#mensajes')
-								.prepend(
-										'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-												+ json[i].from
-												+ '</b></p><p>'
-												+ formatDate(json[i].sent)
-												+ '</p><br><p>'
-												+ json[i].text
-												+ '</p></div></div></div>');
-					}
-				},
-				error : function(xhr, status) {
-					alert('Disculpe, existi贸 un problema');
-				}
-			});
-			
-			
-			
-		}
-		
-		document.addEventListener("DOMContentLoaded", () => {
-			let b = document.getElementById("sendmsg");
-			b.onclick = (e) => {
-				console.log("hola");
-				var today = new Date();
-				var action;
-				if($("#send").attr("data-id-receiver")) action = "/user/" + $("#send").attr("data-id-receiver") + "/msg?=" + $("#send").attr("data-id-sender");
-				else action = "/user/" + $("#send").attr("data-topic") + "/group-msg?=" + $("#send").attr("data-id-sender");
-				e.preventDefault();
-				go(action, 'POST', {message: 
-						document.getElementById("message").value})
-					.then(d => console.log("happy", d))
-					.catch(e => console.log("sad", e))
-				if($("#send").attr("data-id-receiver")) {
-				$('#mensajes')
-				.append(
-						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
-								+ $("#send").attr("data-username-sender")
-								+ '</b></p><p>'
-								+ today.toLocaleString("es-ES").split(" ").join("@")
-								+ '</p><br><p>'
-								+ document.getElementById("message").value
-								+ '</p></div></div></div>');
-				}
-			}
-			
-			$(document).ready(function() {
-				  $(window).keydown(function(event){
-				    if(event.keyCode == 13) {
-				      event.preventDefault();
-				      return false;
-				    }
-				  });
-			});
-		});
-		
-		
-	</script>
-
+		<ul id="slide-out" class="sidenav">
+			<li><div class="user-view">
+					<div class="background">
+						<img src="../img/background1.jpg">
+					</div>
+					<a href="#user"><img class="circle"
+						th:src="@{${'/user/' + session.u.id + '/photo?=' + session.u.id}}"></a>
+					<a href="#name"><span class="white-text name"
+						th:text="${session.u.firstName}">Ejempl</span></a> <a href="#email"><span
+						class="white-text email" th:text="${session.u.username}">jdandturk@gmail.com</span></a>
+				</div></li>
+			<li><a class="subheader">Citas grupales</a></li>
+			<li th:if="${session.u.hasRole('ADMIN')}"><a
+				class="waves-effect" th:data-id="peticiones" th:text="peticiones"
+				th:onclick="getMessagesTopic('peticiones');">Usuario 1</a></li>
+			<li th:if="${session.u.hasRole('ADMIN')}"><a
+				class="waves-effect" th:data-id="admin" th:text="admin"
+				th:onclick="getMessagesTopic('admin');">Usuario 1</a></li>
+			<li th:if="${session.topics != ''}" th:each="g : ${session.topics}"><a
+				class="waves-effect" th:data-id="${g}" th:text="${g}"
+				th:onclick="getMessagesTopic([[${g}]]);">Usuario 1</a></li>
+			<li><a class="subheader">Usuarios</a></li>
+			<li th:each="us : ${usuarios}"><a class="waves-effect sender"
+				th:data-id="${us.id}" th:data-username="${us.username}"
+				th:text="${us.username}"
+				th:onclick="getMessages([[${us.id}]] , [[${us.username}]]);">Usuario
+					1</a></li>
+		</ul>
+	</main>
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
 

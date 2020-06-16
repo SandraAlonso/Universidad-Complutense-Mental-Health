@@ -6,6 +6,8 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
+<script th:src="@{/js/pacientes.js}" src="../js/pacientes.js"></script>
+
 <title>Mis pacientes</title>
 <meta name="theme-color" content="#fafafa">
 
@@ -122,9 +124,8 @@
 												th:if="${emo.emotionalState == 2}">Triste</span> <span
 												th:if="${emo.emotionalState == 3}">Bien</span> <span
 												th:if="${emo.emotionalState == 4}">Muy bien</span> <span
-												th:if="${emo.emotionalState == 5}">Genial</span> <br>
-												<b><span>Entrada:</span></b> <span
-												th:text="${emo.description}"></span></li>
+												th:if="${emo.emotionalState == 5}">Genial</span> <br> <b><span>Entrada:</span></b>
+												<span th:text="${emo.description}"></span></li>
 										</ul>
 									</div>
 								</li>
@@ -135,63 +136,10 @@
 			</div>
 
 		</div>
-</main>
-		<script th:inline="javascript">
-		
-		//Se debería de llamar al iniciar
-				
-		function iniciar() {
-			
-			document.querySelectorAll('.patient').forEach(item => {//coge todos los <> que tengan la palabra patient 
-				  item.addEventListener('click', event => {//para cada uno, espera a ser clicado
-					  event.preventDefault();//evita la accion por defecto del boton
-					  document.getElementById("photo").src='/user/' + item.getAttribute("data-id") + '/photo?=' + item.getAttribute("data-id");
+	</main>
 
-					  document.getElementById("ID").value = item.getAttribute("data-id");
-					  document.getElementById("name").innerHTML = item.getAttribute("data-name");
-					  document.getElementById("lastname").innerHTML =  item.getAttribute("data-lastname");
-					  document.getElementById("mail").innerHTML = item.getAttribute("data-mail");
-					  document.getElementById("disorder").innerHTML = item.getAttribute("data-disorder");
-					  document.getElementById("treatment").innerHTML = item.getAttribute("data-treatment");
-					  mostrarPaciente(item.getAttribute("data-id"));
-				  })
-				})
-				
-				
-				
-		}
-		
-		window.onload = iniciar;//lo inicia al cargar la pagina
-
-		
-	 	function mostrarPaciente(id) {
-			/*<![CDATA[*/
-				
-			var pacientes = /*[[${u.pacientes}]]*/ 'default';
-			console.log(pacientes);
-			var p = /*[[${u.description}]]*/ 'default';
-			console.log(p);
-
-				for(var i = 0;i< pacientes.length;i++){
-					if(pacientes[i].id==id){
-						//var p = /*[[${u.description}]]*/ 'default';
-					}
-				}
-
-			/*]]>*/
-
-	 		
-	 	}
-		</script>
-
-		<script>
-		$(document).ready(function(){
-				$('.collapsible').collapsible();
-		});
-				</script>
-
-		<footer th:replace="fragments/footer.html :: footer"> Footer
-			goes here </footer>
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
 </body>
 </html>
 

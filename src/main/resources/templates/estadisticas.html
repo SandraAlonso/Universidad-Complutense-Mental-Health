@@ -7,13 +7,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Estadisticas</title>
+<title>Estadísticas</title>
 
 <link rel="stylesheet" href="/css/calendario.css">
 <link rel="stylesheet" href="/css/estadisticasPaciente.css">
 
 <th:block th:replace="fragments/head :: header" />
-
+<script th:src="@{/js/estadisticas.js}" src="../js/estadisticas.js"></script>
+<script src="/js/vendor/calendario.js"></script>
 
 </head>
 
@@ -22,7 +23,7 @@
 	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
 
 
-	
+
 	<h4 class="center-align">Estadísticas de ánimo</h4>
 
 	<div class="calendar">
@@ -63,8 +64,8 @@
 					</h5>
 				</div>
 
-				<input id="selectedDate" name="date" type="hidden"> 
-				<input id="emotionalState" name="emotionalState" type="hidden">
+				<input id="selectedDate" name="date" type="hidden"> <input
+					id="emotionalState" name="emotionalState" type="hidden">
 
 
 				<p>Selecciona tu estado de ánimo</p>
@@ -106,51 +107,6 @@
 
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
-
-	<script type="text/javascript" th:inline="javascript">
-		
-
-		function very_dissatisfied() {
-			document.getElementById("emotionalState").value = 1;
-			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy triste';
-		}
-
-		function dissatisfied() {
-			document.getElementById("emotionalState").value = 2;
-			document.getElementById("emotion").innerHTML = 'Hoy te sientes: triste';
-		}
-
-		function satisfied() {
-			document.getElementById("emotionalState").value = 3;
-			document.getElementById("emotion").innerHTML = 'Hoy te sientes: bien';
-		}
-
-		function satisfied_alt() {
-			document.getElementById("emotionalState").value = 4;
-			document.getElementById("emotion").innerHTML = 'Hoy te sientes: muy bien';
-		}
-
-		function very_satisfied() {
-			document.getElementById("emotionalState").value = 5;
-			document.getElementById("emotion").innerHTML = 'Hoy te sientes: genial';
-		}
-	</script>
-
-
-	<script src="/js/vendor/calendario.js"></script>
-
-	<script>
-		$(document).ready(function() {
-			$('.sidenav').sidenav();
-			$('.collapsible').collapsible();
-			$('select').formSelect();
-			$('.modal').modal();
-			$('.trigger-modal').modal();
-		});
-	</script>
-
-
-
 
 </body>
 </html>

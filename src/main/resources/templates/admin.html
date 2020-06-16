@@ -6,6 +6,7 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
+<script th:src="@{/js/admin.js}" src="../js/admin.js"></script>
 <title>Horario</title>
 
 </head>
@@ -23,315 +24,284 @@
 		<h4 class="center-align">Panel de administraciÃ³n</h4>
 		<br>
 	</header>
-	
+
 	<main>
-	<div class="row">
-		<div class="col s12">
-			<ul class="tabs">
-				<li class="tab col s3"><a class="active" href="#buscador">Buscador</a></li>
-				<li class="tab col s2"><a href="#psicologos">PsicÃ³logos</a></li>
-				<li class="tab col s2"><a href="#pacientes">Pacientes</a></li>
-				<li class="tab col s2"><a href="#administradores">Administradores</a></li>
-				<li class="tab col s3"><a href="#usuarios">Usuarios</a></li>			
-			</ul>
-		</div>
-		<div id="psicologos" class="col s12">
-			<ul class="collection">
-				<li th:each="p : ${psicologos}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
-					class="circle"> <span class="title"><b
-						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
-					<p th:text="${p.firstName}">Nombre</p>
-					<p th:text="${p.lastName}">Apellidos</p>
-					<p th:text="${p.mail}">Apellidos</p>
-					<div class="secondary-content">
-						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
-						<a th:data-id="${p.id}" href="#modal2"
-							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
-						<a th:data-id="${p.id}" href="#modal3"
-							class="deshabilitar modal-trigger"><i class="material-icons"
-							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
-					</div></li>
-			</ul>
-		</div>
-		<div id="pacientes" class="col s12">
-			<ul class="collection">
-				<li th:each="p : ${pacientes}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
-					class="circle"> <span class="title"><b
-						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
-					<p th:text="${p.firstName}">Nombre</p>
-					<p th:text="${p.lastName}">Apellidos</p>
-					<p th:text="${p.mail}">Apellidos</p>
-					<div class="secondary-content">
-						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
-						<a th:data-id="${p.id}" href="#modal2"
-							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
-						<a th:data-id="${p.id}" href="#modal3"
-							class="deshabilitar modal-trigger"><i class="material-icons"
-							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
-						<a th:data-id="${p.id}" href="#modal4"
-							class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
-					</div></li>
-			</ul>
-		</div>
-		<div id="administradores" class="col s12">
-			<ul class="collection">
-				<li th:each="p : ${administradores}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
-					class="circle"> <span class="title"><b
-						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
-					<p th:text="${p.firstName}">Nombre</p>
-					<p th:text="${p.lastName}">Apellidos</p>
-					<p th:text="${p.mail}">Apellidos</p>
-					<div class="secondary-content">
-						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
-						<a th:data-id="${p.id}" href="#modal2"
-							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
-						<a th:data-id="${p.id}" href="#modal3"
-							class="deshabilitar modal-trigger"><i class="material-icons"
-							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
-					</div></li>
-			</ul>
-		</div>
-		
-		<div id="usuarios" class="col s12">
-			<ul class="collection">
-				<li th:each="p : ${usuarios}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}"
-					class="circle"> <span class="title"><b
-						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
-					<p th:text="${p.firstName}">Nombre</p>
-					<p th:text="${p.lastName}">Apellidos</p>
-					<p th:text="${p.mail}">Apellidos</p>
-					<div class="secondary-content">
-						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
-						<a th:data-id="${p.id}" href="#modal2"
-							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
-						<a th:data-id="${p.id}" href="#modal3"
-							class="deshabilitar modal-trigger"><i class="material-icons"
-							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
-						<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}" href="#modal4"
-							class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
-					</div></li>
-			</ul>
-		</div>
-
-		<div id="buscador" class="col s12">
-
-			<h5 class="center-align">Buscador</h5>
-
-
-			<div class="nav-wrapper">
-				<form th:action="@{/admin/findUsers}" method="post" name="findUserForm">
-					<div class="row">
-
-						<div class="input-field col s8 m9 offset-s1 offset-m1">
-							<input id="search" type="search" name="search" required> <label
-								class="label-icon" for="search"><i
-								class="material-icons">search</i></label> <i class="material-icons">close</i>
-						</div>
-
-						<button class="col s2 m1 btn waves-effect waves-light btn-large"
-							type="submit">
-							Buscar <i class="material-icons right">send</i>
-						</button>
-					</div>
-					<div class="row">
-					  <span class="col offset-s1">Filtro: </span>
-				      <label>
-				        <input name="filter" type="radio" value="nickname" checked />
-				        <span>Nickname</span>
-				      </label>
-				      <label>
-				        <input name="filter" value="email" type="radio" />
-				        <span>Email</span>
-				      </label>
-				     	<label>
-				        <input name="filter" value="nombre" type="radio" />
-				        <span>Nombre</span>
-				      </label>
-					</div>
-				</form>
+		<div class="row">
+			<div class="col s12">
+				<ul class="tabs">
+					<li class="tab col s3"><a class="active" href="#buscador">Buscador</a></li>
+					<li class="tab col s2"><a href="#psicologos">Psicólogos</a></li>
+					<li class="tab col s2"><a href="#pacientes">Pacientes</a></li>
+					<li class="tab col s2"><a href="#administradores">Administradores</a></li>
+					<li class="tab col s3"><a href="#usuarios">Usuarios</a></li>
+				</ul>
 			</div>
-
-
-
-			<!-- BÃºsqueda -->
-
 			<div id="psicologos" class="col s12">
-			<ul class="collection">
-				<li th:each="p : ${busqueda}" class="collection-item avatar"><img
-					th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
-					class="circle"> <span class="title"><b
-						th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
-					<p th:text="${p.firstName}">Nombre</p>
-					<p th:text="${p.lastName}">Apellidos</p>
-					<p th:text="${p.mail}">Apellidos</p>
-					<div class="secondary-content">
-						<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
-						<a th:data-id="${p.id}" href="#modal2"
-							class="borrar modal-trigger"><i class="material-icons">delete</i></a>
-						<a th:data-id="${p.id}" href="#modal3"
-							class="deshabilitar modal-trigger"><i class="material-icons"
-							th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
-						<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}" href="#modal4"
-							class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
-					</div></li>
+				<ul class="collection">
+					<li th:each="p : ${psicologos}" class="collection-item avatar"><img
+						th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+						class="circle"> <span class="title"><b
+							th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+						<p th:text="${p.firstName}">Nombre</p>
+						<p th:text="${p.lastName}">Apellidos</p>
+						<p th:text="${p.mail}">Mail</p>
+						<div class="secondary-content">
+							<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+							<a th:data-id="${p.id}" href="#modal2"
+								class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+							<a th:data-id="${p.id}" href="#modal3"
+								class="deshabilitar modal-trigger"><i class="material-icons"
+								th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+						</div></li>
+				</ul>
+			</div>
+			<div id="pacientes" class="col s12">
+				<ul class="collection">
+					<li th:each="p : ${pacientes}" class="collection-item avatar"><img
+						th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+						class="circle"> <span class="title"><b
+							th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+						<p th:text="${p.firstName}">Nombre</p>
+						<p th:text="${p.lastName}">Apellidos</p>
+						<p th:text="${p.mail}">Mail</p>
+						<div class="secondary-content">
+							<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+							<a th:data-id="${p.id}" href="#modal2"
+								class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+							<a th:data-id="${p.id}" href="#modal3"
+								class="deshabilitar modal-trigger"><i class="material-icons"
+								th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+							<a th:data-id="${p.id}" href="#modal4"
+								class="renovar modal-trigger"><i class="material-icons">autorenew</i></a>
+						</div></li>
+				</ul>
+			</div>
+			<div id="administradores" class="col s12">
+				<ul class="collection">
+					<li th:each="p : ${administradores}" class="collection-item avatar"><img
+						th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+						class="circle"> <span class="title"><b
+							th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+						<p th:text="${p.firstName}">Nombre</p>
+						<p th:text="${p.lastName}">Apellidos</p>
+						<p th:text="${p.mail}">Mail</p>
+						<div class="secondary-content">
+							<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+							<a th:data-id="${p.id}" href="#modal2"
+								class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+							<a th:data-id="${p.id}" href="#modal3"
+								class="deshabilitar modal-trigger"><i class="material-icons"
+								th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+						</div></li>
+				</ul>
+			</div>
+
+			<div id="usuarios" class="col s12">
+				<ul class="collection">
+					<li th:each="p : ${usuarios}" class="collection-item avatar"><img
+						th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" class="circle">
+						<span class="title"><b
+							th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+						<p th:text="${p.firstName}">Nombre</p>
+						<p th:text="${p.lastName}">Apellidos</p>
+						<p th:text="${p.mail}">Mail</p>
+						<div class="secondary-content">
+							<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+							<a th:data-id="${p.id}" href="#modal2"
+								class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+							<a th:data-id="${p.id}" href="#modal3"
+								class="deshabilitar modal-trigger"><i class="material-icons"
+								th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+							<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}"
+								href="#modal4" class="renovar modal-trigger"><i
+								class="material-icons">autorenew</i></a>
+						</div></li>
+				</ul>
+			</div>
+
+			<div id="buscador" class="col s12">
+
+				<h5 class="center-align">Buscador</h5>
+
+
+				<div class="nav-wrapper">
+					<form th:action="@{/admin/findUsers}" method="post"
+						name="findUserForm">
+						<div class="row">
+
+							<div class="input-field col s8 m9 offset-s1 offset-m1">
+								<input id="search" type="search" name="search" required>
+								<label class="label-icon" for="search"><i
+									class="material-icons">search</i></label> <i class="material-icons">close</i>
+							</div>
+
+							<button class="col s2 m1 btn waves-effect waves-light btn-large"
+								type="submit">
+								Buscar <i class="material-icons right">send</i>
+							</button>
+						</div>
+						<div class="row">
+							<span class="col offset-s1">Filtro: </span> <label> <input
+								name="filter" type="radio" value="nickname" checked /> <span>Nickname</span>
+							</label> <label> <input name="filter" value="email" type="radio" />
+								<span>Email</span>
+							</label> <label> <input name="filter" value="nombre" type="radio" />
+								<span>Nombre</span>
+							</label>
+						</div>
+					</form>
+				</div>
+
+
+
+				<!-- Búsqueda -->
+
+				<div id="psicologos" class="col s12">
+					<ul class="collection">
+						<li th:each="p : ${busqueda}" class="collection-item avatar"><img
+							th:src="@{${'/user/' + p.id + '/photo?=' + p.id}}" alt=""
+							class="circle"> <span class="title"><b
+								th:text="'#' + ${p.id} + ' | ' + ${p.username}">Title</b></span>
+							<p th:text="${p.firstName}">Nombre</p>
+							<p th:text="${p.lastName}">Apellidos</p>
+							<p th:text="${p.mail}">Email</p>
+							<div class="secondary-content">
+								<a th:href="'/user/' + ${p.id}"><i class="material-icons">remove_red_eye</i></a>
+								<a th:data-id="${p.id}" href="#modal2"
+									class="borrar modal-trigger"><i class="material-icons">delete</i></a>
+								<a th:data-id="${p.id}" href="#modal3"
+									class="deshabilitar modal-trigger"><i
+									class="material-icons"
+									th:text="${p.enabled} ? 'lock_open' : 'lock_outline' ">lock_open</i></a>
+								<a th:if="${p.hasRole('PACIENTE')}" th:data-id="${p.id}"
+									href="#modal4" class="renovar modal-trigger"><i
+									class="material-icons">autorenew</i></a>
+							</div></li>
+					</ul>
+				</div>
+
+
+
+
+			</div>
+		</div>
+
+		<div id="add-button" class="fixed-action-btn">
+			<a class="btn-floating btn-large waves-effect waves-light red"> <i
+				class="material-icons">add</i>
+			</a>
+			<ul>
+				<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
+						class="material-icons">supervisor_account</i></a></li>
 			</ul>
 		</div>
 
+		<div id="modal1" class="modal">
+			<form th:action="@{/admin/createUser}" method="post"
+				name="saveUserForm">
+
+				<div class="modal-content">
+					<h4>Añadir un nuevo usuario</h4>
 
 
+					<!-- Con el validate te sale la linea roja -->
 
+					<div class="input-field col s6">
+						<input id="name" name="firstName" type="text" class="validate"
+							required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
+						<label for="name">Nombre del usuario</label>
+					</div>
+
+					<div class="input-field col s6">
+						<input id="last-name" name="lastName" type="text" class="validate"
+							required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
+						<label for="last-name">Apellidos del usuario</label>
+					</div>
+
+					<div class="input-field col s6">
+						<input id="email" name="mail" type="email" class="validate">
+						<label for="email">Dirección de correo electrónico</label>
+					</div>
+
+					<div class="input-field col s6">
+						<input id="nick" name="username" type="text" class="validate"
+							required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
+						<label for="nick">Nick del usuario en la plataforma</label>
+					</div>
+
+					<div class="input-field col s6">
+						<input id="password" type="password" name="password"
+							class="validate" required
+							pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
+							for="password">Contraseña del usuario</label>
+					</div>
+
+
+					<div class="input-field col s6">
+						<input id="roles" name="roles" type="text"> <label
+							for="roles">Roles del usuario en la plataforma</label>
+					</div>
+
+					<input type="hidden" id="active" name="enabled" value="1">
+
+				</div>
+				<div class="modal-footer">
+					<a class="modal-close waves-effect btn-flat">Cancelar</a>
+					<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
+				</div>
+			</form>
 		</div>
-	</div>
 
-	<div id="add-button" class="fixed-action-btn">
-		<a class="btn-floating btn-large waves-effect waves-light red"> <i
-			class="material-icons">add</i>
-		</a>
-		<ul>
-			<li><a class="btn-floating blue modal-trigger" href="#modal1"><i
-					class="material-icons">supervisor_account</i></a></li>
-		</ul>
-	</div>
-
-	<div id="modal1" class="modal">
-		<form th:action="@{/admin/createUser}" method="post"
-			name="saveUserForm">
-
+		<div id="modal2" class="modal">
 			<div class="modal-content">
-				<h4>AÃ±adir un nuevo usuario</h4>
-
-
-				<!-- Con el validate te sale la linea roja -->
-
-				<div class="input-field col s6">
-					<input id="name" name="firstName" type="text" class="validate"
-						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
-						for="name">Nombre del usuario</label>
-				</div>
-
-				<div class="input-field col s6">
-					<input id="last-name" name="lastName" type="text" class="validate"
-						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
-						for="last-name">Apellidos del usuario</label>
-				</div>
-
-				<div class="input-field col s6">
-					<input id="email" name="mail" type="email" class="validate">
-					<label for="email">DirecciÃ³n de correo electrÃ³nico</label>
-				</div>
-
-				<div class="input-field col s6">
-					<input id="nick" name="username" type="text" class="validate"
-						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
-						for="nick">Nick del usuario en la plataforma</label>
-				</div>
-
-				<div class="input-field col s6">
-					<input id="password" type="password" name="password"
-						class="validate" required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
-					<label for="password">ContraseÃ±a del usuario</label>
-				</div>
-
-				<!-- TODO hacer que se auto actualicen -->
-
-				<div class="input-field col s6">
-					<input id="roles" name="roles" type="text"> <label
-						for="roles">Roles del usuario en la plataforma</label>
-				</div>
-
-				<input type="hidden" id="active" name="enabled" value="1">
-
+				<h4>¿Estás seguro que deseas eliminar este usuario?</h4>
+				<p>Esta usuario será eliminada del sistema y ya no podrá ser
+					recuperado</p>
 			</div>
 			<div class="modal-footer">
-				<a class="modal-close waves-effect btn-flat">Cancelar</a>
-				<button type="submit" class="modal-close waves-effect btn-flat">Aceptar</button>
-			</div>
-		</form>
-	</div>
-
-	<div id="modal2" class="modal">
-		<div class="modal-content">
-			<h4>Â¿EstÃ¡s seguro que deseas eliminar este usuario?</h4>
-			<p>Esta usuario serÃ¡ eliminada del sistema y ya no podrÃ¡ ser
-				recuperado</p>
-		</div>
-		<div class="modal-footer">
-			<a id="delete" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
-			<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-		</div>
-	</div>
-
-	<div id="modal3" class="modal">
-		<div class="modal-content">
-			<h4>Â¿EstÃ¡s seguro que deseas deshabilitar o habilitar a este usuario?</h4>
-			<p>Esta usuario serÃ¡ deshabilitado o vuelto a habilitar en el sistema. En caso de deshabilitar ya no podrÃ¡
-				acceder hasta que un administrador le vuelva a habilitar</p>
-		</div>
-		<div class="modal-footer">
-			<a id="toggle" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
-			<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-		</div>
-	</div>
-
-	<div id="modal4" class="modal">
-		<form th:action="@{/admin/changePsychologist}" method="post"
-			name="saveUserForm">
-
-			<input type="hidden" name="id" id="ID">
-
-			<div class="modal-content">
-				<h4>Esta acciÃ³n cambiarÃ¡ al usuario de psicÃ³logo por el
-					introducido</h4>
-				<div class="input-field col s6">
-					<input id="name" name="psycho" type="text" class="validate"
-						required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+"> <label
-						for="name">Introduce el nombre del usuario</label>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="submit"
-					class="modal-close waves-effect waves-green btn-flat">Aceptar</button>
+				<a id="delete" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
 				<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
 			</div>
-		</form>
-	</div>
+		</div>
+
+		<div id="modal3" class="modal">
+			<div class="modal-content">
+				<h4>Â¿Estás seguro que deseas deshabilitar o habilitar a este
+					usuario?</h4>
+				<p>Esta usuario será deshabilitado o vuelto a habilitar en el
+					sistema. En caso de deshabilitar ya no podrá acceder hasta que un
+					administrador le vuelva a habilitar</p>
+			</div>
+			<div class="modal-footer">
+				<a id="toggle" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+				<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+			</div>
+		</div>
+
+		<div id="modal4" class="modal">
+			<form th:action="@{/admin/changePsychologist}" method="post"
+				name="saveUserForm">
+
+				<input type="hidden" name="id" id="ID">
+
+				<div class="modal-content">
+					<h4>Esta acción cambiará al usuario de psicólogo por el
+						introducido</h4>
+					<div class="input-field col s6">
+						<input id="name" name="psycho" type="text" class="validate"
+							required pattern="[a-zA-Z0-9Ã±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]+">
+						<label for="name">Introduce el nombre del usuario</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						class="modal-close waves-effect waves-green btn-flat">Aceptar</button>
+					<a class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+				</div>
+			</form>
+		</div>
 	</main>
 
-	<script>
-	
-	function iniciar() {
-		document.querySelectorAll('.borrar').forEach(item => {
-			  item.addEventListener('click', event => {
-					var a = item.getAttribute("data-id");
-					var eliminate = document.getElementById("delete");
-					eliminate.href = "/admin/deleteUser?id=" + a;
-			  });
-		});
-		
-		document.querySelectorAll('.deshabilitar').forEach(item => {
-			  item.addEventListener('click', event => {
-					var a = item.getAttribute("data-id");
-					var eliminate = document.getElementById("toggle");
-					eliminate.href = "/admin/toggleuser?id=" + a;
-			  });
-		});
-		
-		document.querySelectorAll('.renovar').forEach(item => {
-			  item.addEventListener('click', event => {
-					var a = item.getAttribute("data-id");
-					document.getElementById("ID").value = a;
-			  });
-		});
-	}
-	
-	window.onload = iniciar;//lo inicia al cargar la pagina
-
-	
-	</script>
 
 	<footer th:replace="fragments/footer.html :: footer"> Footer
 		goes here </footer>
