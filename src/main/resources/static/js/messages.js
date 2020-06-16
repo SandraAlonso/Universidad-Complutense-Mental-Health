@@ -34,7 +34,7 @@ var sender;
 			console.log(sender);
 			$('#mensajes').empty();
 			$('#form-send').removeClass('hide');
-			$("#conver").html("ConversaciÃ³n con " + username);
+			$("#conver").html("Conversación con " + username);
 			
 			$('#send').attr("data-id-receiver", id);
 			$('#send').attr("data-topic", '');
@@ -74,7 +74,7 @@ var sender;
 			$('#form-send').removeClass('hide');
 			$('#send').attr("data-topic", name);
 			$('#send').attr("data-id-receiver", '');
-			$("#conver").html("ConversaciÃ³n del grupo " + name);
+			$("#conver").html("Conversación del grupo " + name);
 
 			//TODO borrar el receiver y viceversa
 			
