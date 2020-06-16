@@ -13,7 +13,6 @@ $.ajax({
 	dataType : 'json',
 	success : function(json) {
     	emotional_states = json;
-    	console.log(emotional_states);
 
     },
 	async: false
@@ -68,7 +67,6 @@ function renderDate() {
     		for (i = 1; i <= endDate; i++) {
 
     	        if (i == today.getDate() && dt.getMonth() == today.getMonth()){ 
-	        		console.log("he entrado en  hoy");
 
     	        	cells += "<div class='today'>" +
     	        				"<a style='color: #000000; display:block' class='modal-trigger' href=#modal>" + 

@@ -3,23 +3,19 @@ function change(arg) {
 	var groupAppointment;
 	var a = arg.getAttribute("data-id");
 	clicked_id = a;
-	console.log(a);
 	$.ajax({
 		url : config.rootUrl + "paciente/getAppointments/"+a,
 		type : 'GET',
 		dataType : 'json',
 		success : function(json) {
 			groupAppointment = json;
-			 console.log(groupAppointment);
 
 	    },
 		async: false
 	 })
-	 console.log(groupAppointment);
 					if(typeof groupAppointment === 'undefined') {
 						//Es grupal
 					} else {
-						console.log("hola");
 						//Es individual	
 						document.getElementById("ID").value = a;
 						document.getElementById("date").value = arg
