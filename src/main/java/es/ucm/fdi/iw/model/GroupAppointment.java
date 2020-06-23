@@ -15,6 +15,8 @@ import javax.validation.constraints.Pattern;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "GroupAppointment.allAppointmentsOfUser", query = "SELECT g FROM GroupAppointment g WHERE g.patient = :username"),
+	@NamedQuery(name = "GroupAppointment.hasName", query = "SELECT u.id " + "FROM GroupAppointment u "
+			+ "WHERE u.name = :name"),
 	})
 public class GroupAppointment extends Appointment {
 

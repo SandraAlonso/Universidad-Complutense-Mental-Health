@@ -90,47 +90,58 @@ public class PsicologoController {
 	public String saveAppointment(Model model, HttpServletResponse response,
 			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
 			throws IOException {
-		User requester = (User) session.getAttribute("u");
-		User stored = entityManager.find(User.class, requester.getId());
 
-		int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
-		int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
-		LocalTime ahora = LocalTime.now();
-		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+		TypedQuery<Long> query1 = entityManager.createNamedQuery("GroupAppointment.hasName", Long.class);
+		List<Long> ids = query1.setParameter("name", groupAppointment.getName()).getResultList();
+		if (ids.isEmpty()) {
 
-		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-			groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
-			TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
-					Appointment.class);
-			List<Appointment> lm = query.setParameter("username", stored.getId())
-					.setParameter("date", groupAppointment.getDate())
-					.setParameter("sth", groupAppointment.getStart_hour())
-					.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
+			User requester = (User) session.getAttribute("u");
+			User stored = entityManager.find(User.class, requester.getId());
 
-			if (lm.size() == 0) {
-				groupAppointment.setCreator(stored);
-				groupAppointment.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
-				entityManager.persist(groupAppointment);
-				entityManager.flush();
-				log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
-						groupAppointment.getDate(), groupAppointment.getStart_hour());
-				return "redirect:/psicologo/horario";
+			int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
+			int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+			LocalTime ahora = LocalTime.now();
+			int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+
+			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+				groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
+				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
+						Appointment.class);
+				List<Appointment> lm = query.setParameter("username", stored.getId())
+						.setParameter("date", groupAppointment.getDate())
+						.setParameter("sth", groupAppointment.getStart_hour())
+						.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
+
+				if (lm.size() == 0) {
+					groupAppointment.setCreator(stored);
+					groupAppointment.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
+					entityManager.persist(groupAppointment);
+					entityManager.flush();
+					log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
+							groupAppointment.getDate(), groupAppointment.getStart_hour());
+					return "redirect:/psicologo/horario";
+				} else {
+					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
+					model.addAttribute("problema", p);
+					log.info("El usuario {} no ha podido crear una cita grupal porque ya hay una cita a esa hora.",
+							stored.getFirstName());
+					return horarioPsicologo(session, model, null);
+
+				}
 			} else {
 				Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
 				model.addAttribute("problema", p);
-				log.info("El usuario {} no ha podido crear una cita grupal porque ya hay una cita a esa hora.",
-						stored.getFirstName());
+				log.info(
+						"El usuario {} no ha podido crear una cita grupal porque la hora seleccionada es posterior a la actual ({}).",
+						stored.getFirstName(), LocalDate.now());
 				return horarioPsicologo(session, model, null);
 
 			}
 		} else {
-			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
+			Problema p = new Problema("La cita grupal " + groupAppointment.getName() + " ya existe en el sistema.");
 			model.addAttribute("problema", p);
-			log.info(
-					"El usuario {} no ha podido crear una cita grupal porque la hora seleccionada es posterior a la actual ({}).",
-					stored.getFirstName(), LocalDate.now());
+			log.info("La cita grupal {} ya existe en el sistema.", groupAppointment.getName());
 			return horarioPsicologo(session, model, null);
-
 		}
 	}
 
@@ -160,35 +171,45 @@ public class PsicologoController {
 	public String modifyGroupAppointment(Model model, HttpServletResponse response,
 			@ModelAttribute @Valid GroupAppointment groupAppointment, BindingResult result, HttpSession session)
 			throws IOException {
-		User requester = (User) session.getAttribute("u");
-		User stored = entityManager.find(User.class, requester.getId());
-		GroupAppointment ga = entityManager.find(GroupAppointment.class, groupAppointment.getID());
+		TypedQuery<Long> query1 = entityManager.createNamedQuery("GroupAppointment.hasName", Long.class);
+		List<Long> ids = query1.setParameter("name", groupAppointment.getName()).getResultList();
+		if (ids.isEmpty() || ids.get(0) == groupAppointment.getID()) {
+			User requester = (User) session.getAttribute("u");
+			User stored = entityManager.find(User.class, requester.getId());
+			GroupAppointment ga = entityManager.find(GroupAppointment.class, groupAppointment.getID());
 
-		if (ga != null) {
-			int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
-			int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
-			LocalTime ahora = LocalTime.now();
-			int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
+			if (ga != null) {
+				int fecha = groupAppointment.getDate().compareTo(LocalDate.now());
+				int hora = groupAppointment.getFinish_hour().compareTo(groupAppointment.getStart_hour());
+				LocalTime ahora = LocalTime.now();
+				int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
 
-			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-				groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
-				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
-						Appointment.class);
-				List<Appointment> lm = query.setParameter("username", stored.getId())
-						.setParameter("date", groupAppointment.getDate())
-						.setParameter("sth", groupAppointment.getStart_hour())
-						.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
+				if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+					groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
+					TypedQuery<Appointment> query = entityManager
+							.createNamedQuery("Appointment.allAppointmentsOfSameDate", Appointment.class);
+					List<Appointment> lm = query.setParameter("username", stored.getId())
+							.setParameter("date", groupAppointment.getDate())
+							.setParameter("sth", groupAppointment.getStart_hour())
+							.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 
-				if (lm.size() == 1 && lm.get(0).getID() == groupAppointment.getID()) {
-					ga.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
-					ga.setName(groupAppointment.getName());
-					ga.setDate(groupAppointment.getDate());
-					ga.setFinish_hour(groupAppointment.getFinish_hour());
-					ga.setDescription(groupAppointment.getDescription());
-					log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
-							stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
-							groupAppointment.getDate());
-					return "redirect:/psicologo/horario";
+					if (lm.size() == 1 && lm.get(0).getID() == groupAppointment.getID()) {
+						ga.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
+						ga.setName(groupAppointment.getName());
+						ga.setDate(groupAppointment.getDate());
+						ga.setFinish_hour(groupAppointment.getFinish_hour());
+						ga.setDescription(groupAppointment.getDescription());
+						log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
+								stored.getFirstName(), groupAppointment.getName(), groupAppointment.getStart_hour(),
+								groupAppointment.getDate());
+						return "redirect:/psicologo/horario";
+					} else {
+						Problema p = new Problema(
+								"El usuario " + stored.getUsername() + " no puede modificar esta cita.");
+						model.addAttribute("problema", p);
+						log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+						return horarioPsicologo(session, model, null);
+					}
 				} else {
 					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar esta cita.");
 					model.addAttribute("problema", p);
@@ -196,18 +217,19 @@ public class PsicologoController {
 					return horarioPsicologo(session, model, null);
 				}
 			} else {
-				Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar esta cita.");
+				Problema p = new Problema(
+						"El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
 				model.addAttribute("problema", p);
 				log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
 				return horarioPsicologo(session, model, null);
 			}
 		} else {
-			Problema p = new Problema(
-					"El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
+			Problema p = new Problema("La cita grupal " + groupAppointment.getName() + " ya existe en el sistema.");
 			model.addAttribute("problema", p);
-			log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+			log.info("La cita grupal {} ya existe en el sistema.", groupAppointment.getName());
 			return horarioPsicologo(session, model, null);
 		}
+
 	}
 
 	@RequestMapping("/addUsersOfGroupAppointments")
