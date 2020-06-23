@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
+import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
 import es.ucm.fdi.iw.model.User.Role;
@@ -153,6 +154,14 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		Appointment ga = entityManager.find(Appointment.class, id);
 		if (ga != null) {
+			if(ga instanceof GroupAppointment) {
+			TypedQuery<Message> query = entityManager.createNamedQuery("Message.getByTopic",Message.class);
+			List<Message> lm =  query.setParameter("id", ((GroupAppointment) ga).getName()).getResultList();
+			for(int i=0;i<lm.size();i++) {
+				Message m= entityManager.find(Message.class, lm.get(i).getId());
+				entityManager.remove(m);
+			}
+			}
 			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					ga.getDate(), ga.getStart_hour());
 			entityManager.remove(ga);
