@@ -58,9 +58,15 @@ public class MessageController {
 	public List<Message.Transfer> retrieveMessages(HttpSession session) {
 		long userId = ((User)session.getAttribute("u")).getId();		
 		User u = entityManager.find(User.class, userId);
+		
+		List<Message> lm = new ArrayList<Message>();
+		for(Message m: u.getReceived()) {
+			if(m.getSender()!=null)
+				lm.add(m);
+		}
 		log.info("Generating message list for user {} ({} messages)", 
-				u.getUsername(), u.getReceived().size());
-		return Message.asTransferObjects(u.getReceived());
+				u.getUsername(), lm.size());
+		return Message.asTransferObjects(lm);
 	}	
 	
 	@GetMapping(path = "/get/{id}", produces = "application/json")
@@ -99,4 +105,6 @@ public class MessageController {
 		session.setAttribute("unread", unread);
 		return "{\"unread\": " + unread + "}";
 	}
+	
+	
 }

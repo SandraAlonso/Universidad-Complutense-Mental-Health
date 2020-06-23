@@ -12,8 +12,9 @@ const ws = {
 	 * Default action when message is received. 
 	 */
 	receive: (text) => {
-			if(sender === text.from || typeof sender === 'undefined' || sender === text.to) {
+			if(typeof text.from === 'undefined' || sender === text.from || typeof sender === 'undefined' || sender === text.to) {
 			var today = new Date();
+			if(typeof text.from != 'undefined'){
 				$('#mensajes')
 				.prepend(
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
@@ -23,6 +24,18 @@ const ws = {
 								+ '</p><br><p>'
 								+ text.text
 								+ '</p></div></div></div>');
+			}
+			else{
+				$('#mensajes')
+				.prepend(
+						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
+								+ 'Notificación'
+								+ '</b></p><p>'
+								+ today.toLocaleString("es-ES").split(" ").join("@")
+								+ '</p><br><p>'
+								+ text.text
+								+ '</p></div></div></div>');
+			}
 			}
 	},
 	

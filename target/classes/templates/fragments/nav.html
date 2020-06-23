@@ -32,6 +32,8 @@
 	  		  <li th:if="${session.u.hasRole('ADMIN')}"><a th:href="@{/admin/}">Administrar</a></li>        
 	      	  <!--  <li><a th:href="@{/message/}"><i class="material-icons" th:text="${session.unread} ? 'mail': 'drafts'">mail</i></a></li> -->
 	      	  <li><a th:href="@{/message/}"><i class="material-icons">mail</i></a></li>
+	      	  <li><a th:href="@{/notificaciones/}"><i class="material-icons">notifications</i></a></li>
+	      	  
 			  <li>
 			  	<a class="dropdown-trigger" href="#!" data-target="dropdown1">
 			  		<img class="circle responsive-img profile-image" th:src="@{/user/{id}/photo(id=${session.u.id})}">

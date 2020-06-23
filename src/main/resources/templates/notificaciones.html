@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- License: https://codyhouse.co/mit -->
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet" th:href="@{/css/schedule-style.css}"
+	href="../css/schedule-style.css">
+<th:block th:replace="fragments/head :: header" />
+<script th:src="@{/js/notificaciones.js}" src="../js/notificaciones.js"></script>
+
+<title>Notificaciones</title>
+</head>
+
+<body>
+	<!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+	<!-- Add your site or application content here -->
+
+	<div th:replace="fragments/nav.html :: nav">Nav goes here</div>
+
+	<header class="cd-main-header text-center flex flex-column flex-center">
+		<h4 class="center-align" id="conver">Últimas notificaciones</h4>
+	</header>
+	<main>
+		
+
+		<div class="row" id="mensajes"></div>
+
+		<form id="form-send" class="float row hide" method="POST">
+			<input type="text" id="message" class="col s9 offset-s1">
+			<button id="send" th:data-id-sender="${session.u.id}"
+				th:data-username-sender="${session.u.username}" data-id-receiver=""
+				data-topic=""
+				class="boton-enviar btn-floating waves-effect waves-light"
+				type="submit" name="action">
+				<i class="material-icons right" id="sendmsg">send</i>
+			</button>
+		</form>
+
+		
+				  			<div th:if="${problema}" id="error" class="modal">
+	<div class="modal-content">
+				<h4>Error</h4>
+				<p th:text=${problema.mensaje}>Ejemplo</p>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+			</div>
+			</div>
+	</main>
+	<footer th:replace="fragments/footer.html :: footer"> Footer
+		goes here </footer>
+
+</body>
+</html>

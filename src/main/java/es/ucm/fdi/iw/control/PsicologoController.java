@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,7 +50,10 @@ public class PsicologoController {
 
 	@Autowired
 	EntityManager entityManager;
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
+	
 	// Requester es el usuario que solicita la accion.
 	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
 	// queremos cambiar
@@ -161,6 +165,10 @@ public class PsicologoController {
 				Message m= entityManager.find(Message.class, lm.get(i).getId());
 				entityManager.remove(m);
 			}
+			for(User u:((GroupAppointment)ga).getPatient()) {
+				MandarNotificaciones.postNotifications(u, "se ha eliminado la cita grupal "+ ((GroupAppointment)ga).getName(), entityManager, messagingTemplate);
+			}
+
 			}
 			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 					ga.getDate(), ga.getStart_hour());

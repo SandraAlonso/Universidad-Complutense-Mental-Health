@@ -79,7 +79,8 @@ public class Message {
 		long id;
 		private String topic;
 		public Transfer(Message m) {
-			this.from = m.getSender().getUsername();
+			if(m.getSender()!=null) 
+				this.from = m.getSender().getUsername();
 			if(m.getRecipient() != null) this.to = m.getRecipient().getUsername();
 			this.sent = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(m.getDateSent());
 			//this.received = m.getDateRead() == null ?
@@ -87,6 +88,7 @@ public class Message {
 			this.text = m.getText();
 			this.id = m.getId();
 			this.topic = m.getTopic();
+		
 		}
 		public String getFrom() {
 			return from;
