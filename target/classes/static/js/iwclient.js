@@ -26,7 +26,7 @@ const ws = {
 								+ '</p></div></div></div>');
 			}
 			else{
-				$('#mensajes')
+				$('#notificaciones')
 				.prepend(
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 								+ 'Notificación'

@@ -124,6 +124,7 @@ public class PsicologoController {
 					entityManager.flush();
 					log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 							groupAppointment.getDate(), groupAppointment.getStart_hour());
+					MandarNotificaciones.postNotifications(stored, "se ha eliminado la cita grupal "+ ((GroupAppointment)groupAppointment).getName(), entityManager, messagingTemplate);
 					return "redirect:/psicologo/horario";
 				} else {
 					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
