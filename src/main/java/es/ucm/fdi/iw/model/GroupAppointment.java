@@ -2,6 +2,7 @@ package es.ucm.fdi.iw.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,6 +20,7 @@ public class GroupAppointment extends Appointment {
 
 	@NotEmpty(message = "La cita debe tener nombre")
 	@Pattern(regexp = "[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+", message = "El nombre solo puede contener caracteres alfanumericos")
+	@Column(nullable = false , unique = true)
 	private String name;
 
 	private String description;
