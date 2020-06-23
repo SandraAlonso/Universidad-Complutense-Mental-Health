@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-	Uso desde consola (si tienes maven y java bien instalados, 
-	y estas en el mismo directorio que este pom.xml):
-		- compilar y ejecutar el proyecto:
-			mvn spring-boot:run
--->
+<!-- Uso desde consola (si tienes maven y java bien instalados, y estas en 
+	el mismo directorio que este pom.xml): - compilar y ejecutar el proyecto: 
+	mvn spring-boot:run -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.5.RELEASE</version>
-		<relativePath/>
+		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.ucm</groupId>
 	<artifactId>plantilla</artifactId>					<!-- cambia esto -->
 	<version>0.0.1-SNAPSHOT</version>
 	<name>plantilla</name>								<!-- cambia esto -->
-	<description>Cambia esta descripción</description>	<!-- cambia esto  -->
+	<description>Cambia esta descripción</description>	<!-- cambia esto -->
 	<packaging>jar</packaging>
 
 	<properties>
@@ -71,14 +68,11 @@
 
 
 		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>runtime</scope>
-   		</dependency>
-		<!-- 
-			principal librería de pruebas unitarias en entorno Java
-			https://mvnrepository.com/artifact/junit/junit 			
-		-->
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- principal librería de pruebas unitarias en entorno Java https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -87,11 +81,8 @@
 		</dependency>
 
 
-		<!-- 
-			para generar mockups (falsos objetos que simulan ser objetos reales)
-			en tus pruebas unitarias
-			https://mvnrepository.com/artifact/org.mockito/mockito-core 
-		-->
+		<!-- para generar mockups (falsos objetos que simulan ser objetos reales) 
+			en tus pruebas unitarias https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -99,10 +90,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 
-			para usar karate sobre servidores apache-tomcat
-			https://mvnrepository.com/artifact/com.intuit.karate/karate-apache 
-		-->
+		<!-- para usar karate sobre servidores apache-tomcat https://mvnrepository.com/artifact/com.intuit.karate/karate-apache -->
 		<dependency>
 			<groupId>com.intuit.karate</groupId>
 			<artifactId>karate-apache</artifactId>
@@ -110,10 +98,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 
-			integración entre karate y junit4
-			https://mvnrepository.com/artifact/com.intuit.karate/karate-junit4 
-		-->
+		<!-- integración entre karate y junit4 https://mvnrepository.com/artifact/com.intuit.karate/karate-junit4 -->
 		<dependency>
 			<groupId>com.intuit.karate</groupId>
 			<artifactId>karate-junit4</artifactId>
@@ -121,24 +106,26 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 
-			karate usa chrome u otro navegador para automatizar pruebas
-			https://mvnrepository.com/artifact/com.intuit.karate/karate-core 
-		-->
+		<!-- karate usa chrome u otro navegador para automatizar pruebas https://mvnrepository.com/artifact/com.intuit.karate/karate-core -->
 		<dependency>
 			<groupId>com.intuit.karate</groupId>
 			<artifactId>karate-core</artifactId>
 			<version>0.9.5</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- 
-			karate sólo quiere parsear xml válido, pero lo normal es escribir
-			html que no es xhtml válido. JSoup permite convertir lo uno a lo otro
-			https://mvnrepository.com/artifact/org.jsoup/jsoup
-			(solo hace falta cuando usas Karate para probar APIs; 
-			si automatizas navegador, no es necesario)
-		-->
+
+		<!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
+
+
+		<!-- karate sólo quiere parsear xml válido, pero lo normal es escribir 
+			html que no es xhtml válido. JSoup permite convertir lo uno a lo otro https://mvnrepository.com/artifact/org.jsoup/jsoup 
+			(solo hace falta cuando usas Karate para probar APIs; si automatizas navegador, 
+			no es necesario) -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
@@ -149,11 +136,9 @@
 
 	<build>
 
-		<!--
-			para poder tener todos los recursos de prueba
-			mezclados con las pruebas en sí en src/test/java
-			(esto dice "los recursos están ahí, pero no incluyen los .java")
-		-->
+		<!-- para poder tener todos los recursos de prueba mezclados con las pruebas 
+			en sí en src/test/java (esto dice "los recursos están ahí, pero no incluyen 
+			los .java") -->
 		<testResources>
 			<testResource>
 				<directory>src/test/java</directory>
@@ -169,13 +154,9 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- 
-				surefire se encarga de pasar pruebas JUnit. No queremos
-				que se ejecute Karate siempre, sólo si se especifica
-				
-				mvn test -Dtest=KarateTests 
-				(ojo: sólo se pueden pasar con la aplicación funcionando!)
-			-->
+			<!-- surefire se encarga de pasar pruebas JUnit. No queremos que se ejecute 
+				Karate siempre, sólo si se especifica mvn test -Dtest=KarateTests (ojo: sólo 
+				se pueden pasar con la aplicación funcionando!) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -190,11 +171,8 @@
 				</configuration>
 			</plugin>
 
-			<!-- 
-				para ejecutar karate desde fuera (pruebas externas de interfaz):
-				
-				mvn test -Dexec.args=src/test/karate-ui/login.feature
-			-->
+			<!-- para ejecutar karate desde fuera (pruebas externas de interfaz): 
+				mvn test -Dexec.args=src/test/karate-ui/login.feature -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>

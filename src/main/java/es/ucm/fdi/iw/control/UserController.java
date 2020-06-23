@@ -1,5 +1,7 @@
 package es.ucm.fdi.iw.control;
 
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -11,6 +13,7 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +22,8 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -256,6 +261,15 @@ public class UserController {
 			} catch (Exception e) {
 				log.warn("Error uploading " + id + " ", e);
 			}
+			BufferedImage resizeMe = ImageIO.read(f);
+			Dimension newMaxSize = new Dimension(256, 256);
+			BufferedImage resizedImg = Scalr.resize(resizeMe, Method.QUALITY,
+			                                        newMaxSize.width, newMaxSize.height);
+			BufferedImage cutImg = null;
+			if(resizedImg.getHeight() < 256 || resizedImg.getHeight() < resizedImg.getWidth()) cutImg = Scalr.crop(resizedImg, resizedImg.getHeight(), resizedImg.getHeight());
+			else if(resizedImg.getWidth() < 256 || resizedImg.getWidth() < resizedImg.getHeight()) cutImg = Scalr.crop(resizedImg, resizedImg.getWidth(), resizedImg.getWidth());
+			else cutImg = resizedImg;
+			ImageIO.write(cutImg, "jpg", f);
 			log.info("Successfully uploaded photo for {} into {}!", id, f.getAbsolutePath());
 		}
 		return "user";
