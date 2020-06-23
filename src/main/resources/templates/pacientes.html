@@ -6,7 +6,6 @@
 <link rel="stylesheet" th:href="@{/css/schedule-style.css}"
 	href="../css/schedule-style.css">
 <th:block th:replace="fragments/head :: header" />
-<script th:src="@{/js/pacientes.js}" src="../js/pacientes.js"></script>
 
 <title>Mis pacientes</title>
 <meta name="theme-color" content="#fafafa">
@@ -27,8 +26,8 @@
 						th:text="${pat.firstName}">Nombre</span>
 						<p th:text="${pat.lastName}">Apellido</p> <a
 						th:href="@{/psicologo/pacientes(id=${pat.id})}"
-						class=" waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">Mas
-							sobre el paciente</a>
+						class=" waves-effect pink lighten-5 pink-text text-darken-2 btn pacientBTN">+ 
+							información</a>
 
 					</li>
 
@@ -39,19 +38,25 @@
 			<div class="row">
 				<div class="col s6">
 					<div class="card">
-						<div class="card-image">
-							<img th:if=${patie} width="256" height="256"
-								th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}">
-						</div>
 						<div class="card-content">
-							<b> <span class="title">Datos del paciente: </span></b><br>
-							<span>Nombre: </span><span th:if=${patie}
-								th:text="${patie.firstName}"></span><br> <span>Apellidos:
-							</span> <span th:if=${patie} th:text="${patie.lastName}"></span><br>
-							<span>Mail: </span> <span th:if=${patie} th:text="${patie.mail}"></span><br>
-							<span>Tratamiento: </span> <span th:if=${patie}
-								th:text="${patie.treatment}"></span><br> <span>Diagnostico:
-							</span> <span th:if=${patie} th:text="${patie.disorder}"></span>
+							<ul class="colelciton">
+
+								<li class="collection-item avatar"><img th:if=${patie}
+									th:src="@{${'/user/' + patie.id + '/photo?=' + patie.id}}"
+									alt="" class="circle center-align"> <br>
+								<br> <b> <span class="title">Datos del paciente:
+									</span></b><br> <span>Nombre: </span><span th:if=${patie}
+									th:text="${patie.firstName}"></span><br> <span>Apellidos:
+								</span> <span th:if=${patie} th:text="${patie.lastName}"></span><br>
+									<span>Mail: </span> <span th:if=${patie}
+									th:text="${patie.mail}"></span><br> <span>Tratamiento:
+								</span> <span th:if=${patie} th:text="${patie.treatment}"></span><br>
+									<span>Diagnostico: </span> <span th:if=${patie}
+									th:text="${patie.disorder}"></span></li>
+							</ul>
+
+
+
 						</div>
 						<div class="card-action">
 
@@ -136,16 +141,16 @@
 			</div>
 
 		</div>
-		
-				  			<div th:if="${problema}" id="error" class="modal">
-	<div class="modal-content">
+
+		<div th:if="${problema}" id="error" class="modal">
+			<div class="modal-content">
 				<h4>Error</h4>
 				<p th:text=${problema.mensaje}>Ejemplo</p>
 			</div>
 			<div class="modal-footer">
 				<a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
 			</div>
-			</div>
+		</div>
 	</main>
 
 	<footer th:replace="fragments/footer.html :: footer"> Footer
