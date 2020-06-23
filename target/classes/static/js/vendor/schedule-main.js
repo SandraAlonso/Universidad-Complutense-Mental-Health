@@ -121,7 +121,7 @@
 		this.modal.setAttribute('data-event', target.getAttribute('data-event'));
 		//this.modal.setAttribute('data-content', target.getAttribute('data-content'));
 
-      	this.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = "<div>" + target.getAttribute('data-content') + "</div>"; 
+      	if(target.getAttribute('data-content') != null) this.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = "<div><h5>Descripción</h5>" + target.getAttribute('data-content') + "</div>"; 
       	Util.addClass(self.modal, 'cd-schedule-modal--content-loaded');
 
 
