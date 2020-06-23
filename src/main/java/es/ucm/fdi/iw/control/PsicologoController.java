@@ -178,7 +178,7 @@ public class PsicologoController {
 						.setParameter("sth", groupAppointment.getStart_hour())
 						.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 
-				if (lm.size() == 1) {
+				if (lm.size() == 1 && lm.get(0).getID()==groupAppointment.getID()) {
 					ga.setName(groupAppointment.getName());
 					ga.setDate(groupAppointment.getDate());
 					ga.setStart_hour(groupAppointment.getStart_hour());

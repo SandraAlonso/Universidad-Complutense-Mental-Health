@@ -201,11 +201,11 @@ public class PacienteController {
 
 				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
 						Appointment.class);
-				List<Appointment> lm = query.setParameter("username", stored.getId())
+				List<Appointment> lm = query.setParameter("username", stored.getPsychologist().getId())
 						.setParameter("date", appointment.getDate()).setParameter("sth", appointment.getStart_hour())
 						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
 
-				if (lm.size() == 1) {
+				if (lm.size() == 1 && lm.get(0).getID()==appointment.getID()) {
 					a.setDate(appointment.getDate());
 					a.setStart_hour(appointment.getStart_hour());
 					a.setFinish_hour(appointment.getFinish_hour());
