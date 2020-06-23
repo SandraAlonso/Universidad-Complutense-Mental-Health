@@ -46,6 +46,7 @@ public class MessageController {
 		if(topics_list1 != null) topics_list = topics_list1;
 		String joined = String.join(",", topics_list);
 		session.setAttribute("topics", joined);
+		model.addAttribute("topicsList", topics_list);
 		TypedQuery<User> query = entityManager.createNamedQuery("User.getAllActive", User.class); 
 		model.addAttribute("usuarios", query.getResultList());
 		return "messages";
