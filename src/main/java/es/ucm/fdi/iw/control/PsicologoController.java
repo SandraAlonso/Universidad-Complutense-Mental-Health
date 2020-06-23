@@ -176,7 +176,7 @@ public class PsicologoController {
 				List<Appointment> lm = query.setParameter("username", stored.getId()).setParameter("date", groupAppointment.getDate()).setParameter("sth", groupAppointment.getStart_hour()).setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 				
 				
-				if(lm.size()==0) {
+				if(lm.size()==1) {
 					ga.setName(groupAppointment.getName());
 					ga.setDate(groupAppointment.getDate());
 					ga.setStart_hour(groupAppointment.getStart_hour());
