@@ -117,7 +117,7 @@ public class PacienteController {
 			int horaActual = appointment.getStart_hour().compareTo(ahora);
 
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-
+				appointment.setStart_hour(appointment.getStart_hour().plusMinutes(1));
 				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
 						Appointment.class);
 				List<Appointment> lm = query.setParameter("username", psychologist.getId())
@@ -125,6 +125,7 @@ public class PacienteController {
 						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
 				if (lm.size() == 0) {
 					appointment.setCreator(stored);
+					appointment.setStart_hour(appointment.getStart_hour().minusMinutes(1));
 					appointment.setPsychologist(psychologist);
 					entityManager.persist(appointment);
 					entityManager.flush();
@@ -198,6 +199,7 @@ public class PacienteController {
 			int horaActual = appointment.getStart_hour().compareTo(ahora);
 
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
+				appointment.setStart_hour(appointment.getStart_hour().plusMinutes(1));
 
 				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
 						Appointment.class);
@@ -206,8 +208,8 @@ public class PacienteController {
 						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
 
 				if (lm.size() == 1 && lm.get(0).getID()==appointment.getID()) {
+					a.setStart_hour(appointment.getStart_hour().minusMinutes(1));
 					a.setDate(appointment.getDate());
-					a.setStart_hour(appointment.getStart_hour());
 					a.setFinish_hour(appointment.getFinish_hour());
 					log.info("El usuario {} ha modificado una cita individual, ahora es a las {} del dia {}",
 							stored.getFirstName(), appointment.getStart_hour(), appointment.getDate());

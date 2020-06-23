@@ -99,7 +99,7 @@ public class PsicologoController {
 		int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
 
 		if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-
+			groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
 			TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
 					Appointment.class);
 			List<Appointment> lm = query.setParameter("username", stored.getId())
@@ -109,6 +109,7 @@ public class PsicologoController {
 
 			if (lm.size() == 0) {
 				groupAppointment.setCreator(stored);
+				groupAppointment.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
 				entityManager.persist(groupAppointment);
 				entityManager.flush();
 				log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
@@ -170,7 +171,7 @@ public class PsicologoController {
 			int horaActual = groupAppointment.getStart_hour().compareTo(ahora);
 
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-
+				groupAppointment.setStart_hour(groupAppointment.getStart_hour().plusMinutes(1));
 				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
 						Appointment.class);
 				List<Appointment> lm = query.setParameter("username", stored.getId())
@@ -178,10 +179,10 @@ public class PsicologoController {
 						.setParameter("sth", groupAppointment.getStart_hour())
 						.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 
-				if (lm.size() == 1 && lm.get(0).getID()==groupAppointment.getID()) {
+				if (lm.size() == 1 && lm.get(0).getID() == groupAppointment.getID()) {
+					ga.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
 					ga.setName(groupAppointment.getName());
 					ga.setDate(groupAppointment.getDate());
-					ga.setStart_hour(groupAppointment.getStart_hour());
 					ga.setFinish_hour(groupAppointment.getFinish_hour());
 					ga.setDescription(groupAppointment.getDescription());
 					log.info("El usuario {} ha modificado la cita grupal {}, ahora es a las {} del dia {}.",
