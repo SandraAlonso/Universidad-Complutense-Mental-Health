@@ -16,7 +16,7 @@ const ws = {
 			var today = new Date();
 			if(typeof text.from != 'undefined'){
 				$('#mensajes')
-				.prepend(
+				.prepend( 
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 								+ text.from
 								+ '</b></p><p>'
