@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -69,7 +70,8 @@ public class PacienteController {
 					emotionalEstate.getEmotionalState());
 			return "redirect:/paciente/estadisticas";
 		} else {
-			Problema p = new Problema("La fecha en que el usuario " + stored.getUsername() + " ha intentado introducir un estado emocional es posterior a hoy");
+			Problema p = new Problema("La fecha en que el usuario " + stored.getUsername()
+					+ " ha intentado introducir un estado emocional es posterior a hoy");
 			model.addAttribute("problema", p);
 			log.info(
 					"La fecha en que el usuario {} ha intentado introducir un estado emocional es posterior a hoy {} y por lo tanto imposible",
@@ -91,7 +93,8 @@ public class PacienteController {
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		if (weeks == null) weeks = 0;
+		if (weeks == null)
+			weeks = 0;
 		model.addAttribute("u", stored);
 		model.addAttribute("groupAppointments", stored.getAppointmentsOfTheWeekPatient(weeks.intValue()));
 		model.addAttribute("days", stored.getDaysOfTheWeek(weeks.intValue()));
@@ -114,16 +117,34 @@ public class PacienteController {
 			int horaActual = appointment.getStart_hour().compareTo(ahora);
 
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-				appointment.setCreator(stored);
-				appointment.setPsychologist(psychologist);
-				entityManager.persist(appointment);
-				entityManager.flush();
-				log.info("El usuario {} ha creado una cita individual con el psicologo {} el dia {} a las {}.",
-						stored.getFirstName(), stored.getPsychologist(), appointment.getDate(),
-						appointment.getStart_hour());
-				return "redirect:/paciente/horario";
+
+				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
+						Appointment.class);
+				List<Appointment> lm = query.setParameter("username", psychologist.getId())
+						.setParameter("date", appointment.getDate()).setParameter("sth", appointment.getStart_hour())
+						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
+				if (lm.size() == 0) {
+					appointment.setCreator(stored);
+					appointment.setPsychologist(psychologist);
+					entityManager.persist(appointment);
+					entityManager.flush();
+					log.info("El usuario {} ha creado una cita individual con el psicologo {} el dia {} a las {}.",
+							stored.getFirstName(), stored.getPsychologist(), appointment.getDate(),
+							appointment.getStart_hour());
+					return "redirect:/paciente/horario";
+				} else {
+					Problema p = new Problema(
+							"El usuario " + stored.getUsername() + " no puede añadir cita porque el psicologo "
+									+ psychologist.getFirstName() + " ya tiene una cita a esa hora.");
+					model.addAttribute("problema", p);
+					log.info("El usuario {} no ha podido crear una cita individual porque ya hay una cita a esa hora.",
+							stored.getFirstName());
+					return horarioPsicologo(session, model, null);
+
+				}
 			} else {
-				Problema p = new Problema("El usuario " + stored.getUsername() + " no ha podido crear una cita individual porque la hora seleccionada es posterior a la actual");
+				Problema p = new Problema("El usuario " + stored.getUsername()
+						+ " no ha podido crear una cita individual porque la hora seleccionada es posterior a la actual");
 				model.addAttribute("problema", p);
 				log.info(
 						"El usuario {} no ha podido crear una cita individual porque la hora seleccionada es posterior a la actual ({}).",
@@ -131,7 +152,8 @@ public class PacienteController {
 				return horarioPsicologo(session, model, null);
 			}
 		} else {
-			Problema p = new Problema("El usuario " + stored.getUsername() + " no ha podido crear una cita individual porque la hora seleccionada es posterior a la actual");
+			Problema p = new Problema("El usuario " + stored.getUsername()
+					+ " no ha podido crear una cita individual porque la hora seleccionada es posterior a la actual");
 			model.addAttribute("problema", p);
 			log.info("El usuario {} no puede solicitar una cita por que no tiene un psicologo asociado.",
 					stored.getUsername());
@@ -152,10 +174,10 @@ public class PacienteController {
 			entityManager.remove(ga);
 			return "redirect:/paciente/horario";
 		} else {
-			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente.");
+			Problema p = new Problema(
+					"El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente.");
 			model.addAttribute("problema", p);
-			log.info("El usuario {} no puede eliminar una cita inexistente.",
-					stored.getUsername());
+			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getUsername());
 			return horarioPsicologo(session, model, null);
 		}
 	}
@@ -176,54 +198,69 @@ public class PacienteController {
 			int horaActual = appointment.getStart_hour().compareTo(ahora);
 
 			if (fecha == 0 && horaActual > 0 && hora > 0 || fecha > 0 && hora > 0) {
-				a.setDate(appointment.getDate());
-				a.setStart_hour(appointment.getStart_hour());
-				a.setFinish_hour(appointment.getFinish_hour());
-				log.info("El usuario {} ha modificado una cita individual, ahora es a las {} del dia {}", stored.getFirstName(),
-						appointment.getStart_hour(), appointment.getDate());
-				return "redirect:/paciente/horario";
-			}
-			else {
-				Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar una cita a un día anterior.");
+
+				TypedQuery<Appointment> query = entityManager.createNamedQuery("Appointment.allAppointmentsOfSameDate",
+						Appointment.class);
+				List<Appointment> lm = query.setParameter("username", stored.getId())
+						.setParameter("date", appointment.getDate()).setParameter("sth", appointment.getStart_hour())
+						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
+
+				if (lm.size() == 1) {
+					a.setDate(appointment.getDate());
+					a.setStart_hour(appointment.getStart_hour());
+					a.setFinish_hour(appointment.getFinish_hour());
+					log.info("El usuario {} ha modificado una cita individual, ahora es a las {} del dia {}",
+							stored.getFirstName(), appointment.getStart_hour(), appointment.getDate());
+					return "redirect:/paciente/horario";
+				} else {
+					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar esta cita.");
+					model.addAttribute("problema", p);
+					log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
+					return horarioPsicologo(session, model, null);
+				}
+			} else {
+				Problema p = new Problema(
+						"El usuario " + stored.getUsername() + " no puede modificar una cita a un día anterior.");
 				model.addAttribute("problema", p);
-				log.info("El usuario {} no puede modificar una cita a un día anterior.",
-						stored.getUsername());
+				log.info("El usuario {} no puede modificar una cita a un día anterior.", stored.getUsername());
 				return horarioPsicologo(session, model, null);
 			}
-			
+
 		} else {
-			Problema p = new Problema("El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
+			Problema p = new Problema(
+					"El usuario " + stored.getUsername() + " no puede modificar una cita inexistente.");
 			model.addAttribute("problema", p);
-			log.info("El usuario {} no puede modificar una cita inexistente.",
-					stored.getUsername());
+			log.info("El usuario {} no puede modificar una cita inexistente.", stored.getUsername());
 			return horarioPsicologo(session, model, null);
 		}
 	}
-	
+
 	@GetMapping(path = "/getAppointments/{id}", produces = "application/json")
 	@ResponseBody
 	public Appointment getAppointments(HttpSession session, @PathVariable long id) {
 
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		Appointment ga= entityManager.find(Appointment.class, id);
-		boolean esSuya=false;
-		for(int i =0;i<stored.getCreatorAppointments().size();i++) {
-			if(stored.getCreatorAppointments().get(i).getID()==id) {
-				esSuya=true;
+		Appointment ga = entityManager.find(Appointment.class, id);
+		boolean esSuya = false;
+		for (int i = 0; i < stored.getCreatorAppointments().size(); i++) {
+			if (stored.getCreatorAppointments().get(i).getID() == id) {
+				esSuya = true;
 				break;
 			}
-			
+
 		}
-		if(!esSuya) {
-			for(int i =0;i<stored.getAppointments().size();i++) {
-			if(stored.getGroupAppointmentsPatient().get(i).getID()==id) {
-				esSuya=true;
-				break;
+		if (!esSuya) {
+			for (int i = 0; i < stored.getAppointments().size(); i++) {
+				if (stored.getGroupAppointmentsPatient().get(i).getID() == id) {
+					esSuya = true;
+					break;
+				}
 			}
 		}
-		}
-		if(esSuya) return ga;
-		else return null;
+		if (esSuya)
+			return ga;
+		else
+			return null;
 	}
 }
