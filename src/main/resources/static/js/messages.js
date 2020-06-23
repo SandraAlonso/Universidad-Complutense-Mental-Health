@@ -120,7 +120,7 @@ var sender;
 					.catch(e => console.log("sad", e))
 				if($("#send").attr("data-id-receiver")) {
 				$('#mensajes')
-				.append(
+				.prepend(
 						'<div class="col s10 offset-s1 card horizontal"><div class="card-stacked"><div class="card-content"><p><b>'
 								+ $("#send").attr("data-username-sender")
 								+ '</b></p><p>'
