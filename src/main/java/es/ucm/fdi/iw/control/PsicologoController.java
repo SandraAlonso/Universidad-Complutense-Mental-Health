@@ -53,7 +53,6 @@ public class PsicologoController {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
-	
 	// Requester es el usuario que solicita la accion.
 	// Edited son los datos que obtenemos en la interfaz y por lo tanto, lo que
 	// queremos cambiar
@@ -116,7 +115,7 @@ public class PsicologoController {
 						.setParameter("date", groupAppointment.getDate())
 						.setParameter("sth", groupAppointment.getStart_hour())
 						.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
-
+				
 				if (lm.size() == 0) {
 					groupAppointment.setCreator(stored);
 					groupAppointment.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
@@ -124,7 +123,9 @@ public class PsicologoController {
 					entityManager.flush();
 					log.info("El usuario {} ha creado una cita grupal el dia {} a las {}.", stored.getFirstName(),
 							groupAppointment.getDate(), groupAppointment.getStart_hour());
-					MandarNotificaciones.postNotifications(stored, "se ha eliminado la cita grupal "+ ((GroupAppointment)groupAppointment).getName(), entityManager, messagingTemplate);
+					MandarNotificaciones.postNotifications(stored,
+							"se ha eliminado la cita grupal " + ((GroupAppointment) groupAppointment).getName(),
+							entityManager, messagingTemplate);
 					return "redirect:/psicologo/horario";
 				} else {
 					Problema p = new Problema("El usuario " + stored.getUsername() + " no puede añadir cita.");
@@ -159,16 +160,18 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		Appointment ga = entityManager.find(Appointment.class, id);
 		if (ga != null) {
-			if(ga instanceof GroupAppointment) {
-			TypedQuery<Message> query = entityManager.createNamedQuery("Message.getByTopic",Message.class);
-			List<Message> lm =  query.setParameter("id", ((GroupAppointment) ga).getName()).getResultList();
-			for(int i=0;i<lm.size();i++) {
-				Message m= entityManager.find(Message.class, lm.get(i).getId());
-				entityManager.remove(m);
-			}
-			for(User u:((GroupAppointment)ga).getPatient()) {
-				MandarNotificaciones.postNotifications(u, "se ha eliminado la cita grupal "+ ((GroupAppointment)ga).getName(), entityManager, messagingTemplate);
-			}
+			if (ga instanceof GroupAppointment) {
+				TypedQuery<Message> query = entityManager.createNamedQuery("Message.getByTopic", Message.class);
+				List<Message> lm = query.setParameter("id", ((GroupAppointment) ga).getName()).getResultList();
+				for (int i = 0; i < lm.size(); i++) {
+					Message m = entityManager.find(Message.class, lm.get(i).getId());
+					entityManager.remove(m);
+				}
+				for (User u : ((GroupAppointment) ga).getPatient()) {
+					MandarNotificaciones.postNotifications(u,
+							"se ha eliminado la cita grupal " + ((GroupAppointment) ga).getName(), entityManager,
+							messagingTemplate);
+				}
 
 			}
 			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),

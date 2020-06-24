@@ -22,7 +22,7 @@ public class GroupAppointment extends Appointment {
 
 	@NotEmpty(message = "La cita debe tener nombre")
 	@Pattern(regexp = "[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ_-]+", message = "El nombre solo puede contener caracteres alfanumericos")
-	@Column(nullable = false , unique = true)
+	@Column(nullable = true , unique = true)
 	private String name;
 
 	private String description;
