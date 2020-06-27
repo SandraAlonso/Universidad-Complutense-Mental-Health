@@ -15,10 +15,10 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.ucm</groupId>
-	<artifactId>plantilla</artifactId>					<!-- cambia esto -->
+	<artifactId>UCMH</artifactId>				
 	<version>0.0.1-SNAPSHOT</version>
-	<name>plantilla</name>								<!-- cambia esto -->
-	<description>Cambia esta descripción</description>	<!-- cambia esto -->
+	<name>UCMH</name>								
+	<description>Proyecto de ingeniería web que simula un gestor de una consulta de psicología.</description>
 	<packaging>jar</packaging>
 
 	<properties>

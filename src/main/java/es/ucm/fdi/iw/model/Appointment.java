@@ -16,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @NamedQueries({
 	@NamedQuery(name = "Appointment.allAppointmentsOfSameDate", query = "SELECT a FROM Appointment a WHERE ( PSYCHOLOGIST_ID = :username OR  CREATOR_ID = :username ) AND a.date = :date AND ((a.start_hour BETWEEN :sth AND :fnh OR a.finish_hour BETWEEN :sth AND :fnh) OR ((a.start_hour BETWEEN :sth AND :fnh ) AND (a.finish_hour BETWEEN :sth AND :fnh)) OR (:sth BETWEEN a.start_hour AND a.finish_hour AND :fnh BETWEEN a.start_hour AND a.finish_hour))") })
-	//@NamedQuery(name="Appointment.specialAppointments", query = "SELECT a FROM Appointment a WHERE ( PSYCHOLOGIST_ID = :username OR  CREATOR_ID = :username ) AND a.date = :date AND ( :sth BETWEEN a.start_hour AND a.finish_hour AND :fnh BETWEEN a.start_hour AND a.finish_hour )")
 @Entity
 public abstract class Appointment {
 	

@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import es.ucm.fdi.iw.model.Appointment;
 import es.ucm.fdi.iw.model.EntradasPsicologo;
 import es.ucm.fdi.iw.model.GroupAppointment;
+import es.ucm.fdi.iw.model.IndividualAppointment;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
@@ -160,7 +161,7 @@ public class PsicologoController {
 		User stored = entityManager.find(User.class, requester.getId());
 		Appointment ga = entityManager.find(Appointment.class, id);
 		if (ga != null) {
-			if (ga instanceof GroupAppointment) {
+			if (ga instanceof GroupAppointment && ((GroupAppointment)ga).getCreator().getId() == stored.getId()) {
 				TypedQuery<Message> query = entityManager.createNamedQuery("Message.getByTopic", Message.class);
 				List<Message> lm = query.setParameter("id", ((GroupAppointment) ga).getName()).getResultList();
 				for (int i = 0; i < lm.size(); i++) {
@@ -172,12 +173,25 @@ public class PsicologoController {
 							"se ha eliminado la cita grupal " + ((GroupAppointment) ga).getName(), entityManager,
 							messagingTemplate);
 				}
-
+				log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
+						ga.getDate(), ga.getStart_hour());
+				entityManager.remove(ga);
+				return "redirect:/psicologo/horario";
 			}
-			log.info("El usuario {} ha eliminado una cita grupal el dia {} a las {}.", stored.getFirstName(),
-					ga.getDate(), ga.getStart_hour());
-			entityManager.remove(ga);
-			return "redirect:/psicologo/horario";
+			else if (ga instanceof IndividualAppointment && ((IndividualAppointment)ga).getPsychologist().getId() == stored.getId()){
+				log.info("El usuario {} ha eliminado una cita individual el dia {} a las {}.", stored.getFirstName(),
+						ga.getDate(), ga.getStart_hour());
+				entityManager.remove(ga);
+				return "redirect:/psicologo/horario";
+			}
+			else {
+				Problema p = new Problema(
+						"El usuario " + stored.getUsername() + " no puede eliminar una cita que no es suya.");
+				model.addAttribute("problema", p);
+				log.info("El usuario {} no puede eliminar una cita que no es suya.", stored.getUsername());
+				return horarioPsicologo(session, model, null);
+			}
+			
 		} else {
 			Problema p = new Problema(
 					"El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente.");
@@ -214,7 +228,7 @@ public class PsicologoController {
 							.setParameter("sth", groupAppointment.getStart_hour())
 							.setParameter("fnh", groupAppointment.getFinish_hour()).getResultList();
 
-					if (lm.size() == 1 && lm.get(0).getID() == groupAppointment.getID()) {
+					if (lm.size() == 1 && lm.get(0).getID() == groupAppointment.getID() && groupAppointment.getCreator().getId()==stored.getId()) {
 						ga.setStart_hour(groupAppointment.getStart_hour().minusMinutes(1));
 						ga.setName(groupAppointment.getName());
 						ga.setDate(groupAppointment.getDate());

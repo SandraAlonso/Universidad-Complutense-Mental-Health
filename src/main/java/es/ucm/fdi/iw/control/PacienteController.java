@@ -63,13 +63,27 @@ public class PacienteController {
 		int fecha = emotionalEstate.getDate().compareTo(LocalDate.now());// solo se pueden añadir las anteriores o
 																			// iguales a hoy
 		if (fecha <= 0) {
+			/*TypedQuery<EmotionalState> query = entityManager.createNamedQuery("EmotionalState.statesOfTheDay",
+					EmotionalState.class);
+			List<EmotionalState> lm = query.setParameter("dat", emotionalEstate.getDate()).setParameter("id", stored).getResultList();
+			if(lm.size()==1) {
+				EmotionalState emo= entityManager.find(EmotionalState.class, lm.get(0).getID());
+				emo.setDescription(emotionalEstate.getDescription());
+				emo.setEmotionalState(emotionalEstate.getEmotionalState());
+				emo.setDate(emotionalEstate.getDate());
+				emo.setPatient(emotionalEstate.getPatient());
+				entityManager.persist(emo);
+				entityManager.flush();
+			}
+			else {*/
 			emotionalEstate.setPatient(stored);
 			entityManager.persist(emotionalEstate);
 			entityManager.flush();
+			
 			log.info("Usuario {} ha añadido un nuevo estado emocional y es {}", stored.getFirstName(),
 					emotionalEstate.getEmotionalState());
 			return "redirect:/paciente/estadisticas";
-		} else {
+		}else {
 			Problema p = new Problema("La fecha en que el usuario " + stored.getUsername()
 					+ " ha intentado introducir un estado emocional es posterior a hoy");
 			model.addAttribute("problema", p);
@@ -169,14 +183,14 @@ public class PacienteController {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
 		IndividualAppointment ga = entityManager.find(IndividualAppointment.class, id);
-		if (ga != null) {
+		if (ga != null && ga.getCreator().getId()==stored.getId()) {
 			log.info("El usuario {} ha eliminado una cita individual con el psicologo {} el dia {} a las {}.",
 					stored.getFirstName(), stored.getPsychologist(), ga.getDate(), ga.getStart_hour());
 			entityManager.remove(ga);
 			return "redirect:/paciente/horario";
 		} else {
 			Problema p = new Problema(
-					"El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente.");
+					"El usuario " + stored.getUsername() + " no puede eliminar una cita inexistente o que no es suya.");
 			model.addAttribute("problema", p);
 			log.info("El usuario {} no puede eliminar una cita inexistente.", stored.getUsername());
 			return horarioPsicologo(session, model, null);
@@ -207,7 +221,7 @@ public class PacienteController {
 						.setParameter("date", appointment.getDate()).setParameter("sth", appointment.getStart_hour())
 						.setParameter("fnh", appointment.getFinish_hour()).getResultList();
 
-				if (lm.size() == 1 && lm.get(0).getID()==appointment.getID()) {
+				if (lm.size() == 1 && lm.get(0).getID()==appointment.getID() && appointment.getCreator().getId()==stored.getId()) {
 					a.setStart_hour(appointment.getStart_hour().minusMinutes(1));
 					a.setDate(appointment.getDate());
 					a.setFinish_hour(appointment.getFinish_hour());

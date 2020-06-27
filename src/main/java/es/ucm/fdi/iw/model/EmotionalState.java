@@ -8,11 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-
+@NamedQueries({
+	@NamedQuery(name = "EmotionalState.statesOfTheDay", query = "SELECT s FROM EmotionalState s WHERE s.date = :dat AND s.patient = :id") })
 @Entity
 public class EmotionalState {
 
