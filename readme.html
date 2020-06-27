@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Leeme: Universidad Complutense Mental Health (UCMH)</title>
+	<style type="text/css">
+		.nota { color: gray; }
+	</style>
+</head>
+<body>
+	<h1>Leeme: Universidad Complutense Mental Health (UCMH)</h1>
+	<h2>Objetivo</h2>
+	<p>
+		Proyecto de ingeniería web que simula un gestor de una consulta de psicología.
+	</p>
+	<p>
+		Hemos qu
+	</p>
+	<p>
+		Soporta los siguientes roles:
+		<ul>
+		<li>
+		El <b>administrador</b> (usuario: a, clave: aa) podrá añadir, eliminar, modificar y bloquear (inhabilitar durante un tiempo) los perfiles de los demás usuarios. También podrá cambiar a los pacientes de psicologo que así lo hayan solicitado. Este se asignará aleatoriamente.
+		<li>
+		Un <b>psicólogo</b> (usuario: b, clave aa) podrá crear, modificar y eliminar citas grupales. También podrá añadir a un grupo de sus pacientes a esas citas. Asimismo podrá ver las estadísticas de sus pacientes en una lista (estado de animo y descripción de cómo se sienten). Por último, a modo de consulta, podrá realizar entradas describiendo la evolución de sus pacientes además de anotar sus diagnósticos y tratamientos.  
+		</li>
+		<li>
+		Un <b>paciente</b> (usuario: c, clave aa) podrá añadir, eliminar y modificar citas individuales, acceder al calendario de estadísticas donde podrá guardar su progreso (estado de ánimo y descripción de cómo se siente). Además, podrán solicitar un cambio de psicólogo al administrador.
+		</li>
+		</ul>
+		<p>Por útimo todos los usuarios podrán visualizar y editar los datos de su perfil (nombre, apellidos, nombre de usuario, contraseña y foto de perfil). Además podrán enviar y recibir mensajes individuales y los usuarios participantes en una cita grupal se suscribirán a un grupo donde también podrán enviar y recibir mensajes a los participantes de discho grupo.</p>
+		
+	</p>
+	<h2>Base de datos</h2>
+		<p class="nota">Generado con <a href="https://www.dbdesigner.net/designer/schema/new">db designer</a>; 
+		hay muchos otros programas que permiten hacer cosas parecidas: me da igual cuál se use, y una foto de una
+		servilleta valdría igualmente. Lo importante es el contenido.</p>
+		
+		<img src="src/main/resources/static/img/schema.png" alt="esquema de la BD">
+	
+	<h2>Vistas</h2>
+		
+		<ul>
+	<li><a href="http://localhost:8080">Inicio</a>: Vista inicial. En ella podemos ver las funcionalidades principales de la aplicación: gestión de citas, control de estados de ánimo y gestión eficiente de grupos. En ella vemos el botón para iniciar sesión.</li>
+	<li><a href="http://localhost:8080/login">Login</a>: Página para el inicio de sesión de los usuarios. Deben introducir su nombre de usuario y contraseña.</li>
+	<li><a href="http://localhost:8080/admin">Administrador</a>: Página principal para el usuario administrador. Desde ella se puede hacer una búsqueda de usuarios filtrando por nombre de usuario, email y nombre. Por otra parte, hay tres listas, psicólogos, pacientes, administradores y usuarios. En cada una de las listas se muestran los usuarios con ese roll. A la derecha de los datos de cada usuario se muestran varios botones con los que el administrador podrá desarrollar sus funciones.</li>
+	<li><a href="http://localhost:8080/estadisticas">Estadísticas del paciente</a>: Se muestra un calendario de estadisticas del paciente. Se puede interactura con este calendario pinchando en un día anterior a la fecha actual y añadiendo un estado de animo y una descripción de cómo se siente el usuario. Una vez añadido se muestra el dia coloreado con el estadp de ánimo correspondiente.</li>
+	<li><a href="http://localhost:8080/horarioPaciente">Horario del paciente</a>: En esta página el paciente podrá añadir, modificar y eliminar  sus citas individuales. Además se mostrarán todas sus citas (individuales y grupales) y podrá avanzar y retroceder en las semanas para una mejor visualización.</li>
+	<li><a href="http://localhost:8080/horarioPsicologo">Horario del psicologo</a>: En esta página el psicólogo podrá añadir, modificar y eliminar sus citas grupales. También podrá eliminar las citas individuales solicitadas por sus paciente que no cuadren con su horario. Además se mostrarán todas sus citas (individuales y grupales) y podrá avanzar y retroceder en las semanas para una mejor visualización.</li>
+	<li><a href="http://localhost:8080/messages">Mensajes</a>: Página de chat de cada usuario. En un primer momento se muestran los últimos mensajes recibidos por ese usuario. A la izquierda se podrá desplegar una barra que contendrá todos los chats pertenecientes al usuario en cuestión (grupales e individuales). Pinchando en una conversación podrá enviar y recibir mensajes con el usuario destino.</li>
+	<li><a href="http://localhost:8080/pacientes">Pacientes del psicologo</a>: El psicólogo podrá interaccionar con los datos de sus pacientes. Aparecerá un listado con todos sus pacientes y al pinchar en "+información" se mostrarán los datos del paciente. Además el psicólogo podrá añadir un tratamiento y diagnostico al paciente. Por último se mostrarán las estadísticas del paciente en una lista y el mismo psicólogo podrá tomar nota de los avances de sus pacientes añadiendo entradas al perfil.</li>
+	<li><a href="http://localhost:8080/user">Perfil de usuario</a>: Página en la que se permite al usuario cambiar sus datos básicos personales como su nombre, apellidos, nombre de usuario, email y contraseña. En el caso de que el usuario sea un paciente podrá solicitar un cambio de psicólogo.</li>
+	
+</ul>
+		
+	<h2>Recursos</h2>
+		<ul>
+		<li><a href="src/main/resources/static/img/logo.png"/>Logotipo, obtenido de la 
+		<a href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Backofenthermometer.jpg/170px-Backofenthermometer.jpg">entrada de wikipedia para
+		 termómetro</a>, con licencia <a href="https://en.wikipedia.org/wiki/Thermometer#/media/File:Backofenthermometer.jpg">CC BY-SA 3.0</a>.
+		</ul>
+	<h2>Usuarios y contraseñas</h2>
+<ul>
+	<li>Usuario (admin): <strong>a</strong>. Contraseña: aa</li>
+	<li>Usuario (psicólogo): <strong>b</strong>. Contraseña: aa</li>
+	<li>Usuario (paciente): <strong>c</strong>. Contraseña: aa</li>
+	<li>Usuario (paciente): <strong>d</strong>. Contraseña: aa</li>
+	
+</ul>
+
+<h2>Integrantes</h2>
+
+<ul>
+    <li>Héctor Arranz Torres</li>
+    <li>Sandra Alonso Paz</li>
+</ul>
+
+<h2>Repositorio</h2>
+<p> <a href= "https://github.com/SandraAlonso/IW.git">Repositorio de github</a></p>
+
+</body>
+</html>
