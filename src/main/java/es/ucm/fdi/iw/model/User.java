@@ -6,7 +6,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +23,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -116,6 +117,8 @@ public class User {
 	@JsonIgnore
 	private List<Message> received = new ArrayList<>();
 
+	@Column(columnDefinition = "integer default 0")
+	int unread;
 	
 	//Las que crea el usuario
 	@OneToMany(targetEntity = Appointment.class, fetch = FetchType.EAGER)
@@ -145,6 +148,8 @@ public class User {
 	@OrderBy("date ASC")
 	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();
 
+	@Transient
+	private HashMap<String, Integer> unread_groups = new HashMap<String,Integer>();
 	
 
 	@OneToMany(targetEntity = User.class)
@@ -158,7 +163,6 @@ public class User {
 	@JoinColumn(name = "patient_id")
 	@OrderBy("date ASC")
 	private List<EntradasPsicologo> description = new ArrayList<EntradasPsicologo>();
-	
 	
 	public void addEmotionalState(EmotionalState a) {
 		emotionalState.add(a);
@@ -496,4 +500,29 @@ public class User {
 	public void setDescription(List<EntradasPsicologo> description) {
 		this.description = description;
 	}
+	
+	public int getUnread() {
+		return unread;
+	}
+
+	public void setUnread(int unread) {
+		this.unread = unread;
+	}
+	
+
+	public HashMap<String, Integer> getUnread_groups() {
+		return unread_groups;
+	}
+
+	public void setUnread_groups(HashMap<String, Integer> unread_groups) {
+		this.unread_groups = unread_groups;
+	}
+	
+	public void setUnreadOfTopic(String topic) {
+		Integer value = unread_groups.get(topic); 
+		if(value != null) unread_groups.put(topic, value + 1);
+		else unread_groups.put(topic, 1);
+		unread += 1;
+	}
+	
 }

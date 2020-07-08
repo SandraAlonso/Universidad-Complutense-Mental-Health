@@ -48,7 +48,10 @@ public class PacienteController {
 	private EntityManager entityManager;
 
 	@GetMapping("/estadisticas")
-	public String citasPsicologo() {
+	public String citasPsicologo(HttpSession session) {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		session.setAttribute("u", stored);
 		return "estadisticas";
 	}
 
@@ -91,7 +94,7 @@ public class PacienteController {
 			log.info(
 					"La fecha en que el usuario {} ha intentado introducir un estado emocional es posterior a hoy {} y por lo tanto imposible",
 					stored.getUsername(), LocalDate.now());
-			return citasPsicologo();
+			return citasPsicologo(session);
 		}
 
 	}
@@ -108,6 +111,7 @@ public class PacienteController {
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		session.setAttribute("u",stored);
 		if (weeks == null)
 			weeks = 0;
 		model.addAttribute("u", stored);

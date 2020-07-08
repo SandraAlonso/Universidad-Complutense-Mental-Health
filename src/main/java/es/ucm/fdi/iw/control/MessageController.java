@@ -35,10 +35,14 @@ public class MessageController {
 	@Autowired 
 	private EntityManager entityManager;
 		
+	@Transactional
 	@GetMapping("/")
 	public String getMessages(Model model, HttpSession session) {
 		User user = (User)session.getAttribute("u");
 		User u = entityManager.find(User.class, user.getId());
+		u.setUnread(0);
+		entityManager.persist(u);
+		session.setAttribute("u", u);
 		List<String> topics_list = new ArrayList<String>();
 		List<String> topics_list1 = null;
 		if(u.hasRole(User.Role.PSICOLOGO)) topics_list1 = u.getCeratorAppointmentsTopic();

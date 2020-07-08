@@ -55,7 +55,11 @@ public class AdminController {
 
 
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(Model model, HttpSession session) {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		session.setAttribute("u", stored);
+		
 		model.addAttribute("activeProfiles", env.getActiveProfiles());
 		model.addAttribute("basePath", env.getProperty("es.ucm.fdi.base-path"));
 
@@ -93,7 +97,7 @@ public class AdminController {
 				log.info("Usuario {} ha habilitado de nuevo al usuario {}.", stored.getFirstName(), target.getFirstName());
 			}
 		}
-		return index(model);
+		return index(model, session);
 	}
 
 	@PostMapping("/createUser")
@@ -121,7 +125,7 @@ public class AdminController {
 			Problema p = new Problema("El usuario " + stored.getUsername() + " no ha sido añadido. Ya existe en el sistema.");
 			model.addAttribute("problema", p);
 			log.info("El usuario {} no ha sido añadido. Ya existe en el sistema.", stored.getUsername());
-			return index(model);
+			return index(model,session);
 		}
 		
 
@@ -144,7 +148,7 @@ public class AdminController {
 			Problema p = new Problema("El usuario " + delete.getUsername() + " no ha podido eliminar al usuario porque es nulo o es el mismo.");
 			model.addAttribute("problema", p);
 			log.info("Usuario {} no ha podido eliminar al usuario porque es nulo o es el mismo.", delete.getUsername());
-			return index(model);
+			return index(model, session);
 		}
 	}
 
@@ -165,7 +169,7 @@ public class AdminController {
 			Problema p = new Problema("El usuario " + psycho + " no es un psicólogo o no existe en el sistema.");
 			model.addAttribute("problema", p);
 			log.info("El usuario {} no es un psicólogo o no existe en el sistema.", psycho);
-			return index(model);
+			return index(model, session);
 		}
 
 	}
@@ -190,7 +194,7 @@ public class AdminController {
 			break;
 		}
 		log.info("Se ha devuelto el contenido de la busqueda.");
-		return index(model);
+		return index(model, session);
 	}
 
 }

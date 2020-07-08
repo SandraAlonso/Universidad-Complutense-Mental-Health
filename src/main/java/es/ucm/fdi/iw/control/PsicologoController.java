@@ -65,6 +65,7 @@ public class PsicologoController {
 			@RequestParam(required = false) Long id) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
+		session.setAttribute("u", stored);
 
 		model.addAttribute("u", stored);
 
@@ -80,7 +81,7 @@ public class PsicologoController {
 	public String horarioPsicologo(HttpSession session, Model model, @RequestParam(required = false) Integer weeks) {
 		User requester = (User) session.getAttribute("u");
 		User stored = entityManager.find(User.class, requester.getId());
-		System.out.println(stored.getCreatorAppointments());
+		session.setAttribute("u", stored);
 		if (weeks == null)
 			weeks = 0;
 		model.addAttribute("u", stored);

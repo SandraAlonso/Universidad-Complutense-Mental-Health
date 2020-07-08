@@ -77,7 +77,7 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public String getUser(@PathVariable long id, Model model, HttpSession session) 			
-			throws JsonProcessingException {		
+			throws JsonProcessingException {
 		User u = entityManager.find(User.class, id);
 		model.addAttribute("user", u);
 
@@ -90,6 +90,7 @@ public class UserController {
 		
 		messagingTemplate.convertAndSend("/topic/admin", json);
 
+		session.setAttribute("u", u);
 		return "user";
 	}	
 	
@@ -191,6 +192,10 @@ public class UserController {
 		rootNode.put("id", m.getId());
 		String json = mapper.writeValueAsString(rootNode);
 		
+		TypedQuery<User> query = entityManager.createNamedQuery("User.byUsername", User.class);
+		User to = query.setParameter("username", u.getUsername()).getSingleResult();
+		to.setUnread(to.getUnread() + 1);
+		
 		log.info("Sending a message to {} with contents '{}'", id, json);
 
 		messagingTemplate.convertAndSend("/user/"+u.getUsername()+"/queue/updates", json);
@@ -225,6 +230,11 @@ public class UserController {
 		rootNode.put("text", text);
 		rootNode.put("id", m.getId());
 		String json = mapper.writeValueAsString(rootNode);
+		
+		if(topic == "admin" || topic == "peticiones") {
+			List<User> users = entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%ADMIN%'").getResultList();
+			for (User u : users) u.setUnreadOfTopic(topic);
+		}
 		
 		log.info("Sending a message to {} with contents '{}'", topic, json);
 

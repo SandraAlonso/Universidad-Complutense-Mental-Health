@@ -30,6 +30,9 @@ public class NotificacionesController {
 
 	@GetMapping("/")
 	public String geNotificaciones(Model model, HttpSession session) {
+		User requester = (User) session.getAttribute("u");
+		User stored = entityManager.find(User.class, requester.getId());
+		session.setAttribute("u", stored);
 		return "notificaciones";
 	}
 
