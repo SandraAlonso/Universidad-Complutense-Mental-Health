@@ -74,6 +74,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		})
 
 
+
 public class User {
 
 	private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -146,11 +147,7 @@ public class User {
 	@JsonIgnore
 	@JoinColumn(name = "patient_id")
 	@OrderBy("date ASC")
-	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();
-
-	@Transient
-	private HashMap<String, Integer> unread_groups = new HashMap<String,Integer>();
-	
+	private List<EmotionalState> emotionalState = new ArrayList<EmotionalState>();	
 
 	@OneToMany(targetEntity = User.class)
 	@JoinColumn(name="psychologist_id")
@@ -507,22 +504,6 @@ public class User {
 
 	public void setUnread(int unread) {
 		this.unread = unread;
-	}
-	
-
-	public HashMap<String, Integer> getUnread_groups() {
-		return unread_groups;
-	}
-
-	public void setUnread_groups(HashMap<String, Integer> unread_groups) {
-		this.unread_groups = unread_groups;
-	}
-	
-	public void setUnreadOfTopic(String topic) {
-		Integer value = unread_groups.get(topic); 
-		if(value != null) unread_groups.put(topic, value + 1);
-		else unread_groups.put(topic, 1);
-		unread += 1;
 	}
 	
 }

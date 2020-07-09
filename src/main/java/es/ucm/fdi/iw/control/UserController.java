@@ -47,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import es.ucm.fdi.iw.LocalData;
+import es.ucm.fdi.iw.model.GroupAppointment;
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.Problema;
 import es.ucm.fdi.iw.model.User;
@@ -231,9 +232,15 @@ public class UserController {
 		rootNode.put("id", m.getId());
 		String json = mapper.writeValueAsString(rootNode);
 		
-		if(topic == "admin" || topic == "peticiones") {
+		if(topic.equals("admin") || topic.contentEquals("peticiones")) {
 			List<User> users = entityManager.createQuery("SELECT u FROM User u WHERE roles LIKE '%ADMIN%'").getResultList();
-			for (User u : users) u.setUnreadOfTopic(topic);
+			for (User u : users) u.setUnread(u.getUnread() + 1);
+		}
+		else {
+			TypedQuery<GroupAppointment> query = entityManager.createNamedQuery("GroupAppointment.byName", GroupAppointment.class);
+			List<GroupAppointment> to = query.setParameter("topic", topic).getResultList();
+			for(User u : to.get(0).getPatient()) u.setUnread(u.getUnread() + 1);
+			to.get(0).getCreator().setUnread(to.get(0).getCreator().getUnread() + 1);
 		}
 		
 		log.info("Sending a message to {} with contents '{}'", topic, json);

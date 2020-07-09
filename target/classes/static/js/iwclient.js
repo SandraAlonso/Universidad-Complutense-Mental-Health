@@ -12,6 +12,9 @@ const ws = {
 	 * Default action when message is received. 
 	 */
 	receive: (text) => {
+			var count = parseInt($(".counter").first().text());
+			$(".counter").html("");
+			$(".counter").html(count + 1);
 			if(typeof text.from === 'undefined' || sender === text.from || typeof sender === 'undefined' || sender === text.to) {
 			var today = new Date();
 			if(typeof text.from != 'undefined'){

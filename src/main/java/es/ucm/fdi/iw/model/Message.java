@@ -24,9 +24,8 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "Message.getConversation", query = "SELECT m FROM Message m WHERE (RECIPIENT_ID=:id AND SENDER_ID=:userId) OR (RECIPIENT_ID=:userId AND SENDER_ID=:id)"),
-	@NamedQuery(name = "Message.getByTopic", query = "SELECT m FROM Message m WHERE TOPIC=:id")
-
-	
+	@NamedQuery(name = "Message.getByTopic", query = "SELECT m FROM Message m WHERE TOPIC=:id"),
+	@NamedQuery(name = "Message.countTopic", query = "SELECT COUNT (m) FROM Message m WHERE topic=:t")
 })
 /*
 @NamedQueries({

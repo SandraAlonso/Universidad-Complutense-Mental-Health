@@ -1,6 +1,7 @@
 package es.ucm.fdi.iw.control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.ucm.fdi.iw.model.Message;
 import es.ucm.fdi.iw.model.User;
+import es.ucm.fdi.iw.model.User.Role;
 
 /**
  * User-administration controller
@@ -40,8 +42,6 @@ public class MessageController {
 	public String getMessages(Model model, HttpSession session) {
 		User user = (User)session.getAttribute("u");
 		User u = entityManager.find(User.class, user.getId());
-		u.setUnread(0);
-		entityManager.persist(u);
 		session.setAttribute("u", u);
 		List<String> topics_list = new ArrayList<String>();
 		List<String> topics_list1 = null;
@@ -49,8 +49,20 @@ public class MessageController {
 		if(u.hasRole(User.Role.PACIENTE)) topics_list1 = u.getGroupAppointmentsPatientTopic();
 		if(topics_list1 != null) topics_list = topics_list1;
 		String joined = String.join(",", topics_list);
+		HashMap<String, Long> unreadMap = new HashMap<String, Long>();
+		TypedQuery<Long> query1 = entityManager.createNamedQuery("Message.countTopic", Long.class); 
+		for(String e : topics_list) {
+			Long count = query1.setParameter("t", e).getSingleResult(); 
+			unreadMap.put(e, count);
+		}
+		if(u.hasRole(Role.ADMIN)) {
+			Long count1 = query1.setParameter("t", "admin").getSingleResult();
+			unreadMap.put("admin", count1);
+			count1 = query1.setParameter("t", "peticiones").getSingleResult();
+			unreadMap.put("peticiones", count1);
+		}
 		session.setAttribute("topics", joined);
-		model.addAttribute("topicsList", topics_list);
+		model.addAttribute("topicsList", unreadMap);
 		TypedQuery<User> query = entityManager.createNamedQuery("User.getAllActive", User.class); 
 		model.addAttribute("usuarios", query.getResultList());
 		return "messages";
